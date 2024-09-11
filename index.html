@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Search</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="searchbar-conatiner">
+      <input type="text" placeholder="Search">
+      <button class="searchBtn">
+        <svg>
+          <use xlink:href="sprite.svg#searchIcon"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="relsults-container"></div>
+  <div class="pagination-container">
+    <div class="pagination">
+      <button class="prev-btn">
+        <svg>
+          <use xlink:href="sprite.svg#chevronBackwardIcon"></use>
+        </svg>
+      </button>
+      <div class="pagination-btns">
+        <button class="pagination-active">1</button>
+        <button>2</button>
+        <button>3</button>
+      </div>
+      <button class="next-btn">
+        <svg>
+          <use xlink:href="sprite.svg#chevronForewardIcon"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+</body>
+</html>
