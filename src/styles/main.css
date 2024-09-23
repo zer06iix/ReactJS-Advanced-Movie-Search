@@ -1,9 +1,13 @@
+@import './layouts/carousel.css';
+@import './layouts/navbar.css';
+
 @import url('https://meyerweb.com/eric/tools/css/reset/reset.css');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  --main-color: rgb(16, 21, 30);
+  --main-color: rgb(13, 17, 24);
   --accent-color: rgb(107, 101, 112);
+  --accent-white: rgb(196, 193, 198);
   --light-blue: rgb(175, 187, 242);
   --light-red: rgb(255, 107, 107);
   --light-green: rgb(197, 235, 195);
@@ -17,89 +21,47 @@
 body {
   height: 100vh;
   display: grid;
-  grid-template-rows: 50px 1fr 50px;
+  grid-template-rows: 60px 1fr;
   
   background-color: var(--main-color);
   padding: 20px;
+  overflow: hidden;
 }
 
-.header {
+main {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.searchbar-conatiner {
-  position: relative;
-  height: 35px;
-  width: 300px;
+/* Predefined Link Styles */
+
+a {
+  color: var(--accent-white);
+  font-family: "Noto Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-decoration: none;
+  background: none;
 }
 
-.searchbar-conatiner > input {
-  padding: 5px 10px;
-  height: 100%;
-  width: 100%;
-  border: 2px solid transparent;
-  border-radius: 50px;
-  background-color: var(--accent-color);
-  color: white;
-  
-  font-size: 1rem;
-  transition: border 0.25s ease;
-}
+a:link,
+a:visited {
+  color: var(--accent-white);
+  text-decoration: none;
+}  
 
-.searchbar-conatiner > input:active {
-  outline: none;
-}
+a:hover {
+  color: var(--accent-white);
+  text-decoration: none;
+  cursor: default;
+}  
 
-.searchbar-conatiner > input:focus {
-  outline: none;
-  border: 2px solid var(--light-blue);
-}
-
-.searchbar-conatiner > input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.searchBtn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  aspect-ratio: 1/1;
-  padding: 0;
-  border: none;
-  border-radius: 0 50% 50% 0;
-  
-  background-color: transparent;
-  transition: background-color 0.25s ease;
-}
-
-.searchBtn:hover {
-  cursor: pointer;
-}
-
-.searchBtn:active {
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-.searchBtn > svg {
-  fill: rgba(255, 255, 255, 0.6);
-  height: 100%;
-  padding: 7px;
-  aspect-ratio: 1/1;
-  transition: fill 0.25s ease;
-}
-
-.searchBtn:hover > svg {
-  fill: rgba(255, 255, 255, 1);
+a:active {
+  color: var(--accent-white);
+  text-decoration: none;
 }
 
 
-
-
-.pagination-container {
+/* .pagination-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,4 +132,4 @@ body {
   opacity: 1;
   color: rgba(255, 255, 255, 0.75);
   border: 2px solid var(--light-blue);
-}
+} */
