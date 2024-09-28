@@ -1,0 +1,126 @@
+/* Nav Links */
+
+.navigation-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-sections {
+  height: 100%;
+  width: min(100%, 1100px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-tabs-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transform: translateX(-15px);
+}
+
+.nav-tabs-container > a {
+  padding: 15px;
+  font-size: 1.25rem;
+  transition:
+    color .3s ease,
+    transform .25s ease
+  ;
+}
+
+.nav-tabs-container > a:first-of-type {
+  color: var(--light-blue);
+}
+
+.nav-tabs-container > a:hover {
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+.nav-tabs-container > .indicator {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 10px;
+  background-color: var(--light-blue);
+  border-radius: 50px;
+  transform: translate(0, -25px);
+  transition:
+    width .25s ease,
+    transform .25s ease
+  ;
+}
+
+/* Search Bar */
+
+.searchbar-container {
+  position: relative;
+  height: 35px;
+  width: 300px;
+}
+
+.searchbar-container > input {
+  padding: 5px 10px;
+  height: 100%;
+  width: 100%;
+  border: 2px solid transparent;
+  border-radius: 50px;
+  background-color: var(--accent-color);
+  color: white;
+  
+  font-size: 1rem;
+  transition: border 0.25s ease;
+}
+
+.searchbar-container > input:active {
+  outline: none;
+}
+
+.searchbar-container > input:focus {
+  outline: none;
+  border: 2px solid var(--light-blue);
+}
+
+.searchbar-container > input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.searchBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 1/1;
+  padding: 0;
+  border: none;
+  border-radius: 0 50% 50% 0;
+  
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+}
+
+.searchBtn:hover {
+  cursor: pointer;
+}
+
+.searchBtn:active {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.searchBtn > svg {
+  fill: rgba(255, 255, 255, 0.6);
+  height: 100%;
+  padding: 7px;
+  aspect-ratio: 1/1;
+  transition: fill 0.25s ease;
+}
+
+.searchBtn:hover > svg {
+  fill: rgba(255, 255, 255, 1);
+}

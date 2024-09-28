@@ -1,0 +1,135 @@
+@import './layouts/carousel.css';
+@import './layouts/navbar.css';
+
+@import url('https://meyerweb.com/eric/tools/css/reset/reset.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --main-color: rgb(13, 17, 24);
+  --accent-color: rgb(107, 101, 112);
+  --accent-white: rgb(196, 193, 198);
+  --light-blue: rgb(175, 187, 242);
+  --light-red: rgb(255, 107, 107);
+  --light-green: rgb(197, 235, 195);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Noto Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 60px 1fr;
+  
+  background-color: var(--main-color);
+  padding: 20px;
+  overflow: hidden;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Predefined Link Styles */
+
+a {
+  color: var(--accent-white);
+  font-family: "Noto Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-decoration: none;
+  background: none;
+}
+
+a:link,
+a:visited {
+  color: var(--accent-white);
+  text-decoration: none;
+}  
+
+a:hover {
+  color: var(--accent-white);
+  text-decoration: none;
+  cursor: default;
+}  
+
+a:active {
+  color: var(--accent-white);
+  text-decoration: none;
+}
+
+
+/* .pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  height: 33px;
+}
+
+.pagination .prev-btn,
+.pagination .next-btn {
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 4px;
+  border: none;
+  background-color: var(--accent-color);
+  color: white;
+  opacity: 0.8;
+}
+
+.pagination .prev-btn:hover,
+.pagination .next-btn:hover {
+  cursor: pointer;
+}
+
+.prev-btn > svg,
+.next-btn > svg {
+  height: 100%;
+  aspect-ratio: 1/1;
+  fill: white;
+  padding: 6px;
+}
+
+.pagination-btns {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-inline: 10px;
+}
+
+.pagination-btns > button {
+  height: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 4px;
+  border: none;
+  background-color: var(--accent-color);
+  color: white;
+  opacity: 0.8;
+  transition: transform 0.25s ease;
+}
+
+.pagination-btns > button:hover {
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.pagination-btns > button:active {
+  transform: translateY(0);
+  cursor: pointer;
+}
+
+.pagination-btns .pagination-active {
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.75);
+  border: 2px solid var(--light-blue);
+} */
