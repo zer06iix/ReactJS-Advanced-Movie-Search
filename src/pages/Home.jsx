@@ -1,11 +1,12 @@
-import Carousel from "../components/Carousel";
+import ImageCarousel from "../components/Home/ImageCarousel";
+
 
 export default function Home() {
 
 
     return (
         <>
-            <Carousel />
+            <ImageCarousel />
         </>
     )
 }
