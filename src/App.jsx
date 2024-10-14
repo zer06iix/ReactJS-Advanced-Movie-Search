@@ -1,12 +1,24 @@
 import Navbar from './components/App/Navbar';
 import Home from './pages/Home';
+import MostRated from './pages/MostRated';
+import Popular from './pages/Popular';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Watchlist from './pages/Watchlist';
+
 
 const App = () => {
 	return (
-		<div>
-			<Navbar />
-			<Home />
-		</div>
+		<Router>
+			<div>
+				<Navbar />
+				<Routes>
+					<Route path='/' element={ <Home /> }/>
+					<Route path='/popular' element={ <Popular /> }/>
+					<Route path='/most-rated' element={ <MostRated /> }/>
+					<Route path='/watchlist' element={ <Watchlist /> }/>
+				</Routes>
+			</div>
+		</Router>
 	);
 };
 

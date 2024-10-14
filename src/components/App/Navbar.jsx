@@ -29,17 +29,17 @@ export default function Navbar() {
             </div>
 
             <Sidebar isSidebarOpen={isSidebarOpen}>
-                <SidebarTab href="#Home" activeTab={activeTab} setActiveTab={handleActiveTab}>Home</SidebarTab>
-                <SidebarTab href="#Popular" activeTab={activeTab} setActiveTab={handleActiveTab}>Popular</SidebarTab>
-                <SidebarTab href="#Most-Rated" activeTab={activeTab} setActiveTab={handleActiveTab}>Most Rated</SidebarTab>
-                <SidebarTab href="#Watchlist" activeTab={activeTab} setActiveTab={handleActiveTab}>Watch list</SidebarTab>
+                <SidebarTab to="/" activeTab={activeTab} setActiveTab={handleActiveTab}>Home</SidebarTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <SidebarTab to="/popular" activeTab={activeTab} setActiveTab={handleActiveTab}>Popular</SidebarTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <SidebarTab to="/most-rated" activeTab={activeTab} setActiveTab={handleActiveTab}>Most Rated</SidebarTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <SidebarTab to="/watchlist" activeTab={activeTab} setActiveTab={handleActiveTab}>Watch list</SidebarTab> {/* to is an attribute for linking tabs to each other in react-router */}
             </Sidebar>
 
             <div className="hidden md:flex flex-col md:flex-row">
-                <NavTab href="#Home" activeTab={activeTab} setActiveTab={handleActiveTab}>Home</NavTab>
-                <NavTab href="#Popular" activeTab={activeTab} setActiveTab={handleActiveTab}>Popular</NavTab>
-                <NavTab href="#Most-Rated" activeTab={activeTab} setActiveTab={handleActiveTab}>Most Rated</NavTab>
-                <NavTab href="#Watchlist" activeTab={activeTab} setActiveTab={handleActiveTab}>Watch list</NavTab>
+                <NavTab to="/" activeTab={activeTab} setActiveTab={handleActiveTab}>Home</NavTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <NavTab to="/popular" activeTab={activeTab} setActiveTab={handleActiveTab}>Popular</NavTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <NavTab to="/most-Rated" activeTab={activeTab} setActiveTab={handleActiveTab}>Most Rated</NavTab> {/* to is an attribute for linking tabs to each other in react-router */}
+                <NavTab to="/watchlist" activeTab={activeTab} setActiveTab={handleActiveTab}>Watch list</NavTab> {/* to is an attribute for linking tabs to each other in react-router */}
             </div>
 
 			<div className="hidden md:block searchbar-container px-4 md:px-10 py-2 md:py-10">
