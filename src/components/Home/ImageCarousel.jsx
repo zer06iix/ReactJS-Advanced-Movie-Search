@@ -1,27 +1,11 @@
-import { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
 import Slide from './Slide';
-
+import useCarouselStore from '../../store/CarouselStore';
 
 export default function ImageCarousel() {
-	const slides = [
-		{ path: '/imagePlaceholder.png', title: 'Movie Title 1', rating: '6.7' },
-		{ path: '/imagePlaceholder.png', title: 'Movie Title 2', rating: '7.2' },
-		{ path: '/imagePlaceholder.png', title: 'Movie Title 3', rating: '8.1' },
-		{ path: '/imagePlaceholder.png', title: 'Movie Title 4', rating: '5.5' },
-		{ path: '/imagePlaceholder.png', title: 'Movie Title 5', rating: '9.0' },
-	];
 
-	const [currentSlide, setCurrentSlide] = useState(0);
-
-	const nextSlide = () => {
-		setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-	};
-
-	const prevSlide = () => {
-		setCurrentSlide((prevSlide) => (prevSlide - 1 + slides.length) % slides.length);
-	};
+	const {slides, currentSlide, nextSlide, prevSlide} = useCarouselStore() //These are our states stored in state management
 
 	return (
 		<div className="flex items-center justify-center h-[80vh]">
