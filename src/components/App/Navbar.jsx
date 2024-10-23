@@ -4,7 +4,6 @@ import SearchBar from "./SearchBar";
 import NavTab from "./NavTab";
 import Sidebar from "./Sidebar";
 import SidebarTab from "./SidebarTab";
-import useTabStore from "../../store/tabStore";
 
 export default function Navbar() {
 
@@ -16,6 +15,13 @@ export default function Navbar() {
                 <SearchBar />
             </div>
 
+            <div className="hidden md:flex flex-col md:flex-row">
+                <NavTab path="/" >Home</NavTab> 
+                <NavTab path="/popular" >Popular</NavTab> 
+                <NavTab path="/most-Rated" >Most Rated</NavTab> 
+                <NavTab path="/watchlist" >Watch list</NavTab> 
+            </div>
+            
             <Sidebar>
                 <SidebarTab path="/" >Home</SidebarTab> 
                 <SidebarTab path="/popular" >Popular</SidebarTab> 
@@ -23,12 +29,6 @@ export default function Navbar() {
                 <SidebarTab path="/watchlist" >Watch list</SidebarTab> 
             </Sidebar>
 
-            <div className="hidden md:flex flex-col md:flex-row">
-                <NavTab path="/" >Home</NavTab> 
-                <NavTab path="/popular" >Popular</NavTab> 
-                <NavTab path="/most-Rated" >Most Rated</NavTab> 
-                <NavTab path="/watchlist" >Watch list</NavTab> 
-            </div>
 
 			<div className="hidden md:block searchbar-container px-4 md:px-10 py-2 md:py-10">
             	<SearchBar />

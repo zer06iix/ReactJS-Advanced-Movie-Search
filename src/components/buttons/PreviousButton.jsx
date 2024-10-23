@@ -1,4 +1,4 @@
-import useCarouselStore from "../../store/CarouselStore";
+import useCarouselStore from "../../store/carouselStore";
 
 /* eslint-disable react/prop-types */
 export default function PreviousButton({ className }) {

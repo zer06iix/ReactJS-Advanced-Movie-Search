@@ -1,7 +1,7 @@
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
 import Slide from './Slide';
-import useCarouselStore from '../../store/CarouselStore';
+import useCarouselStore from '../../store/carouselStore';
 
 export default function ImageCarousel() {
 
