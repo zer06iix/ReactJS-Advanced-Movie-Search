@@ -2,7 +2,7 @@
 
 
 
-export default function SearchButton({className}){
+export default function SearchButton({ className }){
     return(
         <button>
             <svg 

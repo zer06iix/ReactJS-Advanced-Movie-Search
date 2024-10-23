@@ -1,8 +1,13 @@
+import useCarouselStore from "../../store/CarouselStore";
+
 /* eslint-disable react/prop-types */
-export default function PreviousButton({className, onClick}) {
+export default function PreviousButton({ className }) {
+
+    const { prevSlide } = useCarouselStore();
+
     return (  
         <button
-            onClick={onClick}
+            onClick={prevSlide}
             className={className}
             style={{ zIndex: 10 }}
         >

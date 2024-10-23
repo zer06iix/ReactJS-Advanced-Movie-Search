@@ -1,8 +1,8 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/App/Navbar';
 import Home from './pages/Home';
 import MostRated from './pages/MostRated';
 import Popular from './pages/Popular';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Watchlist from './pages/Watchlist';
 
 

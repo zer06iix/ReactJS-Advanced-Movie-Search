@@ -1,8 +1,13 @@
 /* eslint-disable react/prop-types */
 
-export default function MenuButton({onClick}) {
+import useTabStore from "../../store/tabStore"
+
+export default function MenuButton() {
+
+    const { toggleSidebar } = useTabStore();
+
     return (
-        <button onClick={onClick}>
+        <button onClick={toggleSidebar}>
             <svg
                 width="33px" 
                 height="33px" 

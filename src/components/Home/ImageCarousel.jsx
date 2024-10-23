@@ -5,14 +5,13 @@ import useCarouselStore from '../../store/CarouselStore';
 
 export default function ImageCarousel() {
 
-	const {slides, currentSlide, nextSlide, prevSlide} = useCarouselStore() //These are our states stored in state management
+	const { slides, currentSlide } = useCarouselStore() //These are our states stored in state management
 
 	return (
 		<div className="flex items-center justify-center h-[80vh]">
 			<div className="relative w-full max-w-4xl mx-auto overflow-hidden">
 
 				<PreviousButton 
-					onClick={prevSlide}
 					className="absolute fill-white top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 z-10"
 				/>
 
@@ -22,8 +21,7 @@ export default function ImageCarousel() {
 					))}
 				</div>
 
-				<NextButton 
-					onClick={nextSlide}
+				<NextButton
 					className="absolute fill-white top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 z-10"
 				/>
 
