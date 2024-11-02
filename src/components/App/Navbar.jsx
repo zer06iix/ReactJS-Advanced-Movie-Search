@@ -1,38 +1,69 @@
-/* eslint-disable no-unused-vars */
-import MenuButton from "../buttons/MenuButton";
-import SearchBar from "./SearchBar";
-import NavTab from "./NavTab";
-import Sidebar from "./Sidebar";
-import SidebarTab from "./SidebarTab";
+import { useState, useEffect } from "react"
+import MenuButton from "../buttons/MenuButton"
+import SearchBar from "./SearchBar"
+import NavTab from "./NavTab"
+import Sidebar from "./Sidebar"
+import SidebarTab from "./SidebarTab"
+import useTabStore from "../../store/tabStore"
 
 export default function Navbar() {
+    const [menuButtonOpacity, setMenuButtonOpacity] = useState(1)
+    const { isSidebarOpen, toggleSidebar } = useTabStore()
+
+    const handleSidebarClick = () => setMenuButtonOpacity(1)
+
+    const handleSidebarTabClick = () => {
+        setMenuButtonOpacity(1)
+        toggleSidebar()
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            // applies when it's larger than this value (in pixels)
+            const widthThreshold = 1000
+            if (window.innerWidth > widthThreshold && isSidebarOpen) {
+                setMenuButtonOpacity(1)
+                toggleSidebar()
+            }
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        // Cleanup listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [isSidebarOpen, toggleSidebar])
+
 
     return (
-        <div className="text-white flex flex-col md:flex-row justify-center nav-tabs-container">
+        <nav>
+            <div className="nav-container">
+                <div className="navbar-left-section">
+                    <MenuButton
+                        style={{ opacity: menuButtonOpacity }}
+                        onClick={() => setMenuButtonOpacity(0)}
+                    />
 
-            <div className="md:hidden flex justify-between items-center px-4 py-2">
-                <MenuButton />
+                    <div className="nav-links-container">
+                        <NavTab path="/">Home</NavTab>
+                        <NavTab path="/popular">Popular</NavTab>
+                        <NavTab path="/most-rated">Most Rated</NavTab>
+                        <NavTab path="/watchlist">Watch list</NavTab>
+                    </div>
+                </div>
+
                 <SearchBar />
             </div>
 
-            <div className="hidden md:flex flex-col md:flex-row">
-                <NavTab path="/" >Home</NavTab> 
-                <NavTab path="/popular" >Popular</NavTab> 
-                <NavTab path="/most-Rated" >Most Rated</NavTab> 
-                <NavTab path="/watchlist" >Watch list</NavTab> 
-            </div>
-            
-            <Sidebar>
-                <SidebarTab path="/" >Home</SidebarTab> 
-                <SidebarTab path="/popular" >Popular</SidebarTab> 
-                <SidebarTab path="/most-rated" >Most Rated</SidebarTab> 
-                <SidebarTab path="/watchlist" >Watch list</SidebarTab> 
-            </Sidebar>
-
-
-			<div className="hidden md:block searchbar-container px-4 md:px-10 py-2 md:py-10">
-            	<SearchBar />
-			</div>
-        </div>
-    );
+            {isSidebarOpen && ( // Render Sidebar only if it's open
+                <Sidebar onClick={handleSidebarClick}>
+                    <SidebarTab path="/" onClick={handleSidebarTabClick}>Home</SidebarTab>
+                    <SidebarTab path="/popular" onClick={handleSidebarTabClick}>Popular</SidebarTab>
+                    <SidebarTab path="/most-rated" onClick={handleSidebarTabClick}>Most Rated</SidebarTab>
+                    <SidebarTab path="/watchlist" onClick={handleSidebarTabClick}>Watch list</SidebarTab>
+                </Sidebar>
+            )}
+        </nav>
+    )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PopularCarousel from '../components/carousels/PopularCarousel';
 import useCarouselStore from '../store/carouselStore';
 import useFetchStore from '../store/fetchStore';
@@ -14,9 +14,8 @@ export default function Popular() {
     }, [fetchPopularMovies]);
 
     return (
-        <div>
+        <>
             <PopularCarousel movies={popularMovies} page={1}/>
-            <PopularCarousel movies={popularMovies} page={2}/>
-        </div>
+        </>
     );
 };

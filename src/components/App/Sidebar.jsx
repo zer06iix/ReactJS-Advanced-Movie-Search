@@ -1,15 +1,23 @@
 /* eslint-disable react/prop-types */
-import useTabStore from "../../store/tabStore";
+import { useCallback } from "react"
+import useTabStore from "../../store/tabStore"
 
-export default function Sidebar({ children }) {
+export default function Sidebar({ children, onClick }) {
+    const { isSidebarOpen, toggleSidebar } = useTabStore()
 
-    const { isSidebarOpen } = useTabStore();
-    
+    const handleClick = useCallback(() => {
+        toggleSidebar()
+        onClick()
+    }, [onClick, toggleSidebar])
+
     return (
-        <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
-            <div className="bg-gray-800 mt-4 h-full w-64 p-4">
+        <div
+            className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}
+            onClick={handleClick}
+        >
+            <div className="sidebar-nav-links-container">
                 {children}
             </div>
         </div>
-    );
+    )
 }
