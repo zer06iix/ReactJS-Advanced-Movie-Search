@@ -1,20 +1,22 @@
 /* eslint-disable react/prop-types */
-export default function Slide({ slide }) {
-    const imageUrl = slide.poster_path 
-        ? `https://image.tmdb.org/t/p/w500${slide.poster_path}` 
-        : '/public/imagePlaceholder.png'; // Replace with your placeholder image path
+const Slide = ({ slide }) => {
+    const imageUrl = slide?.poster_path
+        ? `https://image.tmdb.org/t/p/w500${slide.poster_path}`
+        : '/public/imagePlaceholder.png'
+
+    if (!slide) {
+        return <img src='/public/imagePlaceholder.png' alt='Placeholder' />
+    }
 
     return (
-        <div className="min-w-full relative">
-            <img
-                className="w-{900px} h-[700px] object-fit"
-                src={imageUrl}
-                alt={slide.title}
-            />
-            <div className="absolute bottom-5 left-5 bg-gray-dark bg-opacity-80 text-white p-3 rounded">
-                <p className="text-lg font-semibold">{slide.title}</p>
-                <p className="text-sm">{slide.vote_average}/10 Rating</p>
+        <div className="carousel-cards">
+            <img className="carousel-images" src={imageUrl} alt={slide.title} />
+            <div className="carousel-detail-bg">
+                <p className="carousel-detail-title">{slide.title}</p>
+                <p className="carousel-detail-rating"><span className="rating-span">{slide.vote_average.toFixed(1)}</span>/10 Rating</p>
             </div>
         </div>
-    );
+    )
 }
+
+export default Slide

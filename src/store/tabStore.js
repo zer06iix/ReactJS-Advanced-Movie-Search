@@ -2,7 +2,8 @@ import { create } from "zustand";
 
 const useTabStore = create((set) => {
     const initialStates = {
-        activeTab: sessionStorage.getItem("activeTab") || "Home", //If there wasn't any active tab it will set active tab to home.
+        //If there wasn't any active tab it will set active tab to home.
+        activeTab: sessionStorage.getItem("activeTab") || "Home",
         isSidebarOpen: false,
     }
 
@@ -14,6 +15,6 @@ const useTabStore = create((set) => {
         },
         toggleSidebar: () => set((state) => ({isSidebarOpen: !state.isSidebarOpen})),
     }
-});
+})
 
-export default useTabStore;
+export default useTabStore
