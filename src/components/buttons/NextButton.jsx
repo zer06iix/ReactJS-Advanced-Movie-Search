@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 /* eslint-disable react/prop-types */
 export default function NextButton({ className, onClick }) {
@@ -11,11 +11,11 @@ export default function NextButton({ className, onClick }) {
                 <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
             </svg>
         </button>
-    )
+    );
 }
 
 NextButton.propTypes = {
     className: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
-}
+};

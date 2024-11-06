@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 /* eslint-disable react/prop-types */
 export default function PreviousButton({ className, onClick }) {
@@ -18,4 +18,4 @@ PreviousButton.propTypes = {
     className: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
-}
+};

@@ -1,7 +1,6 @@
-import SearchButton from "../buttons/SearchButton"
+import SearchButton from "../buttons/SearchButton";
 
 export default function SearchBar() {
-
     return (
         <div className="searchbar-container">
             <input
@@ -9,8 +8,7 @@ export default function SearchBar() {
                 placeholder="Search"
                 className="searchbar-input"
             />
-
             <SearchButton className="searchbar-btn" />
         </div>
-    )
+    );
 }

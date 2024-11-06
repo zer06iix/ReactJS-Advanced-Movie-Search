@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom"
-import useTabStore from "../../store/tabStore"
+import { Link } from "react-router-dom";
+import useTabStore from "../../store/tabStore";
 
 export default function NavTab({ path, children }) {
 
 	const { activeTab, handleActiveTab } = useTabStore();
 
-	const isActive = activeTab === children
+	const isActive = activeTab === children;
 
 	return (
 		<Link
@@ -16,5 +16,5 @@ export default function NavTab({ path, children }) {
 		>
 			{children}
 		</Link>
-	)
-}
+	);
+};

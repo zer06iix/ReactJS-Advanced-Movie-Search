@@ -1,54 +1,55 @@
-import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
-import NextButton from '../buttons/NextButton'
-import PreviousButton from '../buttons/PreviousButton'
+import NextButton from '../buttons/NextButton';
+import PreviousButton from '../buttons/PreviousButton';
 
-import PreviousSlide from '../carousels/carouselSlides/PreviousSlide'
-import CurrentSlide from '../carousels/carouselSlides/CurrentSlide'
-import NextSlide from '../carousels/carouselSlides/NextSlide'
+import PreviousSlide from '../carousels/carouselSlides/PreviousSlide';
+import CurrentSlide from '../carousels/carouselSlides/CurrentSlide';
+import NextSlide from '../carousels/carouselSlides/NextSlide';
 
-import MouseDownDetector from './MouseDownDetector'
-import useCarouselStore from '../../store/carouselStore'
+import MouseDownDetector from './MouseDownDetector';
+import useCarouselStore from '../../store/carouselStore';
 
 export default function PopularCarousel({ movies }) {
-    const { prevSlide, currentSlide, nextSlide } = useCarouselStore()
+    const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
+    const wrapperRef = useRef(null);
 
-    const totalSlides = movies.length
-    const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides)
-    const nextSlideIndex = Math.min(totalSlides -1, (currentSlide + 1) % totalSlides)
-    const transitionLength = 330
+    const totalSlides = movies.length;
+    const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides);
+    const nextSlideIndex = Math.min(totalSlides -1, (currentSlide + 1) % totalSlides);
+    const transitionLength = 330;
 
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
-    const [isDragging, setIsDragging] = useState(false)
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
     const handleTransition = (direction) => { // direction: 1 for next, -1 for prev
-        if (isButtonDisabled) return
-        setIsButtonDisabled(true)
+        if (isButtonDisabled) return;
+        setIsButtonDisabled(true);
 
-        const wrapper = document.querySelector('.carousel-wrapper')
-        wrapper.style.transition = `transform ${transitionLength / 1000}s ease`
-        wrapper.style.transform = `translateX(${direction * -100}%)`
+        const wrapper = wrapperRef.current;
+        wrapper.style.transition = `transform ${transitionLength / 1000}s ease`;
+        wrapper.style.transform = `translateX(${direction * -100}%)`;
 
         setTimeout(() => {
-            wrapper.style.transition = 'none'
-            wrapper.style.transform = 'translateX(0%)'
-            direction === 1 ? nextSlide() : prevSlide()
-            setIsDragging(true)
+            wrapper.style.transition = 'none';
+            wrapper.style.transform = 'translateX(0%)';
+            direction === 1 ? nextSlide() : prevSlide();
+            setIsDragging(true);
             setTimeout(() => {
-                wrapper.style.transition = `transform ${transitionLength / 1000}s ease`
-                setIsDragging(false)
-            }, 20)
-        }, transitionLength)
+                wrapper.style.transition = `transform ${transitionLength / 1000}s ease`;
+                setIsDragging(false);
+            }, 20);
+        }, transitionLength);
 
         setTimeout(() => {
-            setIsButtonDisabled(false)
-        }, transitionLength + 20)
-    }
+            setIsButtonDisabled(false);
+        }, transitionLength + 20);
+    };
 
     useEffect(() => {
-        setIsDragging(false)
-    }, [currentSlide])
+        setIsDragging(false);
+    }, [currentSlide]);
 
     return (
         <div className="carousel-container">
@@ -59,7 +60,7 @@ export default function PopularCarousel({ movies }) {
                     disabled={isButtonDisabled}
                 />
 
-                <div className="carousel-wrapper">
+                <div className="carousel-wrapper" ref={wrapperRef}>
                     <PreviousSlide slide={movies[prevSlideIndex]} />
                     <CurrentSlide slide={movies[currentSlide]} />
                     <NextSlide slide={movies[nextSlideIndex]} />
@@ -80,9 +81,9 @@ export default function PopularCarousel({ movies }) {
                 />
             </div>
         </div>
-    )
+    );
 }
 
 PopularCarousel.propTypes = {
     movies: PropTypes.arrayOf(PropTypes.object).isRequired,
-}
+};

@@ -1,14 +1,14 @@
-import { forwardRef } from "react"
-import useTabStore from "../../store/tabStore"
+import { forwardRef } from "react";
+import useTabStore from "../../store/tabStore";
 
 /* eslint-disable react/prop-types */
 const MenuButton = forwardRef(({ style, onClick }, ref) => {
-    const { toggleSidebar } = useTabStore()
+    const { toggleSidebar } = useTabStore();
 
     const handleClick = () => {
-        onClick()
-        toggleSidebar()
-    }
+        onClick();
+        toggleSidebar();
+    };
 
     return (
         <button ref={ref} onClick={handleClick} className="menu-button" style={style}>
@@ -26,9 +26,9 @@ const MenuButton = forwardRef(({ style, onClick }, ref) => {
                 />
             </svg>
         </button>
-    )
-})
+    );
+});
 
-MenuButton.displayName = 'MenuButton'
+MenuButton.displayName = 'MenuButton';
 
-export default MenuButton
+export default MenuButton;

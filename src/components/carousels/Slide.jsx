@@ -2,10 +2,10 @@
 const Slide = ({ slide }) => {
     const imageUrl = slide?.poster_path
         ? `https://image.tmdb.org/t/p/w500${slide.poster_path}`
-        : '/public/imagePlaceholder.png'
+        : null   
 
     if (!slide) {
-        return <img src='/public/imagePlaceholder.png' alt='Placeholder' />
+        return null;
     }
 
     return (

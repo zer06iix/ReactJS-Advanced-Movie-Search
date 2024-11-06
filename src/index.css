@@ -85,10 +85,6 @@ nav {
     cursor: pointer;
 }
 
-.nav-links:active {
-    transform: translateY(-1.2px);
-}
-
 .nav-links.active {
     color: rgb(175, 187, 242);
 }
@@ -147,9 +143,6 @@ nav {
     cursor: pointer;
 }
 
-.sidebar-nav-links:active {
-    transform: translateX(1.2px);
-}
 
 .sidebar-nav-links.active {
     color: rgb(175, 187, 242);
@@ -378,4 +371,14 @@ nav {
 .nextBtn:active > svg {
     transform: translateX(0.25rem);
     fill: rgb(175, 187, 242);
+}
+
+
+/* Loader */
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
 }

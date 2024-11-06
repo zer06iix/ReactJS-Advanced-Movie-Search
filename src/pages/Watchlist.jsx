@@ -1,6 +1,7 @@
-
 export default function Watchlist() {
-    <div>
-        Watchlist
-    </div>
+    return (
+        <div>
+            Watchlist
+        </div>
+    );
 }
