@@ -14,7 +14,7 @@ const useFetchStore = create((set) => ({
         const url = createApiUrl('/movie/popular', page);
         const response = await axios.get(url);
         const movies = response.data.results;
-        console.log(`Popular movies page ${page} fetched.`);
+        console.log(`Popular movies page ${page} got fetched.`);
 
         // Update the popularMovies in carouselStore.js
         return movies; // Return the fetched movies instead of updating the store here

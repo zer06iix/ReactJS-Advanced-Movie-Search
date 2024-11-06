@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+/* eslint-disable no-unused-vars */
+import { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight }) => {
@@ -7,24 +8,30 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
     const [isDragging, setIsDragging] = useState(false);
     const divRef = useRef(null);
 
-    const handleMouseDown = useCallback((e) => {
-        setStartX(e.clientX);
-        setStartY(e.clientY);
+    const handleStart = useCallback((e) => {
+        const clientX = e.touches[0].clientX;
+        const clientY = e.touches[0].clientY;
+        setStartX(clientX);
+        setStartY(clientY);
         setIsDragging(true);
-        document.body.style.cursor = 'grabbing';
+        // Set cursor style using state (not applicable for touch, but can be used for visual feedback)
+        if (divRef.current) {
+            divRef.current.style.cursor = 'grabbing';
+        }
     }, []);
 
-    const handleMouseMove = useCallback(() => {
+    const handleMove = useCallback((e) => {
+        if (!isDragging) return;
         // Dragging logic can be added here if needed
-    }, []);
+    }, [isDragging]);
 
-    const handleMouseUp = useCallback((e) => {
+    const handleEnd = useCallback((e) => {
         if (!isDragging) return;
 
-        const endX = e.clientX;
-        const endY = e.clientY;
-        const deltaX = endX - startX;
-        const deltaY = endY - startY;
+        const clientX = e.changedTouches[0].clientX;
+        const clientY = e.changedTouches[0].clientY;
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
 
         // Check if the movement was more horizontal than vertical
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -38,37 +45,36 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
         }
 
         setIsDragging(false);
-        document.body.style.cursor = '';
+        // Reset cursor style using state (not applicable for touch)
+        if (divRef.current) {
+            divRef.current.style.cursor = '';
+        }
         if (onMouseUp) onMouseUp();
     }, [isDragging, onMouseUp, onDragLeft, onDragRight, startX, startY]);
 
-    const handleMouseLeave = useCallback(() => {
+    const handleTouchMove = useCallback((e) => handleMove(e), [handleMove]);
+    const handleTouchEnd = useCallback((e) => handleEnd(e), [handleEnd]);
+
+    const handleTouchLeave = useCallback(() => {
         if (isDragging) {
             setIsDragging(false);
-            document.body.style.cursor = '';
+            // Reset cursor style using state (not applicable for touch)
+            if (divRef.current) {
+                divRef.current.style.cursor = '';
+            }
             if (onMouseLeave) onMouseLeave();
         }
     }, [isDragging, onMouseLeave]);
 
-    useEffect(() => {
-        const detectorDivBound = divRef.current;
-        if (!detectorDivBound) return;
-
-        detectorDivBound.addEventListener('mousedown', handleMouseDown);
-        detectorDivBound.addEventListener('mousemove', handleMouseMove);
-        detectorDivBound.addEventListener('mouseup', handleMouseUp);
-        detectorDivBound.addEventListener('mouseleave', handleMouseLeave);
-
-        return () => {
-            detectorDivBound.removeEventListener('mousedown', handleMouseDown);
-            detectorDivBound.removeEventListener('mousemove', handleMouseMove);
-            detectorDivBound.removeEventListener('mouseup', handleMouseUp);
-            detectorDivBound.removeEventListener('mouseleave', handleMouseLeave);
-        };
-    }, [handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave]);
-
     return (
-        <div ref={divRef} className="mouse-down-detector" />
+        <div 
+            ref={divRef} 
+            className="mouse-down-detector" 
+            onTouchStart={handleStart} 
+            onTouchMove={isDragging ? handleTouchMove : undefined} 
+            onTouchEnd={handleTouchEnd} 
+            onTouchCancel={handleTouchLeave} // Handle touch cancel
+        />
     );
 };
 
