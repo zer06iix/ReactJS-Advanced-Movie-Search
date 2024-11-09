@@ -1,6 +1,3 @@
-
 export default function MostRated() {
-    <div>
-        MostRated
-    </div>
-};
+  <div>MostRated</div>;
+}
