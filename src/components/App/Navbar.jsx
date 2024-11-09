@@ -8,87 +8,96 @@ import SidebarTab from './SidebarTab';
 import useTabStore from '../../store/tabStore';
 
 export default function Navbar() {
-  const { isSidebarOpen, toggleSidebar } = useTabStore();
-  const [menuButtonOpacity, setMenuButtonOpacity] = useState(1);
-  const [activeTabWidth, setActiveTabWidth] = useState(0);
+    const { isSidebarOpen, toggleSidebar } = useTabStore();
+    const [menuButtonOpacity, setMenuButtonOpacity] = useState(1);
+    const [activeTabWidth, setActiveTabWidth] = useState(0);
 
-  const handleSidebarClick = () => setMenuButtonOpacity(1);
+    const handleSidebarClick = () => setMenuButtonOpacity(1);
 
-  const handleSidebarTabClick = () => {
-    setMenuButtonOpacity(1);
-    toggleSidebar();
-  };
-
-  const handleTabWidthChange = (width) => {
-    setActiveTabWidth(width);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Closes the sidebar when it's larger than widthThreshold
-      const widthThreshold = 1000; // in px
-      if (window.innerWidth > widthThreshold && isSidebarOpen) {
+    const handleSidebarTabClick = () => {
         setMenuButtonOpacity(1);
         toggleSidebar();
-      }
     };
 
-    window.addEventListener('resize', handleResize);
-    // Cleanup listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
+    const handleTabWidthChange = (width) => {
+        setActiveTabWidth(width);
     };
-  }, [isSidebarOpen, toggleSidebar]);
 
-  return (
-    <nav>
-      <div className="nav-container">
-        <div className="navbar-left-section">
-          <MenuButton
-            style={{ opacity: menuButtonOpacity }}
-            onClick={() => setMenuButtonOpacity(0)}
-          />
+    useEffect(() => {
+        const handleResize = () => {
+            // Closes the sidebar when it's larger than widthThreshold
+            const widthThreshold = 1000; // in px
+            if (window.innerWidth > widthThreshold && isSidebarOpen) {
+                setMenuButtonOpacity(1);
+                toggleSidebar();
+            }
+        };
 
-          <div className="nav-links-container">
-            <NavIndicator width={activeTabWidth} />
+        window.addEventListener('resize', handleResize);
+        // Cleanup listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [isSidebarOpen, toggleSidebar]);
 
-            <NavTab path="/" onTabWidthChange={handleTabWidthChange}>
-              Home
-            </NavTab>
+    return (
+        <nav>
+            <div className="nav-container">
+                <div className="navbar-left-section">
+                    <MenuButton
+                        style={{ opacity: menuButtonOpacity }}
+                        onClick={() => setMenuButtonOpacity(0)}
+                    />
 
-            <NavTab path="/popular" onTabWidthChange={handleTabWidthChange}>
-              Popular
-            </NavTab>
+                    <div className="nav-links-container">
+                        <NavIndicator width={activeTabWidth} />
 
-            <NavTab path="/most-rated" onTabWidthChange={handleTabWidthChange}>
-              Most Rated
-            </NavTab>
+                        <NavTab path="/" onTabWidthChange={handleTabWidthChange}>
+                            Home
+                        </NavTab>
 
-            <NavTab path="/watchlist" onTabWidthChange={handleTabWidthChange}>
-              Watch list
-            </NavTab>
-          </div>
-        </div>
+                        <NavTab
+                            path="/popular"
+                            onTabWidthChange={handleTabWidthChange}
+                        >
+                            Popular
+                        </NavTab>
 
-        <SearchBar />
-      </div>
+                        <NavTab
+                            path="/most-rated"
+                            onTabWidthChange={handleTabWidthChange}
+                        >
+                            Most Rated
+                        </NavTab>
 
-      {isSidebarOpen && ( // Render Sidebar only if it's open
-        <Sidebar onClick={handleSidebarClick}>
-          <SidebarTab path="/" onClick={handleSidebarTabClick}>
-            Home
-          </SidebarTab>
-          <SidebarTab path="/popular" onClick={handleSidebarTabClick}>
-            Popular
-          </SidebarTab>
-          <SidebarTab path="/most-rated" onClick={handleSidebarTabClick}>
-            Most Rated
-          </SidebarTab>
-          <SidebarTab path="/watchlist" onClick={handleSidebarTabClick}>
-            Watch list
-          </SidebarTab>
-        </Sidebar>
-      )}
-    </nav>
-  );
+                        <NavTab
+                            path="/watchlist"
+                            onTabWidthChange={handleTabWidthChange}
+                        >
+                            Watch list
+                        </NavTab>
+                    </div>
+                </div>
+
+                <SearchBar />
+            </div>
+
+            {isSidebarOpen && ( // Render Sidebar only if it's open
+                <Sidebar onClick={handleSidebarClick}>
+                    <SidebarTab path="/" onClick={handleSidebarTabClick}>
+                        Home
+                    </SidebarTab>
+                    <SidebarTab path="/popular" onClick={handleSidebarTabClick}>
+                        Popular
+                    </SidebarTab>
+                    <SidebarTab path="/most-rated" onClick={handleSidebarTabClick}>
+                        Most Rated
+                    </SidebarTab>
+                    <SidebarTab path="/watchlist" onClick={handleSidebarTabClick}>
+                        Watch list
+                    </SidebarTab>
+                </Sidebar>
+            )}
+        </nav>
+    );
 }

@@ -2,7 +2,7 @@
 import Slide from '../Slide';
 
 const CurrentSlide = ({ slide }) => {
-  return <Slide slide={slide} />;
+    return <Slide slide={slide} />;
 };
 
 export default CurrentSlide;
