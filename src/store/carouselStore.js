@@ -1,19 +1,20 @@
 import { create } from 'zustand';
+import useMovieStore from './movieStore';
 
 const useCarouselStore = create((set) => ({
-    popularMovies: [], // State to hold popular movies
-    setPopularMovies: (movies) => set({ popularMovies: movies }),
     currentSlide: 0,
-    nextSlide: () =>
+    nextSlide: () => {
+        const { popularMovies } = useMovieStore.getState();
         set((state) => ({
-            currentSlide: (state.currentSlide + 1) % state.popularMovies.length
-        })),
-    prevSlide: () =>
+            currentSlide: (state.currentSlide + 1) % popularMovies.length
+        }));
+    },
+    prevSlide: () => {
+        const { popularMovies } = useMovieStore.getState();
         set((state) => ({
-            currentSlide:
-                (state.currentSlide - 1 + state.popularMovies.length) %
-                state.popularMovies.length
-        }))
+            currentSlide: (state.currentSlide - 1 + popularMovies.length) % popularMovies.length
+        }));
+    }
 }));
 
 export default useCarouselStore;

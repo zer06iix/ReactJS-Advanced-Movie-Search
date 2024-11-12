@@ -14,10 +14,6 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
         setStartX(clientX);
         setStartY(clientY);
         setIsDragging(true);
-        // Set cursor style using state (not applicable for touch, but can be used for visual feedback)
-        if (divRef.current) {
-            divRef.current.style.cursor = 'grabbing';
-        }
     }, []);
 
     const handleMove = useCallback(
@@ -49,37 +45,20 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
             }
 
             setIsDragging(false);
-            // Reset cursor style using state (not applicable for touch)
-            if (divRef.current) {
-                divRef.current.style.cursor = '';
-            }
             if (onMouseUp) onMouseUp();
         },
         [isDragging, onMouseUp, onDragLeft, onDragRight, startX, startY]
     );
-
-    const handleTouchMove = useCallback((e) => handleMove(e), [handleMove]);
-    const handleTouchEnd = useCallback((e) => handleEnd(e), [handleEnd]);
-
-    const handleTouchLeave = useCallback(() => {
-        if (isDragging) {
-            setIsDragging(false);
-            // Reset cursor style using state (not applicable for touch)
-            if (divRef.current) {
-                divRef.current.style.cursor = '';
-            }
-            if (onMouseLeave) onMouseLeave();
-        }
-    }, [isDragging, onMouseLeave]);
 
     return (
         <div
             ref={divRef}
             className="mouse-down-detector"
             onTouchStart={handleStart}
-            onTouchMove={isDragging ? handleTouchMove : undefined}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchLeave} // Handle touch cancel
+            onTouchMove={isDragging ? handleMove : undefined}
+            onTouchEnd={handleEnd}
+            onClick={!isDragging ? onMouseUp : undefined} // Allow click events when not dragging
+            style={{ pointerEvents: isDragging ? 'none' : 'auto' }} // Disable pointer events when dragging
         />
     );
 };

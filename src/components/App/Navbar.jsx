@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import MenuButton from '../buttons/MenuButton';
 import SearchBar from './SearchBar';
 import NavIndicator from './NavIndicator';
@@ -8,6 +9,8 @@ import SidebarTab from './SidebarTab';
 import useTabStore from '../../store/tabStore';
 
 export default function Navbar() {
+    const location = useLocation();
+    const { setActiveTabFromLocation } = useTabStore();
     const { isSidebarOpen, toggleSidebar } = useTabStore();
     const [menuButtonOpacity, setMenuButtonOpacity] = useState(1);
     const [activeTabWidth, setActiveTabWidth] = useState(0);
@@ -22,6 +25,10 @@ export default function Navbar() {
     const handleTabWidthChange = (width) => {
         setActiveTabWidth(width);
     };
+
+    useEffect(() => {
+        setActiveTabFromLocation(location);
+    }, [location, setActiveTabFromLocation])
 
     useEffect(() => {
         const handleResize = () => {

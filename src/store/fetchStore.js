@@ -17,6 +17,23 @@ const useFetchStore = create((set) => ({
 
         // Update the popularMovies in carouselStore.js
         return movies; // Return the fetched movies instead of updating the store here
+    },
+    fetchMovieDetails: async (id) => {
+        try {
+            console.log(`Fetching movie details.`)
+            const url = createApiUrl(`/movie/${id}`, 1);
+            const response = await axios.get(url);
+            console.log('Movie details got fetched');
+            return response.data; // Return the movie details
+        } catch (error) {
+            console.error('Error fetching movie details:', error);
+            throw error; // Rethrow the error for handling in the calling function
+        }
+    },
+    fetchCredits: async (id) => {
+        const url = createApiUrl(`/movie/${id}/credits`, 1);
+        const response = await axios.get(url);
+        return response.data;
     }
 }));
 

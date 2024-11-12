@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import useTabStore from '../../store/tabStore';
 
 export default function NavIndicator({ width }) {
-    const { activeTabIndex: i, tabWidths } = useTabStore();
+    const { activeTab, activeTabIndex: i, tabWidths } = useTabStore();
+
+    if (activeTab === null) return null;
 
     const indicatorOffset = -20;
     const tabWidthOffset = tabWidths

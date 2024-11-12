@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import PopularCarousel from '../components/carousels/PopularCarousel';
-import useCarouselStore from '../store/carouselStore';
 import useFetchStore from '../store/fetchStore';
+import useMovieStore from '../store/movieStore';
 import { useQuery } from '@tanstack/react-query';
+import Loading from '../components/App/Loading';
 
 export default function Popular() {
     const { fetchPopularMovies } = useFetchStore();
-    const { setPopularMovies, popularMovies } = useCarouselStore();
-
+    const { setPopularMovies, popularMovies } = useMovieStore();
+    
     const page = 1;
     const { data, error, isLoading } = useQuery({
         queryKey: ['popularMovies', page],
@@ -23,12 +24,10 @@ export default function Popular() {
 
     if (isLoading) {
         return (
-            <div className="loader-container">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-light"></div>
-            </div>
+            <Loading />
         );
     }
-    if (error) return <div className="text-red-500">Error: {error.message}</div>;
+    if (error) return <div className="error-container">Error: {error.message}</div>;
 
     return <PopularCarousel movies={popularMovies} />;
 }

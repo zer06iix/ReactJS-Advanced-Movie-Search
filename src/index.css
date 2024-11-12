@@ -69,6 +69,7 @@ nav {
     border-radius: 50px;
     top: 50%;
     background-color: rgb(175, 187, 242);
+    box-shadow: 0 0 10px rgb(175, 187, 242), 0 0 20px rgb(175, 187, 242);
     transition:
         transform 0.35s ease,
         width 0.3s ease;
@@ -300,7 +301,7 @@ nav {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .carousel-detail-bg {
@@ -388,11 +389,87 @@ nav {
     fill: rgb(175, 187, 242);
 }
 
-/* Loader */
+/* Loading styles */
 
 .loader-container {
     display: flex;
     align-items: center;
     justify-content: center;
     height: calc(100vh - 100px);
+}
+
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+    color: red;
+}
+
+/* Movie page styles */
+.movie-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: white;
+}
+
+.movie-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.movie-poster {
+    border-radius: 10px;
+    box-shadow: 0 0 20px #070707;
+    width: 200px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.movie-info {
+    max-width: 600px;
+}
+
+.movie-title {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.movie-overview {
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+.movie-rating {
+    font-size: 1.2rem;
+}
+
+.rating-value {
+    font-weight: bold;
+}
+
+.additional-details {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Responsive styles for phones */
+@media (max-width: 768px) {
+    .movie-header {
+        flex-direction: column; /* Stack elements vertically on small screens */
+        align-items: center; /* Center align items */
+    }
+
+    .movie-poster {
+        margin-right: 0; /* Remove right margin on small screens */
+        margin-bottom: 10px; /* Add margin below the poster */
+    }
+
+    .movie-overview {
+        order: 1; /* Ensure overview appears below the poster */
+    }
 }

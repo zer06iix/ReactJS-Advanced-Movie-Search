@@ -73,13 +73,13 @@ export default function PopularCarousel({ movies }) {
                     <NextSlide slide={movies[nextSlideIndex]} />
                 </div>
 
-                <MouseDownDetector
+                {/* <MouseDownDetector
                     onMouseUp={() => setIsDragging(false)}
                     onMouseLeave={() => setIsDragging(false)}
                     onDragLeft={() => handleTransition(1)}
                     onDragRight={() => handleTransition(-1)}
                     style={{ cursor: isDragging ? 'grabbing' : 'default' }}
-                />
+                /> */}
 
                 <NextButton
                     className="carouselBtns nextBtn"
