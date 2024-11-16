@@ -12,7 +12,9 @@ const useCarouselStore = create((set) => ({
     prevSlide: () => {
         const { popularMovies } = useMovieStore.getState();
         set((state) => ({
-            currentSlide: (state.currentSlide - 1 + popularMovies.length) % popularMovies.length
+            currentSlide:
+                (state.currentSlide - 1 + popularMovies.length) %
+                popularMovies.length
         }));
     }
 }));

@@ -1,19 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import NextButton from '../buttons/NextButton';
-import PreviousButton from '../buttons/PreviousButton';
+import NextButton from '../../buttons/NextButton';
+import PreviousButton from '../../buttons/PreviousButton';
 
-import PreviousSlide from './imageCarousel/PreviousSlide';
-import CurrentSlide from './imageCarousel/CurrentSlide';
-import NextSlide from './imageCarousel/NextSlide';
+import PreviousSlide from './PreviousSlide';
+import CurrentSlide from './CurrentSlide';
+import NextSlide from './NextSlide';
 
-import MouseDownDetector from './imageCarousel/MouseDownDetector';
-import useCarouselStore from '../../store/carouselStore';
+import useCarouselStore from '../../../store/carouselStore';
 
-export default function PopularCarousel({ movies }) {
+export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }) {
     const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
-    const wrapperRef = useRef(null);
+    const transitionLength = 330;
 
     const totalSlides = movies.length;
     const prevSlideIndex = Math.max(
@@ -24,18 +24,17 @@ export default function PopularCarousel({ movies }) {
         totalSlides - 1,
         (currentSlide + 1) % totalSlides
     );
-    const transitionLength = 330;
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
-    const handleTransition = (direction) => {
+    const handleCarouselTransition = (direction) => {
         // direction: 1 for next, -1 for prev
         if (isButtonDisabled) return;
         setIsButtonDisabled(true);
 
         const wrapper = wrapperRef.current;
-        wrapper.style.transition = `transform ${transitionLength / 1000}s ease`;
+        wrapper.style.transition = `transform ${transitionLength}ms ease`;
         wrapper.style.transform = `translateX(${direction * -100}%)`;
 
         setTimeout(() => {
@@ -44,7 +43,7 @@ export default function PopularCarousel({ movies }) {
             direction === 1 ? nextSlide() : prevSlide();
             setIsDragging(true);
             setTimeout(() => {
-                wrapper.style.transition = `transform ${transitionLength / 1000}s ease`;
+                wrapper.style.transition = `transform ${transitionLength}ms ease`;
                 setIsDragging(false);
             }, 20);
         }, transitionLength);
@@ -52,6 +51,32 @@ export default function PopularCarousel({ movies }) {
         setTimeout(() => {
             setIsButtonDisabled(false);
         }, transitionLength + 20);
+    };
+
+    const handleUpNextTransition = (direction) => {
+        // direction: 1 for next, -1 for prev
+        const wrapper = upNextWrapperRef.current;
+        if (!wrapper) return;
+
+        wrapper.style.transition = `transform ${transitionLength}ms ease`;
+        wrapper.style.transform = `translateY(${-direction * 120}px)`;
+
+        // if (direction === 1) {
+        //     wrapper.children[1].style.opacity = '0';
+        //     wrapper.children[wrapper.children.length - 1].style.opacity = '0'
+        // } else if (direction === -1) {
+        //     wrapper.children[].style.opacity = '0';
+        //     wrapper.lastElementChild.style.opacity = '1'
+        // }
+
+        setTimeout(() => {
+            wrapper.style.transition = 'none';
+            wrapper.style.transform = 'translateY(0px)';
+
+            if (direction === 1) {
+                wrapper.children[1].style.opacity = '1';
+            }
+        }, transitionLength);
     };
 
     useEffect(() => {
@@ -63,7 +88,10 @@ export default function PopularCarousel({ movies }) {
             <div className="carousel-mask">
                 <PreviousButton
                     className="carouselBtns prevBtn"
-                    onClick={() => handleTransition(-1)}
+                    onClick={() => {
+                        handleUpNextTransition(-1);
+                        handleCarouselTransition(-1);
+                    }}
                     disabled={isButtonDisabled}
                 />
 
@@ -83,16 +111,19 @@ export default function PopularCarousel({ movies }) {
 
                 <NextButton
                     className="carouselBtns nextBtn"
-                    onClick={() => handleTransition(1)}
+                    onClick={() => {
+                        handleUpNextTransition(1);
+                        handleCarouselTransition(1);
+                    }}
                     disabled={isButtonDisabled}
                 />
-
-                {/* <UpNextSection className="up-next-section" /> */}
             </div>
         </div>
     );
 }
 
 PopularCarousel.propTypes = {
-    movies: PropTypes.arrayOf(PropTypes.object).isRequired
+    movies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    wrapperRef: PropTypes.object.isRequired,
+    upNextWrapperRef: PropTypes.object.isRequired
 };

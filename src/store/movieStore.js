@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 const useMovieStore = create((set) => ({
     movie: null, // Movie details on the movie page

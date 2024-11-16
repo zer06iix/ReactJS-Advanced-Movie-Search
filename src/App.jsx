@@ -16,7 +16,7 @@ const App = () => {
                     <Route path="/popular" element={<Popular />} />
                     <Route path="/most-rated" element={<MostRated />} />
                     <Route path="/watchlist" element={<Watchlist />} />
-                    <Route path="/movie/:id" element={<MoviePage />} />                
+                    <Route path="/movie/:id" element={<MoviePage />} />
                 </Routes>
             </div>
         </Router>
