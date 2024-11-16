@@ -27,7 +27,9 @@ const MenuButton = forwardRef(({ style, onClick }, ref) => {
                     fillRule="evenodd"
                     d="M19 4a1 1 0 01-1 1H2a1 1 0 010-2h16a1 1 0 011 1zm0 6a1 1 0 01-1 1H2a1 1 0 110-2h16a1 1 0 011 1zm-1 7a1 1 0 100-2H2a1 1 0 100 2h16z"
                     data-darkreader-inline-fill=""
-                    style={{ '--darkreader-inline-fill': '#080b0c' }}
+                    style={{
+                        '--darkreader-inline-fill': '#080b0c'
+                    }}
                 />
             </svg>
         </button>

@@ -28,7 +28,7 @@ export default function Navbar() {
 
     useEffect(() => {
         setActiveTabFromLocation(location);
-    }, [location, setActiveTabFromLocation])
+    }, [location, setActiveTabFromLocation]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -52,7 +52,9 @@ export default function Navbar() {
             <div className="nav-container">
                 <div className="navbar-left-section">
                     <MenuButton
-                        style={{ opacity: menuButtonOpacity }}
+                        style={{
+                            opacity: menuButtonOpacity
+                        }}
                         onClick={() => setMenuButtonOpacity(0)}
                     />
 

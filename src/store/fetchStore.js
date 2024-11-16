@@ -16,11 +16,12 @@ const useFetchStore = create((set) => ({
         console.log(`Popular movies page ${page} got fetched.`);
 
         // Update the popularMovies in carouselStore.js
-        return movies; // Return the fetched movies instead of updating the store here
+        // Return the fetched movies instead of updating the store here
+        return movies;
     },
     fetchMovieDetails: async (id) => {
         try {
-            console.log(`Fetching movie details.`)
+            console.log(`Fetching movie details.`);
             const url = createApiUrl(`/movie/${id}`, 1);
             const response = await axios.get(url);
             console.log('Movie details got fetched');
@@ -34,6 +35,22 @@ const useFetchStore = create((set) => ({
         const url = createApiUrl(`/movie/${id}/credits`, 1);
         const response = await axios.get(url);
         return response.data;
+    },
+    fetchGenres: async () => {
+        try {
+            console.log('Fetching genres');
+            const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+            const response = await axios.get(url);
+            const genres = response.data.genres.reduce((acc, { id, name }) => {
+                acc[id] = name;
+                return acc;
+            }, {});
+            console.log('Genres fetched successfully');
+            return genres;
+        } catch (error) {
+            console.error('Error fetching genres:', error);
+            throw error;
+        }
     }
 }));
 

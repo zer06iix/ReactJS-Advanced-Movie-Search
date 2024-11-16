@@ -29,23 +29,23 @@ const useTabStore = create((set) => {
                 return { tabWidths: newTabWidths };
             }),
 
-            setActiveTabFromLocation: (location) => {
-                const path = location.pathname;
-                let newActiveTab = 'Home'; // Default tab
-    
-                if (path === '/popular') {
-                    newActiveTab = 'Popular';
-                } else if (path === '/most-rated') {
-                    newActiveTab = 'Most Rated';
-                } else if (path === '/watchlist') {
-                    newActiveTab = 'Watch list';
-                } else if (path.startsWith('/movie')) {
-                    newActiveTab = null; // Set to null for movie pages
-                }
-                
-                set({ activeTab: newActiveTab });
-                sessionStorage.setItem('activeTab', newActiveTab);
+        setActiveTabFromLocation: (location) => {
+            const path = location.pathname;
+            let newActiveTab = 'Home'; // Default tab
+
+            if (path === '/popular') {
+                newActiveTab = 'Popular';
+            } else if (path === '/most-rated') {
+                newActiveTab = 'Most Rated';
+            } else if (path === '/watchlist') {
+                newActiveTab = 'Watch list';
+            } else if (path.startsWith('/movie')) {
+                newActiveTab = null; // Set to null for movie pages
             }
+
+            set({ activeTab: newActiveTab });
+            sessionStorage.setItem('activeTab', newActiveTab);
+        }
     };
 });
 

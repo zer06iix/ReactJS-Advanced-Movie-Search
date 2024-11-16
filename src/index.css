@@ -12,6 +12,23 @@ body {
     flex-direction: column;
 }
 
+/* Loading styles */
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+}
+
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+    color: red;
+}
+
 /* Navigation (Tab Links) */
 
 nav {
@@ -23,7 +40,7 @@ nav {
 
 .nav-container {
     width: min(1170px, 100%);
-    height: 100%;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -43,7 +60,7 @@ nav {
     transition: opacity 0.35s ease;
 }
 
-.menu-button > svg {
+.menu-button>svg {
     width: 33px;
     height: 33px;
     fill: rgb(196, 193, 198);
@@ -53,7 +70,7 @@ nav {
         stroke 0.25s ease;
 }
 
-.menu-button:active > svg {
+.menu-button:active>svg {
     fill: white;
     stroke: white;
 }
@@ -69,7 +86,9 @@ nav {
     border-radius: 50px;
     top: 50%;
     background-color: rgb(175, 187, 242);
-    box-shadow: 0 0 10px rgb(175, 187, 242), 0 0 20px rgb(175, 187, 242);
+    box-shadow:
+        0 0 10px rgb(175, 187, 242),
+        0 0 20px rgb(175, 187, 242);
     transition:
         transform 0.35s ease,
         width 0.3s ease;
@@ -117,7 +136,7 @@ nav {
     transition: opacity 0.35s ease;
 }
 
-.sidebar > div {
+.sidebar>div {
     transition: transform 0.35s ease;
 }
 
@@ -125,11 +144,11 @@ nav {
     opacity: 0;
 }
 
-.sidebar.open > div {
+.sidebar.open>div {
     transform: translateX(0px);
 }
 
-.sidebar.closed > div {
+.sidebar.closed>div {
     transform: translateX(-400px);
 }
 
@@ -228,14 +247,14 @@ nav {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.searchbar-btn > svg {
+.searchbar-btn>svg {
     fill: rgb(196, 193, 198);
     height: 24px;
     aspect-ratio: 1;
     transition: fill 0.3s ease;
 }
 
-.searchbar-btn:hover > svg {
+.searchbar-btn:hover>svg {
     fill: white;
 }
 
@@ -246,12 +265,15 @@ nav {
     align-items: center;
     justify-content: center;
     position: relative;
-    height: calc(100vh - 112px);
+    bottom: 0;
+    width: 100vw;
+    height: calc(100vh - 100px);
 }
 
 .carousel-mask {
     position: absolute;
-    width: 450px;
+    height: clamp(588px, calc(100% - 80px), 650px);
+    aspect-ratio: 5.5/8;
     border-radius: 25px;
     overflow: hidden;
 }
@@ -267,36 +289,37 @@ nav {
 
 .carousel-cards {
     position: relative;
-    height: 100%;
     aspect-ratio: 5.5/8;
     display: flex;
     overflow: hidden;
 }
 
 .carousel-wrapper {
-    min-height: 650px;
     z-index: 50;
     user-select: none;
 }
 
-.carousel-wrapper > div {
+.carousel-wrapper .carousel-cards {
     position: absolute;
     width: 100%;
     transform: translateX(0%);
     z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.carousel-wrapper > div:first-child {
+.carousel-wrapper .carousel-cards:first-child {
     transform: translateX(-100%);
     z-index: 1;
 }
 
-.carousel-wrapper > div:last-child {
+.carousel-wrapper .carousel-cards:last-child {
     transform: translateX(calc(100% + 1px));
     z-index: 1;
 }
 
-.carousel-cards > img {
+.carousel-cards>img {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -369,7 +392,7 @@ nav {
     border-radius: 100px;
 }
 
-.carouselBtns > svg {
+.carouselBtns>svg {
     fill: white;
     position: relative;
     width: 1.75rem;
@@ -379,34 +402,110 @@ nav {
         transform 0.2s ease;
 }
 
-.prevBtn:active > svg {
+.prevBtn:active>svg {
     transform: translateX(-0.25rem);
     fill: rgb(175, 187, 242);
 }
 
-.nextBtn:active > svg {
+.nextBtn:active>svg {
     transform: translateX(0.25rem);
     fill: rgb(175, 187, 242);
 }
 
-/* Loading styles */
+/* Poplar Page - Up Next */
 
-.loader-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 100px);
+.up-next-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(calc((650px * 5.5 / 8) / 2) + 30px), calc(50px - 50%));
+    width: 400px;
 }
 
-.error-container {
+.up-next-title {
+    color: rgb(175, 187, 242);
+    font-size: 1.75rem;
+    font-weight: 500;
+    padding: 12px 18px 12px;
+}
+
+.up-next-mask {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    transform: translateY(0);
+}
+
+.up-next-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.up-next-wrapper .up-next-item {
+    position: absolute;
+    top: 50%;
+    height: 120px;
+    width: 100%;
+    padding: 10px;
+
+    display: grid;
+    grid-template-columns: calc(100px * 5.5 / 8) 1fr;
+    grid-template-rows: 1fr;
+    gap: 10px;
+
+    transition: opacity 330ms ease;
+    overflow: hidden;
+}
+
+.up-next-item .poster {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.up-next-item .right-side {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 100px);
-    color: red;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 8px;
+}
+
+.up-next-item .title {
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: wrap;
+}
+
+.up-next-item .director-name {
+    color: white;
+    font-size: 0.88rem;
+    font-weight: 300;
+    letter-spacing: 0.02rem;
+}
+
+.up-next-item .genres-container {
+    color: white;
+    display: flex;
+    gap: 6px;
+}
+
+.genres-container>div {
+    color: rgb(175, 187, 242);
+    background-color: rgba(107, 101, 112, 0.5);
+    border-radius: 50px;
+    padding-inline: 7px;
+    font-size: 0.85rem;
 }
 
 /* Movie page styles */
+
 .movie-page-container {
     display: flex;
     flex-direction: column;
@@ -460,16 +559,22 @@ nav {
 /* Responsive styles for phones */
 @media (max-width: 768px) {
     .movie-header {
-        flex-direction: column; /* Stack elements vertically on small screens */
-        align-items: center; /* Center align items */
+        flex-direction: column;
+        align-items: center;
     }
 
     .movie-poster {
-        margin-right: 0; /* Remove right margin on small screens */
-        margin-bottom: 10px; /* Add margin below the poster */
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 
     .movie-overview {
-        order: 1; /* Ensure overview appears below the poster */
+        order: 1;
+    }
+}
+
+@media (max-height: 768px) {
+    .carousel-container {
+        height: calc(768px - 100px);
     }
 }
