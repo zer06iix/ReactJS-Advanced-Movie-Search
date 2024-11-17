@@ -2,7 +2,7 @@
 import { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight }) => {
+const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight, clickCurrentSlide }) => {
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
@@ -50,6 +50,11 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
         [isDragging, onMouseUp, onDragLeft, onDragRight, startX, startY]
     );
 
+    const handleClick = useCallback(() => {
+        if (onMouseUp) onMouseUp();
+        if (clickCurrentSlide) clickCurrentSlide();
+    }, [onMouseUp, clickCurrentSlide]);
+
     return (
         <div
             ref={divRef}
@@ -57,7 +62,7 @@ const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight })
             onTouchStart={handleStart}
             onTouchMove={isDragging ? handleMove : undefined}
             onTouchEnd={handleEnd}
-            onClick={!isDragging ? onMouseUp : undefined} // Allow click events when not dragging
+            onClick={!isDragging ? handleClick : undefined} // Allow click events when not dragging
             style={{ pointerEvents: isDragging ? 'none' : 'auto' }} // Disable pointer events when dragging
         />
     );
@@ -67,7 +72,8 @@ MouseDownDetector.propTypes = {
     onMouseUp: PropTypes.func,
     onMouseLeave: PropTypes.func,
     onDragLeft: PropTypes.func,
-    onDragRight: PropTypes.func
+    onDragRight: PropTypes.func,
+    clickCurrentSlide: PropTypes.func.isRequired
 };
 
 export default MouseDownDetector;

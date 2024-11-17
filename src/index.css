@@ -60,7 +60,7 @@ nav {
     transition: opacity 0.35s ease;
 }
 
-.menu-button>svg {
+.menu-button > svg {
     width: 33px;
     height: 33px;
     fill: rgb(196, 193, 198);
@@ -70,7 +70,7 @@ nav {
         stroke 0.25s ease;
 }
 
-.menu-button:active>svg {
+.menu-button:active > svg {
     fill: white;
     stroke: white;
 }
@@ -136,7 +136,7 @@ nav {
     transition: opacity 0.35s ease;
 }
 
-.sidebar>div {
+.sidebar > div {
     transition: transform 0.35s ease;
 }
 
@@ -144,11 +144,11 @@ nav {
     opacity: 0;
 }
 
-.sidebar.open>div {
+.sidebar.open > div {
     transform: translateX(0px);
 }
 
-.sidebar.closed>div {
+.sidebar.closed > div {
     transform: translateX(-400px);
 }
 
@@ -247,14 +247,14 @@ nav {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.searchbar-btn>svg {
+.searchbar-btn > svg {
     fill: rgb(196, 193, 198);
     height: 24px;
     aspect-ratio: 1;
     transition: fill 0.3s ease;
 }
 
-.searchbar-btn:hover>svg {
+.searchbar-btn:hover > svg {
     fill: white;
 }
 
@@ -319,7 +319,7 @@ nav {
     z-index: 1;
 }
 
-.carousel-cards>img {
+.carousel-cards > img {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -392,7 +392,7 @@ nav {
     border-radius: 100px;
 }
 
-.carouselBtns>svg {
+.carouselBtns > svg {
     fill: white;
     position: relative;
     width: 1.75rem;
@@ -402,12 +402,12 @@ nav {
         transform 0.2s ease;
 }
 
-.prevBtn:active>svg {
+.prevBtn:active > svg {
     transform: translateX(-0.25rem);
     fill: rgb(175, 187, 242);
 }
 
-.nextBtn:active>svg {
+.nextBtn:active > svg {
     transform: translateX(0.25rem);
     fill: rgb(175, 187, 242);
 }
@@ -453,9 +453,14 @@ nav {
     grid-template-columns: calc(100px * 5.5 / 8) 1fr;
     grid-template-rows: 1fr;
     gap: 10px;
-
-    transition: opacity 330ms ease;
     overflow: hidden;
+}
+
+.up-next-item:last-child {
+    opacity: 0;
+}
+.up-next-item:first-child {
+    opacity: 0;
 }
 
 .up-next-item .poster {
@@ -496,7 +501,7 @@ nav {
     gap: 6px;
 }
 
-.genres-container>div {
+.genres-container > div {
     color: rgb(175, 187, 242);
     background-color: rgba(107, 101, 112, 0.5);
     border-radius: 50px;
