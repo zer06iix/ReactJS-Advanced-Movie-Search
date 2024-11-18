@@ -87,10 +87,7 @@ export default function UpNextSection({ movies, wrapperRef }) {
                 className="up-next-mask"
                 style={{ height: `${itemsToLoad * 120}px` }}
             >
-                <div
-                    className="up-next-wrapper"
-                    ref={wrapperRef}
-                >
+                <div className="up-next-wrapper" ref={wrapperRef}>
                     {Array.from({ length: itemsToLoad + 2 }, (_, i) => {
                         const movieIndex = currentSlide + i;
                         const adjustedIndex =

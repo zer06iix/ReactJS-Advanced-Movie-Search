@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
+import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const Slide = ({ slide, posterDetail }) => {
+const Slide = forwardRef(({ slide, posterDetail }, ref) => {
     const imageUrl = slide?.poster_path
         ? `https://image.tmdb.org/t/p/w500${slide.poster_path}`
         : null;
@@ -16,6 +19,7 @@ const Slide = ({ slide, posterDetail }) => {
                 <Link
                     to={`/movie/${slide?.id}`}
                     onClick={() => console.log(`Navigating to ${slide?.title}`)}
+                    ref={ref}
                 >
                     <img
                         className="carousel-images"
@@ -24,8 +28,7 @@ const Slide = ({ slide, posterDetail }) => {
                     />
                     <div className="carousel-detail-bg">
                         <p className="carousel-detail-title">
-                            {slide.title} (
-                            {new Date(slide.release_date).getFullYear()})
+                            {slide.title} ({new Date(slide.release_date).getFullYear()})
                         </p>
                         <p className="carousel-detail-rating">
                             <span className="rating-span">
@@ -40,6 +43,6 @@ const Slide = ({ slide, posterDetail }) => {
             )}
         </div>
     );
-};
+});
 
 export default Slide;

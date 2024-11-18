@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import NextButton from '../../buttons/NextButton';
@@ -9,11 +9,14 @@ import PreviousSlide from './PreviousSlide';
 import CurrentSlide from './CurrentSlide';
 import NextSlide from './NextSlide';
 
+import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../store/carouselStore';
 
 export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }) {
+    const transitionLength = 380;
+    const currentSlideRef = useRef(null);
     const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
-    const transitionLength = 330;
+    const [isDragging, setIsDragging] = useState(false);
 
     const totalSlides = movies.length;
     const prevSlideIndex = Math.max(
@@ -25,13 +28,21 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
         (currentSlide + 1) % totalSlides
     );
 
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
+    // Click Cooldown
+    const [carouselDisabled, setCarouselDisabled] = useState(false);
+    const [upNextDisabled, setUpNextDisabled] = useState(false);
+
+    const handleMouseDetectorClick = () => {
+        if (currentSlideRef.current) {
+            currentSlideRef.current.click();
+        }
+    };
+
 
     const handleCarouselTransition = (direction) => {
         // direction: 1 for next, -1 for prev
-        if (isButtonDisabled) return;
-        setIsButtonDisabled(true);
+        if (carouselDisabled) return;
+        setCarouselDisabled(true);
 
         const wrapper = wrapperRef.current;
         wrapper.style.transition = `transform ${transitionLength}ms ease`;
@@ -49,34 +60,65 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
         }, transitionLength);
 
         setTimeout(() => {
-            setIsButtonDisabled(false);
+            setCarouselDisabled(false);
         }, transitionLength + 20);
     };
 
     const handleUpNextTransition = (direction) => {
         // direction: 1 for next, -1 for prev
+        if (upNextDisabled) return;
+        setUpNextDisabled(true);
+
         const wrapper = upNextWrapperRef.current;
         if (!wrapper) return;
+
+        const firstChild = wrapper.children[0];
+        const secondChild = wrapper.children[1];
+        const secondLastChild = wrapper.children[wrapper.children.length - 2];
+        const lastChild = wrapper.children[wrapper.children.length - 1];
 
         wrapper.style.transition = `transform ${transitionLength}ms ease`;
         wrapper.style.transform = `translateY(${-direction * 120}px)`;
 
-        // if (direction === 1) {
-        //     wrapper.children[1].style.opacity = '0';
-        //     wrapper.children[wrapper.children.length - 1].style.opacity = '0'
-        // } else if (direction === -1) {
-        //     wrapper.children[].style.opacity = '0';
-        //     wrapper.lastElementChild.style.opacity = '1'
-        // }
+        switch (direction) {
+            case 1:
+                secondChild.style.transition = `opacity ${transitionLength}ms ease`;
+                secondChild.style.opacity = '0';
+                lastChild.style.transition = `opacity ${transitionLength}ms ease`;
+                lastChild.style.opacity = '1';
+                break;
+
+            case -1:
+                secondLastChild.style.transition = `opacity ${transitionLength}ms ease`;
+                secondLastChild.style.opacity = '0';
+                firstChild.style.transition = `opacity ${transitionLength}ms ease`;
+                firstChild.style.opacity = '1';
+                break;
+
+            default:
+                console.warn('Unexpected direction:', direction);
+        }
 
         setTimeout(() => {
             wrapper.style.transition = 'none';
             wrapper.style.transform = 'translateY(0px)';
 
+            for (let i = 0; i < wrapper.children.length; i++) {
+                wrapper.children[i].style.transition = 'none';
+                wrapper.children[i].style.opacity = '1';
+            }
+
             if (direction === 1) {
-                wrapper.children[1].style.opacity = '1';
+                lastChild.style.opacity = '0';
+            }
+            if (direction === -1) {
+                firstChild.style.opacity = '0';
             }
         }, transitionLength);
+
+        setTimeout(() => {
+            setUpNextDisabled(false);
+        }, transitionLength + 20);
     };
 
     useEffect(() => {
@@ -92,22 +134,29 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
                         handleUpNextTransition(-1);
                         handleCarouselTransition(-1);
                     }}
-                    disabled={isButtonDisabled}
+                    disabled={carouselDisabled}
                 />
 
                 <div className="carousel-wrapper" ref={wrapperRef}>
                     <PreviousSlide slide={movies[prevSlideIndex]} />
-                    <CurrentSlide slide={movies[currentSlide]} />
+                    <CurrentSlide slide={movies[currentSlide]} ref={currentSlideRef} />
                     <NextSlide slide={movies[nextSlideIndex]} />
                 </div>
 
-                {/* <MouseDownDetector
+                <MouseDownDetector
                     onMouseUp={() => setIsDragging(false)}
                     onMouseLeave={() => setIsDragging(false)}
-                    onDragLeft={() => handleTransition(1)}
-                    onDragRight={() => handleTransition(-1)}
+                    onDragLeft={() => {
+                        handleUpNextTransition(1);
+                        handleCarouselTransition(1);
+                    }}
+                    onDragRight={() => {
+                        handleUpNextTransition(-1);
+                        handleCarouselTransition(-1);
+                    }}
+                    clickCurrentSlide={handleMouseDetectorClick}
                     style={{ cursor: isDragging ? 'grabbing' : 'default' }}
-                /> */}
+                />
 
                 <NextButton
                     className="carouselBtns nextBtn"
@@ -115,7 +164,7 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
                         handleUpNextTransition(1);
                         handleCarouselTransition(1);
                     }}
-                    disabled={isButtonDisabled}
+                    disabled={carouselDisabled}
                 />
             </div>
         </div>
