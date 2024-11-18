@@ -9,7 +9,7 @@ import UpNextItem from './UpNextItem';
 const GENRE_API_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
 
 export default function UpNextSection({ movies, wrapperRef }) {
-    const itemsToLoad = 3;
+    const itemsToLoad = 5;
     const { currentSlide } = useCarouselStore();
     const { fetchCredits } = useFetchStore();
     const [genreMap, setGenreMap] = useState({});
