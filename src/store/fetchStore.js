@@ -9,16 +9,13 @@ const createApiUrl = (endpoint, page) =>
 
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async (page) => {
-        console.log('Fetching popular movies');
+        console.log('Fetching popular movies'); // Log when fetching starts
         const url = createApiUrl('/movie/popular', page);
         const response = await axios.get(url);
         const movies = response.data.results;
-        console.log(`Popular movies page ${page} got fetched.`);
-
-        // Update the popularMovies in carouselStore.js
-        // Return the fetched movies instead of updating the store here
-        return movies;
+        return movies; // Ensure this is returning an array
     },
+
     fetchMovieDetails: async (id) => {
         try {
             console.log(`Fetching movie details.`);
@@ -31,25 +28,38 @@ const useFetchStore = create((set) => ({
             throw error; // Rethrow the error for handling in the calling function
         }
     },
+    
     fetchCredits: async (id) => {
         const url = createApiUrl(`/movie/${id}/credits`, 1);
         const response = await axios.get(url);
         return response.data;
     },
-    fetchGenres: async () => {
+
+    fetchGenres: async () => { // New function to fetch genres
         try {
             console.log('Fetching genres');
-            const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+            // const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+            const url = createApiUrl(`/genre/movie/list`, 1);
             const response = await axios.get(url);
-            const genres = response.data.genres.reduce((acc, { id, name }) => {
+            console.log('Genres fetched successfully');
+            return response.data.genres; // Return the genres
+        } catch (error) {
+            console.error('Error fetching genres:', error);
+            throw error; // Rethrow the error for handling in the calling function
+        }
+    },
+
+    fetchGenresMap: async () => { // New function to fetch genres and transform them into a map
+        try {
+            const genres = await useFetchStore.getState().fetchGenres(); // Fetch genres
+            const genresMap = genres.reduce((acc, { id, name }) => {
                 acc[id] = name;
                 return acc;
             }, {});
-            console.log('Genres fetched successfully');
-            return genres;
+            return genresMap; // Return the genres map
         } catch (error) {
-            console.error('Error fetching genres:', error);
-            throw error;
+            console.error('Error fetching genres map:', error);
+            throw error; // Rethrow the error for handling in the calling function
         }
     }
 }));

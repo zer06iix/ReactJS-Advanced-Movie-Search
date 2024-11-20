@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import MenuButton from '../buttons/MenuButton';
 import SearchBar from './SearchBar';
@@ -10,10 +10,15 @@ import useTabStore from '../../store/tabStore';
 
 export default function Navbar() {
     const location = useLocation();
-    const { setActiveTabFromLocation } = useTabStore();
-    const { isSidebarOpen, toggleSidebar } = useTabStore();
-    const [menuButtonOpacity, setMenuButtonOpacity] = useState(1);
-    const [activeTabWidth, setActiveTabWidth] = useState(0);
+    const { 
+        setActiveTabFromLocation, 
+        isSidebarOpen, 
+        toggleSidebar, 
+        menuButtonOpacity, 
+        setMenuButtonOpacity, 
+        activeTabWidth, 
+        setActiveTabWidth 
+    } = useTabStore();
 
     const handleSidebarClick = () => setMenuButtonOpacity(1);
 
@@ -45,7 +50,7 @@ export default function Navbar() {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [isSidebarOpen, toggleSidebar]);
+    }, [isSidebarOpen, toggleSidebar, setMenuButtonOpacity]);
 
     return (
         <nav>

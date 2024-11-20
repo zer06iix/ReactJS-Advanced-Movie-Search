@@ -8,7 +8,11 @@ const useMovieStore = create((set) => ({
     setPopularMovies: (movies) => set({ popularMovies: movies }),
 
     credits: [],
-    setCredits: (credit) => set({ credits: credit })
+    setCredits: (credit) => set({ credits: credit }),
+
+    genresMap: {}, //State to hold genres
+    setGenresMap: (genres) => set({ genresMap: genres })
+
 }));
 
 export default useMovieStore;

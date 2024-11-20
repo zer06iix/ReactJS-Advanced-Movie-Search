@@ -1,9 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import { useEffect } from 'react';
 import useTabStore from '../../store/tabStore';
 
 export default function NavIndicator({ width }) {
     const { activeTab, activeTabIndex: i, tabWidths } = useTabStore();
+
+    useEffect(() => {
+        // This will trigger a re-render when activeTab changes
+    }, [activeTab]);
 
     if (activeTab === null) return null;
 

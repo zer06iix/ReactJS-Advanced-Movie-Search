@@ -10,6 +10,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    overflow-y: auto; /* Allow vertical scrolling if needed */
 }
 
 /* Loading styles */
@@ -63,7 +65,7 @@ nav {
 .menu-button > svg {
     width: 33px;
     height: 33px;
-    fill: rgb(196, 193, 198);
+    fill: #c4c1c6;
     stroke: rgb(196, 193, 198);
     transition:
         fill 0.25s ease,
@@ -122,7 +124,7 @@ nav {
 }
 
 .nav-links.inactive {
-    color: rgb(196, 193, 198);
+    color: #c4c1c6;
 }
 
 .sidebar {
@@ -295,8 +297,8 @@ nav {
 }
 
 .carousel-wrapper {
-    z-index: 50;
-    user-select: none;
+    display: flex; /* Ensure items are in a row */
+    width: 100%; /* Full width */
 }
 
 .carousel-wrapper .carousel-cards {
@@ -412,18 +414,24 @@ nav {
     fill: rgb(175, 187, 242);
 }
 
-/* Poplar Page - Up Next */
+/* Popular Page - Up Next */
 
 .up-next-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(calc(calc((650px * 5.5 / 8) / 2) + 30px), calc(50px - 50%));
-    width: 400px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .up-next-container {
+      display: none;
+    }
 }
 
 .up-next-title {
-    color: rgb(175, 187, 242);
+    color: #c4c1c6;
     font-size: 1.75rem;
     font-weight: 500;
     padding: 12px 18px 12px;
@@ -488,6 +496,21 @@ nav {
     white-space: wrap;
 }
 
+.title-wrap {
+    max-width: 100%; /* Ensure it takes full width */
+    overflow: hidden; /* Hide overflow text */
+    white-space: normal; /* Allow text to wrap */
+}
+
+.title {
+    font-size: 1.2rem; /* Adjust font size */
+    font-weight: bold; /* Make the title bold */
+    color: white; /* Set text color */
+    line-height: 1.4; /* Adjust line height for better readability */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
 .up-next-item .director-name {
     color: white;
     font-size: 0.88rem;
@@ -509,6 +532,13 @@ nav {
     font-size: 0.85rem;
 }
 
+.genres-item {
+    margin-right: 3px;
+    padding: 3px;
+    display: inline;
+    width: calc(100% / 5.5);
+}
+
 /* Movie page styles */
 
 .movie-page-container {
@@ -528,37 +558,48 @@ nav {
 .movie-poster {
     border-radius: 10px;
     box-shadow: 0 0 20px #070707;
-    width: 200px;
+    width: 300px;
     height: auto;
-    margin-right: 20px;
+    margin-right: 100px;
 }
 
 .movie-info {
     max-width: 600px;
+    background-color: rgba(31, 41, 55, 0.8); /* Subtle background for contrast */
+    border-radius: 12px; /* Rounded corners for a softer look */
+    padding: 20px; /* Added padding for better spacing */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
 }
 
 .movie-title {
-    font-size: 2rem;
+    font-size: 2.3rem; /* Increased font size for prominence */
     margin: 0;
+    color: rgb(175, 187, 242); /* Soft color for elegance */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Subtle text shadow for depth */
 }
 
 .movie-overview {
-    font-size: 1rem;
+    font-size: 1.1rem; /* Slightly larger for readability */
     margin: 10px 0;
+    color: rgba(255, 255, 255, 0.85); /* Light color for better contrast */
 }
 
 .movie-rating {
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Increased size for emphasis */
+    margin-bottom: 10px;
 }
 
 .rating-value {
     font-weight: bold;
+    color: rgb(255, 215, 0); /* Consistent gold color */
 }
 
 .additional-details {
     margin-top: 20px;
     width: 100%;
     text-align: center;
+    font-style: italic; /* Italic style for additional details */
+    color: rgba(255, 255, 255, 0.75); /* Light color for subtlety */
 }
 
 /* Responsive styles for phones */

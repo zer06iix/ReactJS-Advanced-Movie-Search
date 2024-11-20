@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/display-name */
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import Slide from '../Slide';
 
 const CurrentSlide = forwardRef(({ slide }, ref) => {

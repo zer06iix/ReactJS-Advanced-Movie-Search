@@ -1,14 +1,20 @@
+/* eslint-disable no-unused-vars */
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import useFetchStore from '../store/fetchStore';
-import Loading from '../components/App/Loading';
+import Loading from '../components/AppComponents/Loading';
 import useMovieStore from '../store/movieStore';
 import { useQuery } from '@tanstack/react-query';
 
 export default function MoviePage() {
     const { id: movieId } = useParams(); // Get the movie ID from the URL
-    const { movie, setMovie, credits, setCredits } = useMovieStore();
-    const { fetchMovieDetails, fetchCredits } = useFetchStore(); // Fetch function from our store
+    const { 
+        movie, setMovie, 
+        credits, setCredits, 
+        genresMap, setGenresMap, 
+    } = useMovieStore();
+
+    const { fetchMovieDetails, fetchCredits, fetchGenresMap } = useFetchStore(); // Fetch function from our store
 
     const { data: movieData, error: movieError } = useQuery({
         queryKey: ['movie', movieId],
@@ -22,29 +28,55 @@ export default function MoviePage() {
         enabled: !!movieId
     });
 
+    const { data: genresData, error: genresError } = useQuery({
+        queryKey: ['genresMap'],
+        queryFn: () => fetchGenresMap
+    });
+    
+    const runtimeToHours = movie ? Math.floor(movie.runtime / 60) : 0;
+    const runtimeToMinutes = movie ? movie.runtime % 60 : 0;
+    const formattedRuntime = `${runtimeToHours}h ${runtimeToMinutes}m`;
+
+    useEffect(() => {
+        if (genresMap) setGenresMap(genresData);
+    }, [genresData, genresMap, setGenresMap]);
+
     useEffect(() => {
         if (movieData) setMovie(movieData);
         if (movieCreditsData) setCredits(movieCreditsData);
     }, [movieData, setMovie, movieCreditsData, setCredits]);
 
     if (!movie) return <Loading />;
-    if (movieError)
-        return <div className="error-container">Error: {movieError.message}</div>;
-    if (movieCreditsError)
+
+    if (movieError) {
+        console.log('MovieError:', movieError);
+        return <div className="error-container">MovieError: {movieError.message}</div>;
+    }
+
+    if (movieCreditsError) {
+        console.log('CreditsError:', movieCreditsError);
         return (
-            <div className="error-container">Error: {movieCreditsError.message}</div>
+            <div className="error-container">CreditsError: {movieCreditsError.message}</div>
         );
+    }
+
+    if (genresError) {
+        console.log('GenresError:', genresError);
+        return (
+            <div className="error-container">GenresError: {genresError.message}</div>
+        );
+    }
 
     const ratingColor =
         movie.vote_average > 8
             ? '#34ff19'
             : movie.vote_average > 6.9
-              ? 'yellowgreen'
-              : movie.vote_average > 5
-                ? 'orange'
-                : movie.vote_average > 3
-                  ? 'red'
-                  : 'darkred';
+            ? 'yellowgreen'
+            : movie.vote_average > 5
+            ? 'orange'
+            : movie.vote_average > 3
+            ? 'red'
+            : 'darkred';
     return (
         <div className="movie-page-container">
             <div className="movie-header">
@@ -65,7 +97,7 @@ export default function MoviePage() {
                         }}
                     >
                         Released on:{' '}
-                        {new Date(movie.release_date).toLocaleDateString()}
+                        {new Date(movie.release_date).toLocaleDateString()} - {formattedRuntime}
                     </p>
                     <p className="movie-rating">
                         Rating:{' '}
@@ -78,7 +110,14 @@ export default function MoviePage() {
                             {' '}
                             {movie.vote_average.toFixed(1)}{' '}
                         </span>
-                    </p>
+                    </p>    
+                    <div className="genres-container">
+                        {Array.isArray(movie.genres) ? movie.genres.map(genre => (
+                            <div key={genre.id} className="genres-item">
+                                {genre.name}
+                            </div>
+                        )) : 'No genres available'}
+                    </div>
                     <p className="movie-overview">{movie.overview}</p>
                 </div>
             </div>

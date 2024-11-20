@@ -1,20 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from 'react';
 import Slide from '../Slide';
+import { useQuery } from '@tanstack/react-query';
+import useFetchStore from '../../../store/fetchStore';
 
 const UpNextItem = ({
     movie,
-    genreMap,
-    creditsData,
-    creditsLoading,
-    creditsError,
+    genresData,
     translateY
 }) => {
-    const isLoading = creditsLoading[movie?.id] || false;
-    const isError = creditsError[movie?.id] || false;
+    const { fetchCredits } = useFetchStore();
+    // const isLoading = creditsLoading[movie?.id] || false;
+    // const isError = creditsError[movie?.id] || false;
 
-    if (isLoading) {
+    const { 
+        data: creditsData, 
+        isLoading: creditsLoading, 
+        error: creditsError 
+    } = useQuery({
+        queryKey: ['credits', movie?.id],
+        queryFn: () => fetchCredits(movie?.id)
+    });
+
+    if (creditsLoading) {
         return (
             <div
                 className="up-next-item"
@@ -25,29 +33,34 @@ const UpNextItem = ({
         );
     }
 
-    if (isError) {
+    if (creditsError) {
         return (
             <div
                 className="up-next-item"
                 style={{ transform: `translateY(${translateY}%)` }}
             >
-                Error loading credits: {creditsError[movie?.id]?.message}
+                Error loading credits: {creditsError.message}
             </div>
         );
     }
 
-    const titleWithYear = `${movie.title} (${new Date(movie.release_date).getFullYear()})`;
-    const director = creditsData[movie?.id]?.crew?.find(
+    // const titleWithYear = `${movie.title} (${new Date(movie.release_date).getFullYear()})`;
+    const director = creditsData?.crew?.find(
         (member) => member.job === 'Director'
     );
+
     const directorName = director ? director.name : 'Director not found';
 
     const slideGenres = movie.genre_ids.slice(0, 3).map((id) => (
         <div className="genre-item" key={id}>
-            {genreMap[id] || 'Unknown Genre'}
+            {genresData[id] || 'Unknown Genre'}
         </div>
     ));
 
+    const titleParts = movie.title.length > 30 
+        ? [movie.title.slice(0, 30), movie.title.slice(30)] 
+        : [movie.title];
+        
     return (
         <div
             className="up-next-item"
@@ -59,10 +72,12 @@ const UpNextItem = ({
 
             <div className="right-side">
                 <div className="heading">
-                    <p className="title">{titleWithYear}</p>
-                    {titleWithYear.length < 30 && ( // only if there was enough room
-                        <p className="director-name">Directed by {directorName}</p>
-                    )}
+                    <div className={movie.title.length < 30 ? 'title-wrap' : ''}>
+                        <p className="title">
+                                {titleParts[0]}{titleParts[1] && <br />}{titleParts[1]}
+                        </p>
+                    </div>
+                    <p className="director-name">Directed by {directorName}</p>
                 </div>
 
                 <div className="genres-container">
