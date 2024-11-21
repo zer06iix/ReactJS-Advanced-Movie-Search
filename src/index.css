@@ -43,11 +43,25 @@ body {
 
 /* Loading styles */
 
+/* src/components/AppComponents/Loading.css */
 .loader-container {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: calc(100vh - 100px);
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+    border-radius: 50%;
+    /* height: 2.5rem;
+    width: 2.5rem;  */
+    border-top: 4px solid #afbbf2;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .error-container {
@@ -373,6 +387,7 @@ nav {
 
     font-family: 'Montserrat', sans-serif;
     pointer-events: none;
+    backdrop-filter: blur(5px); /* Added blur effect */
 }
 
 .carousel-detail-title {
@@ -554,7 +569,7 @@ nav {
     gap: 6px;
 }
 
-.genres-container > div {
+.genres-container > .genres-item {
     color: #afbbf2;
     background-color: rgba(107, 101, 112, 0.5);
     border-radius: 50px;
@@ -562,12 +577,12 @@ nav {
     font-size: 0.85rem;
 }
 
-.genres-item {
+/* .genres-item {
     margin-right: 3px;
     padding: 3px;
     display: inline;
     width: calc(100% / 5.5);
-}
+} */
 
 /* Movie page styles */
 

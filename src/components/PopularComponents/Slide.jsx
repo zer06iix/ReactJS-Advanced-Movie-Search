@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
+import VoteAverage from '../MovieComponents/VoteAverage';
 
 const Slide = forwardRef(({ slide, posterDetail }, ref) => {
     const imageUrl = slide?.poster_path
@@ -29,12 +30,10 @@ const Slide = forwardRef(({ slide, posterDetail }, ref) => {
                         <p className="carousel-detail-title">
                             {slide.title} ({new Date(slide.release_date).getFullYear()})
                         </p>
-                        <p className="carousel-detail-rating">
-                            <span className="rating-span">
-                                {slide?.vote_average?.toFixed(1)}
-                            </span>
-                            /10 Rating
-                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <VoteAverage voteAverage={slide.vote_average} />
+                            <span style={{ fontSize: '0.9rem', marginTop: '4px' }}>/10 Rating</span>
+                        </div>
                     </div>
                 </Link>
             ) : (

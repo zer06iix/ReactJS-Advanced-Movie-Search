@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Slide from '../Slide';
+import Genre from '../../MovieComponents/Genre';
 import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../../../store/fetchStore';
 import { Link } from 'react-router-dom';
+import Loading from '../../AppComponents/Loading';
 
 const UpNextItem = ({
     movie,
-    genresData,
     translateY
 }) => {
     const { fetchCredits } = useFetchStore();
@@ -27,7 +28,7 @@ const UpNextItem = ({
                 className="up-next-item"
                 style={{ transform: `translateY(${translateY}%)` }}
             >
-                Loading credits...
+                <Loading />
             </div>
         );
     }
@@ -50,11 +51,11 @@ const UpNextItem = ({
 
     const directorName = director ? director.name : 'Director not found';
 
-    const slideGenres = movie.genre_ids.slice(0, 3).map((id) => (
-        <div className="genre-item" key={id}>
-            {genresData[id] || 'Unknown Genre'}
-        </div>
-    ));
+    // const slideGenres = movie.genre_ids.slice(0, 3).map((id) => (
+    //     <div className="genre-item" key={id}>
+    //         {genresData[id] || 'Unknown Genre'}
+    //     </div>
+    // ));
 
     const titleParts = movie.title.length > 30 
         ? [movie.title.slice(0, 30), movie.title.slice(30)] 
@@ -80,8 +81,8 @@ const UpNextItem = ({
                 </div>
 
                 <div className="genres-container"> {/* Genres gonna be links later */}
-                    {slideGenres.length > 0 ? (
-                        slideGenres
+                    {movie.genre_ids && movie.genre_ids.length > 0 ? (
+                        <Genre genreIds={movie.genre_ids} />
                     ) : (
                         <div>Genre not available</div>
                     )}

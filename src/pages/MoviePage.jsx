@@ -1,20 +1,27 @@
 /* eslint-disable no-unused-vars */
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../store/fetchStore';
 import Loading from '../components/AppComponents/Loading';
 import useMovieStore from '../store/movieStore';
-import { useQuery } from '@tanstack/react-query';
+import Genre from '../components/MovieComponents/Genre';
+import VoteAverage from '../components/MovieComponents/VoteAverage';
+import Overview from '../components/MovieComponents/Overview';
+import CastScroller from '../components/MovieComponents/cast/CastScroller';
 
 export default function MoviePage() {
+    const [isLoading, setIsLoading] = useState(true); 
+
+
     const { id: movieId } = useParams(); // Get the movie ID from the URL
     const { 
         movie, setMovie, 
-        credits, setCredits, 
-        genresMap, setGenresMap, 
+        credits, setCredits,
+        genresMap
     } = useMovieStore();
-
-    const { fetchMovieDetails, fetchCredits, fetchGenresMap } = useFetchStore(); // Fetch function from our store
+    
+    const { fetchMovieDetails, fetchCredits, fetchGenres } = useFetchStore(); // Fetch function from our store
 
     const { data: movieData, error: movieError } = useQuery({
         queryKey: ['movie', movieId],
@@ -27,26 +34,35 @@ export default function MoviePage() {
         queryFn: () => fetchCredits(movieId),
         enabled: !!movieId
     });
-
-    const { data: genresData, error: genresError } = useQuery({
-        queryKey: ['genresMap'],
-        queryFn: () => fetchGenresMap
-    });
     
     const runtimeToHours = movie ? Math.floor(movie.runtime / 60) : 0;
     const runtimeToMinutes = movie ? movie.runtime % 60 : 0;
     const formattedRuntime = `${runtimeToHours}h ${runtimeToMinutes}m`;
 
     useEffect(() => {
-        if (genresMap) setGenresMap(genresData);
-    }, [genresData, genresMap, setGenresMap]);
+        fetchGenres(); // Fetch genres when the component mounts
+    }, [fetchGenres]);
+
+    // You can use a loading state
 
     useEffect(() => {
-        if (movieData) setMovie(movieData);
+        if (genresMap && movie) {
+            setIsLoading(false); // Set loading to false when genresMap and movie are available
+        }
+    }, [genresMap, movie]);
+
+    useEffect(() => {
+        if (movieData) {
+            setMovie(movieData);
+        }
         if (movieCreditsData) setCredits(movieCreditsData);
     }, [movieData, setMovie, movieCreditsData, setCredits]);
 
     if (!movie) return <Loading />;
+
+    if (!genresMap) {
+        return <Loading />; // or some other loading state
+    }
 
     if (movieError) {
         console.log('MovieError:', movieError);
@@ -59,24 +75,6 @@ export default function MoviePage() {
             <div className="error-container">CreditsError: {movieCreditsError.message}</div>
         );
     }
-
-    if (genresError) {
-        console.log('GenresError:', genresError);
-        return (
-            <div className="error-container">GenresError: {genresError.message}</div>
-        );
-    }
-
-    const ratingColor =
-        movie.vote_average > 8
-            ? '#34ff19'
-            : movie.vote_average > 6.9
-            ? 'yellowgreen'
-            : movie.vote_average > 5
-            ? 'orange'
-            : movie.vote_average > 3
-            ? 'red'
-            : 'darkred';
     return (
         <div className="movie-page-container">
             <div className="movie-header">
@@ -89,58 +87,64 @@ export default function MoviePage() {
                     <h1 className="movie-title">
                         {movie.title} ({new Date(movie.release_date).getFullYear()})
                     </h1>
-                    <p
-                        className="movie-release-date"
-                        style={{
-                            fontStyle: 'italic',
-                            color: 'lightgray'
-                        }}
-                    >
-                        Released on:{' '}
-                        {new Date(movie.release_date).toLocaleDateString()} - {formattedRuntime}
-                    </p>
-                    <p className="movie-rating">
-                        Rating:{' '}
-                        <span
-                            className="rating-value"
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <p
+                            className="movie-release-date"
                             style={{
-                                color: ratingColor
+                                fontStyle: 'italic',
+                                color: 'lightgray',
+                                marginRight: '10px'
                             }}
                         >
-                            {' '}
-                            {movie.vote_average.toFixed(1)}{' '}
-                        </span>
-                    </p>    
-                    <div className="genres-container">
-                        {Array.isArray(movie.genres) ? movie.genres.map(genre => (
-                            <div key={genre.id} className="genres-item">
-                                {genre.name}
-                            </div>
-                        )) : 'No genres available'}
+                            Released on:{' '}
+                            {new Date(movie.release_date).toLocaleDateString()} 
+                        </p> 
+                        <p className="movie-showtime"
+                            style={{
+                                    fontStyle: 'italic',
+                                    color: 'lightgray',
+                                    marginRight: '10px'
+                             }}
+                        >
+                           - {formattedRuntime}
+                        </p>
                     </div>
-                    <p className="movie-overview">{movie.overview}</p>
+                    <div className="movie-rating" style={{ display: 'flex', alignItems: 'center' }}>
+                        <p style={{ marginRight: '5px' }}>
+                            Rating:
+                        </p>
+                        <span style={{ marginTop: '4px' }}>
+                            <VoteAverage voteAverage={movie.vote_average} />
+                        </span>
+                        <p
+                            style={{
+                                fontStyle: 'italic',
+                                color: 'lightgray',
+                                fontSize: '13px',
+                                marginTop: '7px'
+                            }}
+                        >
+                            By {movie.vote_count} people
+                        </p>
+                    </div>
+                    <div className="genres-container">
+                        {isLoading ? (
+                            <span className="genres-item">Loading genres...</span> // Display loading message
+                        ) : (
+                            movie.genre_ids && movie.genre_ids.length > 0 ? (
+                                <Genre genreIds={movie.genre_ids} /> 
+                            ) : (
+                                <span className='genres-item'>No genres available</span>
+                            )
+                        )}
+                    </div>
+
+                    <Overview movie={movie}/>
                 </div>
             </div>
-            <h1 className='cast-header'>Cast</h1>
-            <div className="cast-scroller-container">
-                {/* <h1 className="cast-header">Cast</h1> Fixed header */}
-                <div className="cast-scroller">
-                    {credits.cast.length > 0 ? (
-                        credits.cast.map((member) => (
-                            <div key={member.id} className="cast-member">
-                                <img
-                                    src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
-                                    alt={member.name}
-                                    className="cast-image"
-                                />
-                                <p className="cast-name">{member.name}</p>
-                                <p className="cast-character-name">{member.character}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No cast information available.</p>
-                    )}
-                </div>
+            <div className="cast-container">
+                <h1 className="cast-header">Cast</h1>
+                <CastScroller />
             </div>
         </div>
     );
