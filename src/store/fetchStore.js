@@ -17,16 +17,11 @@ const useFetchStore = create((set) => ({
     },
 
     fetchMovieDetails: async (id) => {
-        try {
-            console.log(`Fetching movie details.`);
-            const url = createApiUrl(`/movie/${id}`, 1);
-            const response = await axios.get(url);
-            console.log('Movie details got fetched');
-            return response.data; // Return the movie details
-        } catch (error) {
-            console.error('Error fetching movie details:', error);
-            throw error; // Rethrow the error for handling in the calling function
-        }
+        console.log(`Fetching movie details.`);
+        const url = createApiUrl(`/movie/${id}`, 1);
+        const response = await axios.get(url);
+        console.log('Movie details got fetched');
+        return response.data; // Return the movie details
     },
     
     fetchCredits: async (id) => {

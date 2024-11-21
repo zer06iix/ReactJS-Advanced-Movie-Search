@@ -14,6 +14,33 @@ body {
     overflow-y: auto; /* Allow vertical scrolling if needed */
 }
 
+/* Custom scrollbar styles for the default scroller */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.8); /* Track color */
+    border-radius: 10px; /* Rounded corners for the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(175, 187, 242); /* Thumb color */
+    border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 170, 220); /* Thumb color on hover */
+}
+
+/* Custom scrollbar styles for Firefox */
+* {
+    scrollbar-width: thin; /* Use thin scrollbar */
+    scrollbar-color: rgb(175, 187, 242) rgba(31, 41, 55, 0.8); /* Thumb and track color */
+}
+
+
 /* Loading styles */
 
 .loader-container {
@@ -495,6 +522,9 @@ nav {
     text-overflow: ellipsis;
     white-space: wrap;
 }
+.up-next-item .title:hover {
+    color: #afbbf2;
+}
 
 .title-wrap {
     max-width: 100%; /* Ensure it takes full width */
@@ -525,7 +555,7 @@ nav {
 }
 
 .genres-container > div {
-    color: rgb(175, 187, 242);
+    color: #afbbf2;
     background-color: rgba(107, 101, 112, 0.5);
     border-radius: 50px;
     padding-inline: 7px;
@@ -542,11 +572,9 @@ nav {
 /* Movie page styles */
 
 .movie-page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    color: white;
+    max-width: 1200px; /* Set a maximum width */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add some padding */
 }
 
 .movie-header {
@@ -587,6 +615,7 @@ nav {
 .movie-rating {
     font-size: 1.5rem; /* Increased size for emphasis */
     margin-bottom: 10px;
+    color: white;
 }
 
 .rating-value {
@@ -594,12 +623,95 @@ nav {
     color: rgb(255, 215, 0); /* Consistent gold color */
 }
 
-.additional-details {
-    margin-top: 20px;
+.cast-scroller-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks */
+    padding: 10px 0; /* Add some vertical padding */
+    background-color: rgba(31, 41, 55, 0.8); /* Semi-transparent background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+}
+
+.cast-scroller-container::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar */
+}
+
+.cast-scroller-container::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.8); /* Track color */
+    border-radius: 10px; /* Rounded corners for the track */
+}
+
+.cast-scroller-container::-webkit-scrollbar-thumb {
+    background: rgb(175, 187, 242); /* Thumb color */
+    border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.cast-scroller-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 170, 220); /* Thumb color on hover */
+}
+
+/* Custom scrollbar styles for Firefox */
+.cast-scroller-container {
+    position: relative; /* This allows the sticky header to be relative to this container */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 10px 0; /* Add some vertical padding */
+    background-color: rgba(31, 41, 55, 0.8); /* Semi-transparent background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+}
+
+.cast-header {
+    top: 0;
+    padding: 10px;
+    color: white;
+    font-size: 1.8rem;
+    z-index: 10;
+    margin-bottom: 10px;
     width: 100%;
-    text-align: center;
-    font-style: italic; /* Italic style for additional details */
-    color: rgba(255, 255, 255, 0.75); /* Light color for subtlety */
+}
+
+.cast-scroller {
+    display: flex; /* Use flexbox for horizontal layout */
+    gap: 40px; /* Space between cast members */
+    padding: 10px; /* Padding for the scroller */
+}
+
+.cast-member {
+    flex: 0 0 auto; /* Prevent flex items from shrinking */
+    text-align: center; /* Center the text under the image */
+    transition: transform 0.3s; /* Smooth scaling on hover */
+}
+
+.cast-member:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.cast-image {
+    width: 120px; /* Set a fixed width for the images */
+    height: 180px; /* Set a fixed height for uniformity */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    object-fit: cover; /* Ensure the image covers the area */
+}
+
+.cast-name {
+    margin-top: 8px; /* Space between image and name */
+    font-size: 17px; /* Adjust font size */
+    color: #ffffff; /* Text color */
+    font-weight: bold; /* Bold text */
+}
+
+.cast-character-name {
+    margin-top: 8px; /* Space between image and name */
+    font-size: 14px; /* Adjust font size */
+    color: #ffffff; /* Text color */
+}
+
+/* Optional: Add a background color to the container for contrast */
+.additional-details {
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners for the container */
 }
 
 /* Responsive styles for phones */

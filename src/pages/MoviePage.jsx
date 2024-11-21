@@ -121,13 +121,26 @@ export default function MoviePage() {
                     <p className="movie-overview">{movie.overview}</p>
                 </div>
             </div>
-            <div className="text-white additional-details">
-                <h2>Cast</h2>
-                {credits.cast.length > 0 ? (
-                    <p>{credits.cast.map((member) => member.name).join(', ')}</p>
-                ) : (
-                    <p>No cast information available.</p>
-                )}
+            <h1 className='cast-header'>Cast</h1>
+            <div className="cast-scroller-container">
+                {/* <h1 className="cast-header">Cast</h1> Fixed header */}
+                <div className="cast-scroller">
+                    {credits.cast.length > 0 ? (
+                        credits.cast.map((member) => (
+                            <div key={member.id} className="cast-member">
+                                <img
+                                    src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
+                                    alt={member.name}
+                                    className="cast-image"
+                                />
+                                <p className="cast-name">{member.name}</p>
+                                <p className="cast-character-name">{member.character}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No cast information available.</p>
+                    )}
+                </div>
             </div>
         </div>
     );

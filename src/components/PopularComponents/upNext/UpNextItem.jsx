@@ -3,6 +3,7 @@
 import Slide from '../Slide';
 import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../../../store/fetchStore';
+import { Link } from 'react-router-dom';
 
 const UpNextItem = ({
     movie,
@@ -10,8 +11,6 @@ const UpNextItem = ({
     translateY
 }) => {
     const { fetchCredits } = useFetchStore();
-    // const isLoading = creditsLoading[movie?.id] || false;
-    // const isError = creditsError[movie?.id] || false;
 
     const { 
         data: creditsData, 
@@ -66,21 +65,21 @@ const UpNextItem = ({
             className="up-next-item"
             style={{ transform: `translateY(${translateY}%)` }}
         >
-            <div className="poster">
+            <Link to={`/movie/${movie.id}`} className="poster">
                 <Slide slide={movie} posterDetail={false} />
-            </div>
+            </Link>
 
             <div className="right-side">
                 <div className="heading">
                     <div className={movie.title.length < 30 ? 'title-wrap' : ''}>
-                        <p className="title">
+                        <Link to={`/movie/${movie.id}`} className="title">
                                 {titleParts[0]}{titleParts[1] && <br />}{titleParts[1]}
-                        </p>
+                        </Link>
                     </div>
                     <p className="director-name">Directed by {directorName}</p>
                 </div>
 
-                <div className="genres-container">
+                <div className="genres-container"> {/* Genres gonna be links later */}
                     {slideGenres.length > 0 ? (
                         slideGenres
                     ) : (
