@@ -12,7 +12,6 @@ const useMovieStore = create((set) => ({
 
     genresMap: {}, //State to hold genres
     setGenresMap: (genres) => set({ genresMap: genres })
-
 }));
 
 export default useMovieStore;

@@ -10,14 +10,14 @@ import useTabStore from '../../store/tabStore';
 
 export default function Navbar() {
     const location = useLocation();
-    const { 
-        setActiveTabFromLocation, 
-        isSidebarOpen, 
-        toggleSidebar, 
-        menuButtonOpacity, 
-        setMenuButtonOpacity, 
-        activeTabWidth, 
-        setActiveTabWidth 
+    const {
+        setActiveTabFromLocation,
+        isSidebarOpen,
+        toggleSidebar,
+        menuButtonOpacity,
+        setMenuButtonOpacity,
+        activeTabWidth,
+        setActiveTabWidth
     } = useTabStore();
 
     const handleSidebarClick = () => setMenuButtonOpacity(1);

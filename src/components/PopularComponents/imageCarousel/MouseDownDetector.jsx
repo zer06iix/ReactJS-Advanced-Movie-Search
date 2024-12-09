@@ -2,7 +2,13 @@
 import { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-const MouseDownDetector = ({ onMouseUp, onMouseLeave, onDragLeft, onDragRight, clickCurrentSlide }) => {
+const MouseDownDetector = ({
+    onMouseUp,
+    onMouseLeave,
+    onDragLeft,
+    onDragRight,
+    clickCurrentSlide
+}) => {
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
     const [isDragging, setIsDragging] = useState(false);

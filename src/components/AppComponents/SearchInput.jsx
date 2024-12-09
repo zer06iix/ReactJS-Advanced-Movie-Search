@@ -1,4 +1,9 @@
 /* eslint-disable react/prop-types */
-export default function SearchInput({ className }) {
-    return <input type="text" placeholder="Search" className={className} />;
-}
+
+const SearchInput = ({ value, onChange, className }) => {
+    return (
+        <input type="text" className={className} value={value} onChange={onChange} />
+    );
+};
+
+export default SearchInput;
