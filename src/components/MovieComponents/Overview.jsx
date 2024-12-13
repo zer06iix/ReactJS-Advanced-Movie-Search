@@ -4,5 +4,5 @@ export default function Overview({ movie }) {
         <>
             <p className="movie-overview">{movie.overview}</p>
         </>
-    )
+    );
 }

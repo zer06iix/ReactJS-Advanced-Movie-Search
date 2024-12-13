@@ -1,5 +1,6 @@
 /* src/tailwind.css */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,7 +41,6 @@ body {
     scrollbar-color: rgb(175, 187, 242) rgba(31, 41, 55, 0.8); /* Thumb and track color */
 }
 
-
 /* Loading styles */
 
 /* src/components/AppComponents/Loading.css */
@@ -54,14 +54,16 @@ body {
 .animate-spin {
     animation: spin 1s linear infinite;
     border-radius: 50%;
-    /* height: 2.5rem;
-    width: 2.5rem;  */
     border-top: 4px solid #afbbf2;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .error-container {
@@ -69,7 +71,18 @@ body {
     align-items: center;
     justify-content: center;
     height: calc(100vh - 100px);
-    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.error-details-wrapper .title {
+    color: white;
+    font-size: 2rem;
+    padding-bottom: 10px;
+}
+
+.error-details-wrapper .description {
+    color: rgb(255, 175, 175);
+    font-size: 1.2rem;
 }
 
 /* Navigation (Tab Links) */
@@ -226,30 +239,26 @@ nav {
     color: rgb(196, 193, 198);
 }
 
-@media (max-width: 1000px) {
-    .menu-button {
-        display: block;
-    }
-
-    .nav-links-container {
-        display: none;
-    }
-}
-
 /* Navigation (Search bar) */
 
 .searchbar-container {
     position: relative;
+    width: 300px;
+    height: 40px;
 }
 
 .searchbar-input {
+    position: absolute;
+    top: 0;
     color: white;
     background-color: rgb(107, 101, 112);
     padding-block: 5px;
     padding-inline: 12px 45px;
-    width: 300px;
+    width: 100%;
+    height: 100%;
     border-radius: 50px;
     border: 2px solid transparent;
+    z-index: 3;
     transition:
         border 0.35s ease,
         padding 0.3s ease;
@@ -283,6 +292,7 @@ nav {
     border-radius: 0 50px 50px 0;
     background-color: rgba(255, 255, 255, 0);
 
+    z-index: 3;
     transition: background-color 0.3s ease;
 }
 
@@ -301,6 +311,50 @@ nav {
     fill: white;
 }
 
+.query-results {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    padding-top: 18px;
+
+    background-color: rgba(60, 59, 68, 0.85);
+    backdrop-filter: blur(100px);
+    border-radius: 0 0 20px 20px;
+    z-index: 1;
+    transition:
+        opacity 0.35s ease,
+        height 0.35s ease;
+}
+
+.query-results.active {
+    height: 100px;
+    opacity: 0.88;
+}
+
+.query-results.inactive {
+    height: 80px;
+    opacity: 0;
+}
+
+.query-results.inactive .query-results-error-message {
+    opacity: 0;
+}
+
+.query-results-error-message {
+    position: absolute;
+    left: 50%;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    transform: translateX(-50%);
+    color: rgb(196, 193, 198);
+    opacity: 1;
+}
+
 /* Poplar Page - carousel */
 
 .carousel-container {
@@ -315,9 +369,15 @@ nav {
 
 .carousel-mask {
     position: absolute;
-    height: clamp(588px, calc(100% - 80px), 650px);
+    height: clamp(550px, calc(100% - 80px), 650px);
     aspect-ratio: 5.5/8;
     border-radius: 25px;
+    box-shadow:
+        0 2px 1px rgba(0, 0, 0, 0.09),
+        0 4px 2px rgba(0, 0, 0, 0.09),
+        0 8px 4px rgba(0, 0, 0, 0.09),
+        0 16px 8px rgba(0, 0, 0, 0.09),
+        0 32px 16px rgba(0, 0, 0, 0.09);
     overflow: hidden;
 }
 
@@ -338,8 +398,8 @@ nav {
 }
 
 .carousel-wrapper {
-    display: flex; /* Ensure items are in a row */
-    width: 100%; /* Full width */
+    display: flex;
+    width: 100%;
 }
 
 .carousel-wrapper .carousel-cards {
@@ -387,7 +447,9 @@ nav {
 
     font-family: 'Montserrat', sans-serif;
     pointer-events: none;
-    backdrop-filter: blur(5px); /* Added blur effect */
+
+    backdrop-filter: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-detail-title {
@@ -459,17 +521,12 @@ nav {
 /* Popular Page - Up Next */
 
 .up-next-container {
-    position: absolute;
-    top: 50%;
+    display: block;
+    position: fixed;
+    top: 160px;
     left: 50%;
-    transform: translate(calc(calc((650px * 5.5 / 8) / 2) + 30px), calc(50px - 50%));
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .up-next-container {
-      display: none;
-    }
+    transform: translate(calc(calc((650px * 5.5 / 8) / 2) + 30px), 0);
+    width: calc(100vw / 2 - 300px);
 }
 
 .up-next-title {
@@ -497,13 +554,13 @@ nav {
     top: 50%;
     height: 120px;
     width: 100%;
+    max-width: 400px;
     padding: 10px;
 
     display: grid;
     grid-template-columns: calc(100px * 5.5 / 8) 1fr;
     grid-template-rows: 1fr;
     gap: 10px;
-    overflow: hidden;
 }
 
 .up-next-item:last-child {
@@ -519,13 +576,20 @@ nav {
     border-radius: 10px;
     overflow: hidden;
     backdrop-filter: blur(5px);
+    font-size: 0rem;
 }
 
 .up-next-item .right-side {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-block: 8px;
+    padding-top: 8px;
+    min-width: 100%;
+    width: calc(100% - calc(100px * 5.5 / 8));
+}
+
+.up-next-item .poster:hover + .right-side .title {
+    color: #afbbf2;
 }
 
 .up-next-item .title {
@@ -533,27 +597,15 @@ nav {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.15rem;
     font-weight: 500;
+    transition: color 0.2s ease-out;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: wrap;
+    white-space: nowrap;
 }
+
 .up-next-item .title:hover {
     color: #afbbf2;
-}
-
-.title-wrap {
-    max-width: 100%; /* Ensure it takes full width */
-    overflow: hidden; /* Hide overflow text */
-    white-space: normal; /* Allow text to wrap */
-}
-
-.title {
-    font-size: 1.2rem; /* Adjust font size */
-    font-weight: bold; /* Make the title bold */
-    color: white; /* Set text color */
-    line-height: 1.4; /* Adjust line height for better readability */
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Remove default padding */
 }
 
 .up-next-item .director-name {
@@ -563,13 +615,13 @@ nav {
     letter-spacing: 0.02rem;
 }
 
-.up-next-item .genres-container {
+.up-next-item .genres-container .genre-scroll-container {
     color: white;
     display: flex;
     gap: 6px;
 }
 
-.genres-container > .genres-item {
+.genres-container .genre-scroll-container > .genres-item {
     color: #afbbf2;
     background-color: rgba(107, 101, 112, 0.5);
     border-radius: 50px;
@@ -587,150 +639,305 @@ nav {
 /* Movie page styles */
 
 .movie-page-container {
-    max-width: 1200px; /* Set a maximum width */
-    margin: 0 auto; /* Center the container */
-    padding: 20px; /* Add some padding */
-}
+    position: relative;
+    min-height: calc(100vh - 100px);
+    height: 100%;
+    width: 100vw;
 
-.movie-header {
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    justify-content: center;
 }
 
-.movie-poster {
-    border-radius: 10px;
-    box-shadow: 0 0 20px #070707;
-    width: 300px;
-    height: auto;
-    margin-right: 100px;
+.movie-detail-container {
+    position: absolute;
+    width: min(1170px, 100%);
+    height: 100%;
+    padding-inline: 40px;
 }
 
-.movie-info {
-    max-width: 600px;
-    background-color: rgba(31, 41, 55, 0.8); /* Subtle background for contrast */
-    border-radius: 12px; /* Rounded corners for a softer look */
-    padding: 20px; /* Added padding for better spacing */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+.movie-page-background-overlay {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0); /*******/
+    height: 100vh;
+    width: 100vw;
+    transform: translateY(-100px);
+    z-index: -100;
 }
 
-.movie-title {
-    font-size: 2.3rem; /* Increased font size for prominence */
-    margin: 0;
-    color: rgb(175, 187, 242); /* Soft color for elegance */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Subtle text shadow for depth */
-}
-
-.movie-overview {
-    font-size: 1.1rem; /* Slightly larger for readability */
-    margin: 10px 0;
-    color: rgba(255, 255, 255, 0.85); /* Light color for better contrast */
-}
-
-.movie-rating {
-    font-size: 1.5rem; /* Increased size for emphasis */
-    margin-bottom: 10px;
-    color: white;
-}
-
-.rating-value {
-    font-weight: bold;
-    color: rgb(255, 215, 0); /* Consistent gold color */
-}
-
-.cast-scroller-container {
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent line breaks */
-    padding: 10px 0; /* Add some vertical padding */
-    background-color: rgba(31, 41, 55, 0.8); /* Semi-transparent background */
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
-}
-
-.cast-scroller-container::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
-    height: 8px; /* Height of the scrollbar */
-}
-
-.cast-scroller-container::-webkit-scrollbar-track {
-    background: rgba(31, 41, 55, 0.8); /* Track color */
-    border-radius: 10px; /* Rounded corners for the track */
-}
-
-.cast-scroller-container::-webkit-scrollbar-thumb {
-    background: rgb(175, 187, 242); /* Thumb color */
-    border-radius: 10px; /* Rounded corners for the thumb */
-}
-
-.cast-scroller-container::-webkit-scrollbar-thumb:hover {
-    background: rgb(150, 170, 220); /* Thumb color on hover */
-}
-
-/* Custom scrollbar styles for Firefox */
-.cast-scroller-container {
-    position: relative; /* This allows the sticky header to be relative to this container */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    padding: 10px 0; /* Add some vertical padding */
-    background-color: rgba(31, 41, 55, 0.8); /* Semi-transparent background */
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
-}
-
-.cast-header {
-    top: 0;
-    padding: 10px;
-    color: white;
-    font-size: 1.8rem;
-    z-index: 10;
-    margin-bottom: 10px;
+.details-heading-section {
     width: 100%;
+    height: 500px;
+    display: flex;
+    padding-top: 35px;
 }
 
-.cast-scroller {
-    display: flex; /* Use flexbox for horizontal layout */
-    gap: 40px; /* Space between cast members */
-    padding: 10px; /* Padding for the scroller */
+.details-heading-section {
+    display: flex;
+    gap: 30px;
+}
+
+.details-heading-section .poster {
+    aspect-ratio: 5.5/8;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.details-heading-section .poster > img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.details-heading-section .right-side > * {
+    color: rgb(196, 193, 198);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.details-heading-section .title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 500;
+    padding-block: 18px 5px;
+}
+
+.details-heading-section .other-info {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.other-info .separator {
+    margin: 0 8px;
+    color: rgba(196, 193, 198, 0.6);
+}
+
+.genres {
+    margin-bottom: 30px;
+}
+
+.genres > span {
+    font-weight: 600;
+}
+
+.rating-container {
+    width: 425px;
+    height: 75px;
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.rating-container .item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rating-container .item .label {
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.rating-container .item .value {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+    margin-bottom: 5px;
+}
+
+.rating-container .separator {
+    width: 2px;
+    height: 100%;
+    border-radius: 5px;
+    background-color: rgba(196, 193, 198, 0.15);
+}
+
+.rating-container .icon {
+    height: 24px;
+    aspect-ratio: 1;
+}
+
+.rating-container .imdb-rating .value .icon {
+    fill: rgba(250, 162, 0, 0.75);
+}
+
+.rating-container .vote-count .value .icon {
+    fill: rgba(118, 152, 179, 0.85);
+}
+
+.rating-container .popularity .value .icon {
+    fill: #49a078;
+}
+
+.rating-container .value .average {
+    font-size: 1.5rem;
+}
+
+.description {
+    width: min(100%و 300px);
+    height: 200px;
+}
+
+.description .title {
+    padding: 0;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.description .title .info {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.125rem;
+}
+
+.description .expander {
+    color: black;
+    background-color: rgb(175, 187, 242);
+    border-radius: 50px;
+    padding: 4px 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: none;
+}
+
+/* Cast Section */
+
+.cast-members-container {
+    padding-block: 50px;
+    color: rgb(196, 193, 198);
+}
+
+.cast-members-container .title {
+    font-size: 2.2rem;
+    font-family: Montserrat;
+    padding-bottom: 18px;
+}
+
+.cast-members-container .title span {
+    padding-inline: 10px;
+    border-radius: 50px;
+    margin-left: 10px;
+    background-color: rgb(175, 187, 242);
+    color: black;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.cast-members-container .title .icon {
+    display: inline;
+    height: 35px;
+    aspect-ratio: 1;
+    fill: rgb(196, 193, 198);
+}
+
+.cast-scroller-container {
+    position: relative;
+    height: 200px;
+    user-select: none;
+    overflow: hidden;
+}
+
+.cast-scroller-container:hover {
+    cursor: grab;
+}
+
+.cast-scroller-container .sahdow-overlay {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.cast-scroller-container .sahdow-overlay-start {
+    left: 0;
+    opacity: 0;
+    background-image: linear-gradient(to right, rgb(13, 17, 24) 10%, transparent);
+}
+
+.cast-scroller-container .sahdow-overlay-end {
+    right: 0;
+    opacity: 1;
+    background-image: linear-gradient(to left, rgb(13, 17, 24) 10%, transparent);
+}
+
+.cast-scroller-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: max-content;
+    height: 200px;
+    display: flex;
 }
 
 .cast-member {
-    flex: 0 0 auto; /* Prevent flex items from shrinking */
-    text-align: center; /* Center the text under the image */
-    transition: transform 0.3s; /* Smooth scaling on hover */
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-rows: 140px 30px 30px;
 }
 
-.cast-member:hover {
-    transform: scale(1.05); /* Scale up on hover */
+.cast-member .cast-image-container {
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }
 
-.cast-image {
-    width: 120px; /* Set a fixed width for the images */
-    height: 180px; /* Set a fixed height for uniformity */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-    object-fit: cover; /* Ensure the image covers the area */
+.cast-member .cast-image {
+    width: 100%;
+    object-fit: cover;
+    pointer-events: none;
 }
 
-.cast-name {
-    margin-top: 8px; /* Space between image and name */
-    font-size: 17px; /* Adjust font size */
-    color: #ffffff; /* Text color */
-    font-weight: bold; /* Bold text */
+.cast-member .cast-name,
+.cast-member .cast-character-name {
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.cast-character-name {
-    margin-top: 8px; /* Space between image and name */
-    font-size: 14px; /* Adjust font size */
-    color: #ffffff; /* Text color */
+@media (max-width: 1000px) {
+    .menu-button {
+        display: block;
+    }
+
+    .nav-links-container {
+        display: none;
+    }
 }
 
-/* Optional: Add a background color to the container for contrast */
-.additional-details {
-    padding: 20px;
-    border-radius: 10px; /* Rounded corners for the container */
+@media (max-width: 1280px) {
+    .up-next-container {
+        display: none;
+    }
 }
 
-/* Responsive styles for phones */
-@media (max-width: 768px) {
+@media (max-height: 700px) {
+    .carousel-container {
+        height: calc(700px - 100px);
+    }
+}
+
+@media (max-width: 780px) {
+    .up-next-container {
+        display: none;
+    }
+
     .movie-header {
         flex-direction: column;
         align-items: center;
@@ -743,11 +950,5 @@ nav {
 
     .movie-overview {
         order: 1;
-    }
-}
-
-@media (max-height: 768px) {
-    .carousel-container {
-        height: calc(768px - 100px);
     }
 }

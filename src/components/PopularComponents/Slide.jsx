@@ -28,11 +28,14 @@ const Slide = forwardRef(({ slide, posterDetail }, ref) => {
                     />
                     <div className="carousel-detail-bg">
                         <p className="carousel-detail-title">
-                            {slide.title} ({new Date(slide.release_date).getFullYear()})
+                            {slide.title} (
+                            {new Date(slide.release_date).getFullYear()})
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <VoteAverage voteAverage={slide.vote_average} />
-                            <span style={{ fontSize: '0.9rem', marginTop: '4px' }}>/10 Rating</span>
+                            <span style={{ fontSize: '0.9rem', marginTop: '4px' }}>
+                                /10 Rating
+                            </span>
                         </div>
                     </div>
                 </Link>

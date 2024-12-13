@@ -34,7 +34,7 @@ const useTabStore = create((set) => {
             const path = location.pathname;
             let newActiveTab = 'Home'; // Default tab
             let newActiveTabIndex = 0; // Default index
-        
+
             if (path === '/popular') {
                 newActiveTab = 'Popular';
                 newActiveTabIndex = 1;
@@ -48,7 +48,7 @@ const useTabStore = create((set) => {
                 newActiveTab = null;
                 newActiveTabIndex = -1; // Use an invalid index to represent no active tab
             }
-        
+
             set({ activeTab: newActiveTab, activeTabIndex: newActiveTabIndex });
             sessionStorage.setItem('activeTab', newActiveTab);
             sessionStorage.setItem('activeTabIndex', newActiveTabIndex);

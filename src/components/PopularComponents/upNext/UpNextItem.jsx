@@ -7,16 +7,13 @@ import useFetchStore from '../../../store/fetchStore';
 import { Link } from 'react-router-dom';
 import Loading from '../../AppComponents/Loading';
 
-const UpNextItem = ({
-    movie,
-    translateY
-}) => {
+const UpNextItem = ({ movie, index, translateY }) => {
     const { fetchCredits } = useFetchStore();
 
-    const { 
-        data: creditsData, 
-        isLoading: creditsLoading, 
-        error: creditsError 
+    const {
+        data: creditsData,
+        isLoading: creditsLoading,
+        error: creditsError
     } = useQuery({
         queryKey: ['credits', movie?.id],
         queryFn: () => fetchCredits(movie?.id)
@@ -44,23 +41,10 @@ const UpNextItem = ({
         );
     }
 
-    // const titleWithYear = `${movie.title} (${new Date(movie.release_date).getFullYear()})`;
-    const director = creditsData?.crew?.find(
-        (member) => member.job === 'Director'
-    );
+    const director = creditsData?.crew?.find((member) => member.job === 'Director');
 
     const directorName = director ? director.name : 'Director not found';
 
-    // const slideGenres = movie.genre_ids.slice(0, 3).map((id) => (
-    //     <div className="genre-item" key={id}>
-    //         {genresData[id] || 'Unknown Genre'}
-    //     </div>
-    // ));
-
-    const titleParts = movie.title.length > 30 
-        ? [movie.title.slice(0, 30), movie.title.slice(30)] 
-        : [movie.title];
-        
     return (
         <div
             className="up-next-item"
@@ -72,20 +56,22 @@ const UpNextItem = ({
 
             <div className="right-side">
                 <div className="heading">
-                    <div className={movie.title.length < 30 ? 'title-wrap' : ''}>
-                        <Link to={`/movie/${movie.id}`} className="title">
-                                {titleParts[0]}{titleParts[1] && <br />}{titleParts[1]}
-                        </Link>
-                    </div>
+                    <Link to={`/movie/${movie.id}`}>
+                        <p className="title">{movie.title}</p>
+                    </Link>
                     <p className="director-name">Directed by {directorName}</p>
                 </div>
 
-                <div className="genres-container"> {/* Genres gonna be links later */}
-                    {movie.genre_ids && movie.genre_ids.length > 0 ? (
-                        <Genre genreIds={movie.genre_ids} />
-                    ) : (
-                        <div>Genre not available</div>
-                    )}
+                <div className="genres-container">
+                    {' '}
+                    {/* Genres will be links later */}
+                    <div className="genre-scroll-container">
+                        {movie.genre_ids && movie.genre_ids.length > 0 ? (
+                            <Genre genreIds={movie.genre_ids} />
+                        ) : (
+                            <div>Genre not available</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -29,18 +29,23 @@ export default function Popular() {
         return <Loading />;
     }
     if (error) {
-        return <div className="error-container">Error: {error.message}</div>;
+        return (
+            <div className="error-container">
+                <div className="error-details-wrapper">
+                    <p className="title">An Error Accrued :(</p>
+                    <p className="description">Error: {error.message}</p>
+                </div>
+            </div>
+        );
     }
 
     return (
         <>
-            {/* Pass the ref down to PopularCarousel */}
             <PopularCarousel
                 movies={popularMovies}
                 wrapperRef={carouselWrapperRef}
                 upNextWrapperRef={upNextWrapperRef}
             />
-            {/* Pass the ref down to UpNextSection */}
             <UpNextSection movies={popularMovies} wrapperRef={upNextWrapperRef} />
         </>
     );

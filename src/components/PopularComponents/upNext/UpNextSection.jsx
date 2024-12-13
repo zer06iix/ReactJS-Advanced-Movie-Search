@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useCarouselStore from '../../../store/carouselStore';
 import useFetchStore from '../../../store/fetchStore';
@@ -7,11 +7,16 @@ import UpNextItem from './UpNextItem';
 import { useQuery } from '@tanstack/react-query';
 
 export default function UpNextSection({ movies, wrapperRef }) {
-    const itemsToLoad = 5;
+    const [itemsToLoad, setItemsToLoad] = useState(5);
+    const [opacities, setOpacities] = useState([]);
     const { currentSlide } = useCarouselStore();
     const { fetchGenresMap } = useFetchStore();
 
-    const { data: genresData, error: genresError, isLoading: genresLoading } = useQuery({
+    const {
+        data: genresData,
+        error: genresError,
+        isLoading: genresLoading
+    } = useQuery({
         queryKey: ['genresMap'],
         queryFn: fetchGenresMap
     });
@@ -22,6 +27,30 @@ export default function UpNextSection({ movies, wrapperRef }) {
         }
     }, [genresError]);
 
+    // Caculate the items to load count based on vh
+    const calculateItemsToLoad = () => {
+        const leastItems = 2;
+        const mostItems = 5;
+        const staticOffset = 166 + 100; // navbar height & etc.
+        const itemHeight = 120;
+        const viewportHeight = window.innerHeight;
+        const calculatedItems = Math.floor(
+            (window.innerHeight - staticOffset) / itemHeight
+        );
+        setItemsToLoad(Math.max(leastItems, Math.min(calculatedItems, mostItems)));
+        setOpacities(Array.from({ length: calculatedItems + 2 }, () => 1));
+    };
+
+    useEffect(() => {
+        calculateItemsToLoad();
+
+        window.addEventListener('resize', calculateItemsToLoad);
+
+        return () => {
+            window.removeEventListener('resize', calculateItemsToLoad);
+        };
+    }, []);
+
     return (
         <div className="up-next-container">
             <p className="up-next-title">Up Next</p>
@@ -29,10 +58,7 @@ export default function UpNextSection({ movies, wrapperRef }) {
                 className="up-next-mask"
                 style={{ height: `${itemsToLoad * 120}px` }}
             >
-                <div
-                    className="up-next-wrapper"
-                    ref={wrapperRef}
-                >
+                <div className="up-next-wrapper" ref={wrapperRef}>
                     {genresLoading ? (
                         <p>Loading genres...</p>
                     ) : (
@@ -42,14 +68,15 @@ export default function UpNextSection({ movies, wrapperRef }) {
                                 (movieIndex + movies.length) % movies.length;
                             const movie = movies[adjustedIndex];
                             if (!movie) return null;
-                            const translateY = ((itemsToLoad + 1) / 2 - i) * -100 - 50;
+                            const translateY =
+                                ((itemsToLoad + 1) / 2 - i) * -100 - 50;
                             return (
                                 <UpNextItem
-                                    key={i}
                                     movie={movie}
                                     index={i}
                                     genresData={genresData}
                                     translateY={translateY}
+                                    opacity={1}
                                 />
                             );
                         })

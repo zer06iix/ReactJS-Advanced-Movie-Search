@@ -38,7 +38,6 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
         }
     };
 
-
     const handleCarouselTransition = (direction) => {
         // direction: 1 for next, -1 for prev
         if (carouselDisabled) return;
@@ -139,7 +138,10 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
 
                 <div className="carousel-wrapper" ref={wrapperRef}>
                     <PreviousSlide slide={movies[prevSlideIndex]} />
-                    <CurrentSlide slide={movies[currentSlide]} ref={currentSlideRef} />
+                    <CurrentSlide
+                        slide={movies[currentSlide]}
+                        ref={currentSlideRef}
+                    />
                     <NextSlide slide={movies[nextSlideIndex]} />
                 </div>
 

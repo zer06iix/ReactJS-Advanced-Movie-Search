@@ -7,8 +7,7 @@ import { API_KEY, BASE_URL } from '../api/tmdb';
 const createApiUrlWithPage = (endpoint, page) =>
     `${BASE_URL}${endpoint}?api_key=${API_KEY}&page=${page}`;
 
-const createApiUrl = (endpoint) => 
-    `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
+const createApiUrl = (endpoint) => `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
 
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async (page) => {
@@ -26,14 +25,15 @@ const useFetchStore = create((set) => ({
         console.log('Movie details got fetched');
         return response.data; // Return the movie details
     },
-    
+
     fetchCredits: async (id) => {
         const url = createApiUrl(`/movie/${id}/credits`);
         const response = await axios.get(url);
         return response.data;
     },
 
-    fetchGenres: async () => { // New function to fetch genres
+    fetchGenres: async () => {
+        // New function to fetch genres
         try {
             console.log('Fetching genres');
             // const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
@@ -47,7 +47,8 @@ const useFetchStore = create((set) => ({
         }
     },
 
-    fetchGenresMap: async () => { // New function to fetch genres and transform them into a map
+    fetchGenresMap: async () => {
+        // New function to fetch genres and transform them into a map
         try {
             const genres = await useFetchStore.getState().fetchGenres(); // Fetch genres
             const genresMap = genres.reduce((acc, { id, name }) => {
