@@ -1,0 +1,24 @@
+/* Show the menu button instad of navigation links on smaller screens */
+@media (max-width: 1000px) {
+    .menu-button {
+        display: block;
+    }
+
+    .nav-links-container {
+        display: none;
+    }
+}
+
+/* Hide the "up next" section on medium-sized screens */
+@media (max-width: 1280px) {
+    .up-next-container {
+        display: none;
+    }
+}
+
+/* Adjust the height of the carousel container for smaller viewports */
+@media (max-height: 700px) {
+    .carousel-container {
+        height: calc(700px - 100px);
+    }
+}
