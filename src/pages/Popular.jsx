@@ -32,7 +32,7 @@ export default function Popular() {
         return (
             <div className="error-container">
                 <div className="error-details-wrapper">
-                    <p className="title">An Error Accrued :(</p>
+                    <p className="title">An Error occurred :(</p>
                     <p className="description">Error: {error.message}</p>
                 </div>
             </div>

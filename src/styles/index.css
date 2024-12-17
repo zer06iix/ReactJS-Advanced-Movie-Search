@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import './base.css';
+@import './navigation.css';
+@import './scrollbar.css';
+@import './pages/movie-page.css';
+@import './pages/popular-page.css';
+@import './media-queries.css';
+
+/* @import './layout.css'; */
+/* @import './components.css'; */
+/* @import './utilities.css'; */
+/* @import './theme.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

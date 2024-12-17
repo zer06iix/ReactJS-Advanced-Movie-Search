@@ -1,0 +1,76 @@
+:root {
+    --arrow-btns-length: 20px; /* will be overridden */
+    --track-color: blue;
+    --thumb-color: gray;
+    --arrow-btn-color: red;
+}
+
+.scrollbar-track {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between; /*******/
+    justify-content: space-between;
+    right: 0;
+    top: 50%;
+    background-color: var(--track-color);
+    transform: translateY(-50%);
+    transition:
+        width 500ms ease,
+        height 500ms ease;
+    /* margin-right: 5px; */
+}
+
+.scrollbar-track .thumb {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+    transition:
+        opacity 0.3s ease,
+        width 0.3s ease;
+    background-color: var(--thumb-color);
+}
+
+.scrollbar-track .thumb:hover,
+.scrollbar-track .thumb:active {
+    opacity: 0.9;
+}
+
+.arrow-btns-container {
+    position: relative;
+    height: var(--arrow-btns-length);
+    transition: transform 500ms ease;
+}
+
+.arrow-btn {
+    position: absolute;
+    aspect-ratio: 1;
+    border: none;
+    cursor: pointer;
+    background-color: var(--arrow-btn-color);
+    transition: background-color 0.3s ease;
+}
+
+.arrow-btn:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.arrow-btns-container:has(.arrow-btn-up) {
+    transform: translateY(calc(-1 * var(--arrow-btns-length)));
+}
+.arrow-btns-container:has(.arrow-btn-down) {
+    transform: translateY(var(--arrow-btns-length));
+}
+.arrow-btns-container:has(.arrow-btn-left) {
+    transform: translateX(calc(-1 * var(--arrow-btns-length)));
+}
+.arrow-btns-container:has(.arrow-btn-right) {
+    transform: translateX(var(--arrow-btns-length));
+}
+
+.movie-detail-container {
+    position: relative;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
