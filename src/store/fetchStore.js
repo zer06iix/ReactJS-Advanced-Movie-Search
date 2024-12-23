@@ -3,11 +3,16 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { API_KEY, BASE_URL } from '../api/tmdb';
 
+// Utility function to create API URLs
+const createApiUrl = (endpoint) => `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
+
 // Utility function to create API URLs with their page
 const createApiUrlWithPage = (endpoint, page) =>
     `${BASE_URL}${endpoint}?api_key=${API_KEY}&page=${page}`;
 
-const createApiUrl = (endpoint) => `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
+// Utility function to create API URLs with their query
+const createApiUrlWithQuery = (endpoint, query) =>
+    `${BASE_URL}${endpoint}?api_key=${API_KEY}&query=${query}`;
 
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async (page) => {
@@ -60,6 +65,13 @@ const useFetchStore = create((set) => ({
             console.error('Error fetching genres map:', error);
             throw error; // Rethrow the error for handling in the calling function
         }
+    },
+
+    fetchQueries: async (query) => {
+        const url = createApiUrlWithQuery(`/search/movie`, query);
+        const response = await axios.get(url);
+        
+        return response.data.results;
     }
 }));
 

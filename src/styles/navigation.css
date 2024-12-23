@@ -233,7 +233,7 @@ nav {
     fill: white;
 }
 
-.searchbar-container .query-results {
+/* .searchbar-container .query-results {
     position: absolute;
     top: 50%;
     left: 0;
@@ -251,7 +251,7 @@ nav {
     transition:
         opacity 0.35s ease,
         height 0.35s ease;
-}
+} */
 
 .searchbar-container .query-results.active {
     height: 100px;
@@ -279,4 +279,56 @@ nav {
 
 .searchbar-container .query-results.inactive .query-results-error-message {
     opacity: 0;
+}
+
+/* Search bar result section */
+.query-results {
+    height: auto; /* Allow height to adjust based on content */
+    max-height: 400px; /* Optional: Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    background: #181818; /* White background for contrast */
+    border-radius: 20px; /* Increased border radius for a softer look */
+    padding: 20px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Softer box shadow */
+}
+
+/* Result item styles */
+.result-item {
+    padding: 15px; /* Increased padding for better spacing */
+    margin: 10px 0; /* Margin between items */
+    border-radius: 15px; /* Rounded corners */
+    background-color: #00000070; /* Light pastel background color */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+    display: flex;
+    align-items: flex-start; /* Align items to the start */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.result-item:hover {
+    transform: scale(1.05); /* Slightly scale up on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+/* Title and info styles */
+.result-title {
+    font-size: 1.4rem; /* Larger font for title */
+    font-weight: bold; /* Bold title */
+    color: #ffffff; /* Darker text color */
+    margin-bottom: 5px; /* Space below title */
+}
+
+.result-info {
+    font-size: 1rem; /* Smaller font for info */
+    color: #ffffff; /* Lighter text color */
+}
+
+/* Error message styles */
+.query-results-error-message {
+    text-align: center;
+    color: #ff4d4d; /* Red color for error messages */
+    font-weight: bold; /* Make error message bold */
+    margin-top: 10px; /* Add margin for spacing */
 }
