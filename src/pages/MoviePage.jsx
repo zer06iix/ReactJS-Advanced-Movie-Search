@@ -7,9 +7,14 @@ import { ReactSVG } from 'react-svg';
 import useFetchStore from '../store/fetchStore';
 import Loading from '../components/AppComponents/Loading';
 import useMovieStore from '../store/movieStore';
+import Overview from '../components/MovieComponents/Overview';
 import CastScroller from '../components/MovieComponents/cast/CastScroller';
 import CustomScrollbar from '../components/AppComponents/Scrollbar';
 import sprite from '../styles/sprite.svg';
+import Genres from '../components/MovieComponents/Genres';
+import IMDbRating from '../components/MovieComponents/rating/IMDbRating';
+import VoteCount from '../components/MovieComponents/rating/VoteCount';
+import Popularity from '../components/MovieComponents/rating/Popularity';
 
 export default function MoviePage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -113,7 +118,8 @@ export default function MoviePage() {
                     <div className="right-side">
                         <div className="title">{movie.title}</div>
                         <p className="other-info">
-                            {new Date(movie.release_date).getFullYear()}
+                            {/* {new Date(movie.release_date).getFullYear()} */}
+                            {new Date(movie.release_date).toLocaleDateString('en-US')}
 
                             {formattedRuntime !== null ? (
                                 <>
@@ -138,63 +144,25 @@ export default function MoviePage() {
                             ) : null}
                         </p>
 
-                        <pre className="genres">
-                            <span>Genres:</span> {genreNames.join(', ')}
-                        </pre>
+                        <Genres />
 
                         {/* Rating, Vote Count, Popularity Display */}
                         <div className="rating-container">
-                            <div className="item imdb-rating">
-                                <p className="label">IMDb Rating</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#rating-icon`} />
-                                    </svg>
-                                    <p className="average">
-                                        {movie.vote_average.toFixed(1)}
-                                    </p>
-                                </div>
-                            </div>
+                            <IMDbRating />
 
                             <span className="separator"></span>
 
-                            <div className="item vote-count">
-                                <p className="label">Vote Count</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#vote-count`} />
-                                    </svg>
-                                    <p className="average">{movie.vote_count}</p>
-                                </div>
-                            </div>
-
+                            <VoteCount />
+                            
                             <span className="separator"></span>
 
-                            <div className="item popularity">
-                                <p className="label">Popularity</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#popularity`} />
-                                    </svg>
-                                    <p className="average">
-                                        {movie.popularity >= 1000
-                                            ? `${(movie.popularity / 1000).toFixed(1)}k`
-                                            : movie.popularity}
-                                    </p>
-                                </div>
-                            </div>
+                            <Popularity />
                         </div>
 
                         {/* Description Section */}
                         <div className="description">
                             <p className="title">Description:</p>
-                            <p className="info">{movie.overview}</p>
-                            <button
-                                className="expander"
-                                onClick={toggleDescriptionExpand}
-                            >
-                                {isExpanded ? 'Collapse' : 'Expand'}
-                            </button>
+                            <Overview isExpanded={isExpanded} toggleDescriptionExpand={toggleDescriptionExpand}/>
                         </div>
                     </div>
                 </div>
@@ -218,7 +186,7 @@ export default function MoviePage() {
             </div>
 
             <ReactSVG src={sprite} style={{ display: 'none' }} />
-            <CustomScrollbar y />
+            {/* <CustomScrollbar/> */}
         </div>
     );
 }

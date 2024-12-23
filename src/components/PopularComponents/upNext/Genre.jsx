@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useFetchStore from '../../store/fetchStore';
-import useMovieStore from '../../store/movieStore';
+import useFetchStore from '../../../store/fetchStore';
+import useMovieStore from '../../../store/movieStore';
 
 export default function Genre({ genreIds }) {
     const { fetchGenresMap } = useFetchStore();

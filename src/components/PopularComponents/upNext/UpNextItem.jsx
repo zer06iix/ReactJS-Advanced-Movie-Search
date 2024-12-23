@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Slide from '../Slide';
-import Genre from '../../MovieComponents/Genre';
+import Genre from './Genre';
 import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../../../store/fetchStore';
 import { Link } from 'react-router-dom';

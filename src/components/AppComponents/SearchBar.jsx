@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SearchButton from '../buttons/SearchButton';
 import SearchInput from './SearchInput';
 
@@ -23,7 +23,7 @@ export default function SearchBar() {
 
             <div className={`query-results ${queryResultState}`}>
                 <p className="query-results-error-message">
-                    No results for "{query}"
+                    No results for &quot;{query}&quot;
                 </p>
             </div>
         </div>

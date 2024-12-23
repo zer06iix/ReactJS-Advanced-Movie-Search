@@ -72,6 +72,7 @@ export default function UpNextSection({ movies, wrapperRef }) {
                                 ((itemsToLoad + 1) / 2 - i) * -100 - 50;
                             return (
                                 <UpNextItem
+                                    key={i}
                                     movie={movie}
                                     index={i}
                                     genresData={genresData}

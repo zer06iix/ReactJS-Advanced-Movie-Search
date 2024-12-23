@@ -84,6 +84,20 @@
     font-weight: 600;
 }
 
+.genre-container {
+    display: inline;
+}
+
+.genre-item {
+    display: inline;
+    color: #afbbf2;
+    margin-right: 0.4rem;
+}
+.genre-item:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .rating-container {
     width: 425px;
     height: 75px;

@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
-import VoteAverage from '../MovieComponents/VoteAverage';
+import VoteAverage from './imageCarousel/VoteAverage';
 
 const Slide = forwardRef(({ slide, posterDetail }, ref) => {
     const imageUrl = slide?.poster_path

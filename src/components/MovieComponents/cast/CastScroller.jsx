@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import useMovieStore from '../../../store/movieStore';
 import CastItem from './CastItem';
 
@@ -19,7 +19,7 @@ export default function CastScroller() {
             setMaxTranslateX(maxX); // Set max translateX
             setTranslateX(Math.max(Math.min(translateX, 0), maxX)); // Constrain translateX
         }
-    }, [credits]); // Recalculate when credits change
+    }, [credits, translateX]); // Recalculate when credits change
 
     useEffect(() => {
         const handleMouseUp = () => setIsDragging(false);
