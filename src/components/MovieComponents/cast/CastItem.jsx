@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useRef, useEffect, useState } from 'react';
 import CastImage from './CastImage';
 
@@ -13,10 +12,28 @@ export default function CastItem({ member }) {
         setImgError(true);
     };
 
+    useEffect(() => {
+        // Check if name overflows
+        if (nameRef.current) {
+            const overflow =
+                nameRef.current.scrollWidth > nameRef.current.clientWidth;
+            if (overflow) {
+                setNameTitle(member.name); // Set the full name if it overflows
+            }
+        }
+
+        // Check if character overflows
+        if (characterRef.current) {
+            const overflow =
+                characterRef.current.scrollWidth > characterRef.current.clientWidth;
+            if (overflow) {
+                setCharacterTitle(member.character || 'Unknown Character'); // Set the full character name if it overflows
+            }
+        }
+    }, [member]);
+
     return (
         <div className="cast-member">
-            {' '}
-            {/* Ensure this is a block-level element */}
             <div className="cast-image-container">
                 {!imgError ? (
                     <CastImage member={member} onError={handleImageError} />
