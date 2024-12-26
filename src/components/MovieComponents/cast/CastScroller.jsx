@@ -60,26 +60,32 @@ export default function CastScroller() {
             // onWheel={handleWheel}
         >
             <div
-                className="shadow-overlay shadow-overlay-start"
-                style={{ opacity: shadowOverlayOpacityStart }}
-            ></div>
-            <div
-                className="cast-scroller-wrapper"
-                ref={wrapperRef}
-                style={{ transform: `translateX(${translateX}px)` }}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
+                className="cast-scroller-container"
+                ref={containerRef}
+                // onWheel={handleWheel}
             >
-                {credits && credits.cast && credits.cast.length > 0
-                    ? credits.cast.map((member) => (
-                          <CastItem member={member} key={member.id} />
-                      ))
-                    : null}
+                <div
+                    className="shadow-overlay shadow-overlay-start"
+                    style={{ opacity: shadowOverlayOpacityStart }}
+                ></div>
+                <div
+                    className="cast-scroller-wrapper"
+                    ref={wrapperRef}
+                    style={{ transform: `translateX(${translateX}px)` }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                >
+                    {credits && credits.cast && credits.cast.length > 0
+                        ? credits.cast.map((member) => (
+                              <CastItem member={member} key={member.id} />
+                          ))
+                        : null}
+                </div>
+                <div
+                    className="shadow-overlay shadow-overlay-end"
+                    style={{ opacity: shadowOverlayOpacityEnd }}
+                ></div>
             </div>
-            <div
-                className="shadow-overlay shadow-overlay-end"
-                style={{ opacity: shadowOverlayOpacityEnd }}
-            ></div>
         </div>
     );
 }

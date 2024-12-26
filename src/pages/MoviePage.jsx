@@ -106,7 +106,7 @@ export default function MoviePage() {
     const numberOfCastMembers = credits && credits.cast ? credits.cast.length : 0;
 
     const getMovieTitleClass = (title) => {
-        if (!title) return 'title-small'; // Default class
+        if (!title) return 'title-small';
         const length = title.length;
 
         switch (true) {
@@ -160,6 +160,12 @@ export default function MoviePage() {
                                         {formattedRuntime}
                                     </>
                                 ) : null}
+                                {formattedRuntime !== null ? (
+                                    <>
+                                        <span className="separator">•</span>
+                                        {formattedRuntime}
+                                    </>
+                                ) : null}
 
                                 {movie.adult !== undefined ? (
                                     <>
@@ -181,6 +187,7 @@ export default function MoviePage() {
 
                                 <VoteCount />
 
+                                <span className="separator"></span>
                                 <span className="separator"></span>
 
                                 <Popularity />
