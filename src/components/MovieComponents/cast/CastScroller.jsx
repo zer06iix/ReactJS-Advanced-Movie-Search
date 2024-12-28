@@ -10,14 +10,15 @@ export default function CastScroller() {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [maxTranslateX, setMaxTranslateX] = useState(0); // State for max translate
+    // const scrollSpeed = 50; // Controls how fast the scroll is
 
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
             const wrapperWidth = wrapperRef.current.offsetWidth;
             const containerWidth = containerRef.current.offsetWidth;
-            const maxX = containerWidth - wrapperWidth;
-            setMaxTranslateX(maxX); // Set max translateX
-            setTranslateX(Math.max(Math.min(translateX, 0), maxX)); // Constrain translateX
+            const maxX = wrapperWidth - containerWidth;
+            setMaxTranslateX(-maxX); // Set max translateX
+            setTranslateX(Math.max(Math.min(translateX, 0), -maxX)); // Constrain translateX
         }
     }, [credits, translateX]); // Recalculate when credits change
 
@@ -26,15 +27,6 @@ export default function CastScroller() {
         window.addEventListener('mouseup', handleMouseUp);
         return () => window.removeEventListener('mouseup', handleMouseUp);
     }, []);
-
-    useEffect(() => {
-        // Log when at the beginning or end
-        if (translateX === 0) {
-            console.log('Drag is at the beginning');
-        } else if (translateX === maxTranslateX) {
-            console.log('Drag is at the end');
-        }
-    }, [translateX, maxTranslateX]); // Depend on translateX and maxTranslateX
 
     const handleMouseDown = (e) => {
         setIsDragging(true);
@@ -48,34 +40,52 @@ export default function CastScroller() {
         setStartX(e.clientX);
     };
 
+    // const handleWheel = (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+
+    //     const deltaX = e.deltaY > 0 ? -scrollSpeed : scrollSpeed; // Calculate scroll based on wheel delta
+    //     setTranslateX((prev) => Math.max(Math.min(prev + deltaX, 0), maxTranslateX));
+    // };
+
     const shadowOverlayOpacityStart =
         translateX === maxTranslateX ? 1 : translateX === 0 ? 0 : 1;
     const shadowOverlayOpacityEnd =
         translateX === 0 ? 1 : translateX === maxTranslateX ? 0 : 1;
 
     return (
-        <div className="cast-scroller-container" ref={containerRef}>
+        <div
+            className="cast-scroller-container"
+            ref={containerRef}
+            // onWheel={handleWheel}
+        >
             <div
-                className="sahdow-overlay sahdow-overlay-start"
-                style={{ opacity: shadowOverlayOpacityStart }}
-            ></div>
-            <div
-                className="cast-scroller-wrapper"
-                ref={wrapperRef}
-                style={{ transform: `translateX(${translateX}px)` }}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
+                className="cast-scroller-container"
+                ref={containerRef}
+                // onWheel={handleWheel}
             >
-                {credits && credits.cast && credits.cast.length > 0
-                    ? credits.cast.map((member) => (
-                          <CastItem member={member} key={member.id} />
-                      ))
-                    : null}
+                <div
+                    className="shadow-overlay shadow-overlay-start"
+                    style={{ opacity: shadowOverlayOpacityStart }}
+                ></div>
+                <div
+                    className="cast-scroller-wrapper"
+                    ref={wrapperRef}
+                    style={{ transform: `translateX(${translateX}px)` }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                >
+                    {credits && credits.cast && credits.cast.length > 0
+                        ? credits.cast.map((member) => (
+                              <CastItem member={member} key={member.id} />
+                          ))
+                        : null}
+                </div>
+                <div
+                    className="shadow-overlay shadow-overlay-end"
+                    style={{ opacity: shadowOverlayOpacityEnd }}
+                ></div>
             </div>
-            <div
-                className="sahdow-overlay sahdow-overlay-end"
-                style={{ opacity: shadowOverlayOpacityEnd }}
-            ></div>
         </div>
     );
 }

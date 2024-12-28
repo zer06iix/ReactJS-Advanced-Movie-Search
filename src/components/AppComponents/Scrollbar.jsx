@@ -6,32 +6,42 @@ const DEFAULT_CONFIG = {
     arrowBtnsColor: 'red',
     arrowBtnsLength: 20, //px
     hideArrowBtnsWhenInactive: true,
-    arrowBtnsToggleDelay: 500, //ms
+    arrowBtnsToggleDelay: 800, //ms
     trackThickness: 20,
-    thumbThickness: 20,
-    thumbLength: {
-        mode: 'relevant', // can be 'static' or 'relevant'
-        value: 75 // px when mode is 'static'
-    }
+    thumbThickness: 20
 };
 
-function CustomScrollbar({ x = false, y = false, config = {} }) {
+function CustomScrollbar({
+    x = false,
+    y = false,
+    contentRef, // For the scrollbar track, this is unchanged.
+    scrollableRef, // New prop: The ref or element we want to scroll
+    config = {},
+    scrollOffset = 0
+}) {
     // Merge default config with user-provided config
-    const scrollConfig = {
-        ...DEFAULT_CONFIG,
-        ...config,
-        thumbLength: {
-            ...DEFAULT_CONFIG.thumbLength,
-            ...(config.thumbLength || {})
-        }
-    };
+    const scrollConfig = { ...DEFAULT_CONFIG, ...config };
 
-    // To track active/inactive state
-    const [isActive, setIsActive] = useState(true);
-    const scrollbarRef = useRef(null);
-    const mouseLeaveTimerRef = useRef(null);
+    // State variables
+    const [isActive, setIsActive] = useState(true); // Tracks if the scrollbar is active
+    const [thumbPosition, setThumbPosition] = useState(0); // Position of the scrollbar thumb
+    const [isDragging, setIsDragging] = useState(false); // Tracks if the thumb is being dragged
+    const [dragOffset, setDragOffset] = useState(0); //Offset from the click position
+    const [contentHeight, setContentHeight] = useState(0); // Height of the content
+    const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 }); // Viewport dimensions
+    const [contentWidth, setContentWidth] = useState(0); // Width of the content
+    const [viewportWidth, setViewportWidth] = useState(0); // Width of the viewport
+    const [heightProportion, setHeightProportion] = useState(0); // Proportion of height
+    const [thumbLength, setThumbLength] = useState(0); // set the thumb size
+    const [scrollPosition, setScrollPosition] = useState(0); // Current scroll position
 
-    // Update CSS custom property when component mounts or config changes
+    // Refs for DOM elements
+    const trackRef = useRef(null); // Ref to the scrollbar track element
+    const thumbRef = useRef(null); // Ref to the scrollbar thumb element
+
+    // Get the scrollable element
+    const scrollableElement = scrollableRef?.current || document.body;
+
     useEffect(() => {
         document.documentElement.style.setProperty(
             '--arrow-btns-length',
@@ -39,171 +49,238 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
         );
     }, [scrollConfig.arrowBtnsLength]);
 
-    const [thumbPosition, setThumbPosition] = useState(0);
-    const isDragging = useRef(false);
-    const trackRef = useRef(null);
+    //  Handle mouse down event on the thumb
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        e.preventDefault();
+        if (trackRef.current && thumbRef.current) {
+            const trackRect = trackRef.current.getBoundingClientRect();
+            const thumbRect = thumbRef.current.getBoundingClientRect();
 
-    // Mouse Handlers
-
-    // Mouse event handlers for thumb movement
-    const createMouseHandlers = () => {
-        const handleMouseDown = (e) => {
-            e.preventDefault();
-            isDragging.current = true;
-            document.body.style.userSelect = 'none';
-        };
-
-        const handleMouseUp = () => {
-            isDragging.current = false;
-            document.body.style.userSelect = '';
-        };
-
-        const handleMouseMove = (e) => {
-            if (!isDragging.current || !trackRef.current) return;
-
-            const rect = trackRef.current.getBoundingClientRect();
-            let thumbLength;
-
-            if (scrollConfig.thumbLength.mode === 'static') {
-                thumbLength = scrollConfig.thumbLength.value;
-            } else {
-                thumbLength = x ? rect.width * 0.5 : rect.height * 0.5;
+            let initialOffset;
+            if (x) {
+                initialOffset = e.clientX - trackRect.left - thumbPosition;
+            } else if (y) {
+                initialOffset = e.clientY - trackRect.top - thumbPosition;
             }
-
-            let newPosition;
-
-            if (y) {
-                const offsetY = e.clientY - rect.top;
-                newPosition = Math.min(
-                    Math.max(0, offsetY - thumbLength / 2),
-                    rect.height - thumbLength
-                );
-            } else if (x) {
-                const offsetX = e.clientX - rect.left;
-                newPosition = Math.min(
-                    Math.max(0, offsetX - thumbLength / 2),
-                    rect.width - thumbLength
-                );
-            }
-
-            setThumbPosition(newPosition || 0);
-        };
-
-        return { handleMouseDown, handleMouseUp, handleMouseMove };
+            if (initialOffset !== undefined) setDragOffset(initialOffset);
+        }
     };
 
-    const { handleMouseDown, handleMouseUp, handleMouseMove } =
-        createMouseHandlers();
+    // Handle mouse move event during dragging
+    const handleMouseMove = (e) => {
+        if (!isDragging) return;
 
+        if (trackRef.current) {
+            const trackRect = trackRef.current.getBoundingClientRect();
+
+            let newPosition;
+            if (x) {
+                const mouseX = e.clientX - trackRect.left;
+                const maxPosition = trackRect.width - thumbLength;
+                newPosition = Math.min(
+                    Math.max(0, mouseX - dragOffset),
+                    maxPosition
+                );
+            } else if (y) {
+                const mouseY = e.clientY - trackRect.top;
+                const maxPosition = trackRect.height - thumbLength;
+                newPosition = Math.min(
+                    Math.max(0, mouseY - dragOffset),
+                    maxPosition
+                );
+            }
+            if (newPosition !== undefined) {
+                setThumbPosition(newPosition);
+            }
+        }
+    };
+
+    // Handle mouse up event to stop dragging
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    // Calculate the thumb length on component mount and when x or y change
     useEffect(() => {
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
+        if (trackRef.current && thumbRef.current) {
+            const trackRect = trackRef.current.getBoundingClientRect();
+            const thumbRect = thumbRef.current.getBoundingClientRect();
+            if (y) {
+                const trackHeight = trackRect.height;
+                const maxThumbHeight = trackHeight * (trackHeight / contentHeight);
+
+                setThumbLength(Math.min(trackHeight * 0.5, maxThumbHeight));
+                setThumbLength(thumbRect.height);
+            } else if (x) {
+                const trackWidth = trackRect.width;
+                const maxThumbWidth = trackWidth * (trackWidth / contentWidth);
+
+                setThumbLength(Math.min(trackWidth * 0.5, maxThumbWidth));
+                setThumbLength(thumbRect.width);
+            }
+        }
+    }, [y, x, contentHeight, contentWidth, heightProportion, thumbRef]);
+
+    // Calculate content and viewport dimensions and listen to resize and content changes
+    useEffect(() => {
+        // Function to calculate and set dimensions
+        const handleResize = () => {
+            if (contentRef && contentRef.current) {
+                const rect = contentRef.current.getBoundingClientRect();
+                setContentHeight(rect.height + scrollOffset);
+                setContentWidth(rect.width);
+            }
+            setViewportWidth(window.innerWidth);
+            setViewportSize({
+                width: window.innerWidth,
+                height: window.innerHeight
+            });
+        };
+
+        // Initial call to set sizes
+        handleResize();
+        // Set up a resize listener
+        window.addEventListener('resize', handleResize);
+
+        let resizeObserver;
+
+        // Set up a resize observer to observe the contentRef
+        if (contentRef && contentRef.current) {
+            resizeObserver = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    setContentHeight(entry.contentRect.height + scrollOffset);
+                    setContentWidth(entry.contentRect.width);
+                }
+            });
+            resizeObserver.observe(contentRef.current);
+        }
+
+        // Cleanup function to remove the listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            if (resizeObserver) resizeObserver.disconnect();
+        };
+    }, [contentRef, scrollOffset]);
+
+    // Handle the thumb dragging
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        } else {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        }
 
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, []);
+    }, [isDragging, handleMouseMove, handleMouseUp]);
 
-    // Mouse event handlers for tracking cursor
+    // Calculate the proportion of the content height vs viewport height
     useEffect(() => {
-        if (!scrollConfig.hideArrowBtnsWhenInactive) return;
+        if (y && viewportSize.height && contentHeight)
+            setHeightProportion((viewportSize.height / contentHeight) * 100);
 
-        const handleMouseEnter = () => {
-            // Clear any pending timeout
-            if (mouseLeaveTimerRef.current) {
-                clearTimeout(mouseLeaveTimerRef.current);
+        if (x && viewportWidth && contentWidth)
+            setHeightProportion((viewportWidth / contentWidth) * 100);
+    }, [contentHeight, viewportSize.height, contentWidth, viewportWidth, x, y]);
+
+    // Calculate the scroll position based on thumb position
+    useEffect(() => {
+        if (trackRef.current) {
+            const trackRect = trackRef.current.getBoundingClientRect();
+            let newScrollPosition;
+            if (y) {
+                const scrollableHeight = contentHeight - viewportSize.height;
+                const maxThumbPosition = trackRect.height - thumbLength;
+
+                newScrollPosition =
+                    scrollableHeight * (thumbPosition / maxThumbPosition);
+            } else if (x) {
+                const scrollableWidth = contentWidth - viewportWidth;
+                const maxThumbPosition = trackRect.width - thumbLength;
+
+                newScrollPosition =
+                    scrollableWidth * (thumbPosition / maxThumbPosition);
             }
-            setIsActive(true);
-        };
-
-        const handleMouseLeave = () => {
-            // Set a timeout to allow for potential re-entry
-            mouseLeaveTimerRef.current = setTimeout(() => {
-                setIsActive(false);
-            }, scrollConfig.arrowBtnsToggleDelay);
-        };
-
-        const scrollbarElement = scrollbarRef.current;
-        if (scrollbarElement) {
-            scrollbarElement.addEventListener('mouseenter', handleMouseEnter);
-            scrollbarElement.addEventListener('mouseleave', handleMouseLeave);
-
-            return () => {
-                scrollbarElement.removeEventListener('mouseenter', handleMouseEnter);
-                scrollbarElement.removeEventListener('mouseleave', handleMouseLeave);
-            };
+            if (newScrollPosition !== undefined) {
+                setScrollPosition(newScrollPosition);
+            }
         }
-    }, [scrollConfig.hideArrowBtnsWhenInactive, scrollConfig.arrowBtnsToggleDelay]);
+    }, [
+        thumbPosition,
+        contentHeight,
+        contentWidth,
+        viewportSize.height,
+        viewportWidth,
+        y,
+        x,
+        thumbLength
+    ]);
 
+    // Apply scroll to content
     useEffect(() => {
-        const handleResize = () => {
-            if (trackRef.current) {
-                const rect = trackRef.current.getBoundingClientRect();
-                let thumbLength;
-
-                if (scrollConfig.thumbLength.mode === 'static') {
-                    thumbLength = scrollConfig.thumbLength.value;
-                } else {
-                    thumbLength = y ? rect.height * 0.5 : rect.width * 0.5;
-                }
-
-                // Recalculate thumb position proportionally
-                if (y || x) {
-                    const currentPosition = thumbPosition;
-                    const maxPossiblePosition = y
-                        ? rect.height - thumbLength
-                        : rect.width - thumbLength;
-
-                    // Ensure the thumb stays within the new track bounds
-                    const newPosition = Math.min(
-                        currentPosition,
-                        maxPossiblePosition
-                    );
-
-                    setThumbPosition(newPosition);
-                }
+        if (scrollableElement) {
+            if (y) {
+                scrollableElement.scrollTo({
+                    top: scrollPosition
+                });
+            } else if (x) {
+                scrollableElement.scrollTo({
+                    left: scrollPosition
+                });
             }
-        };
+        }
+    }, [scrollPosition, scrollableElement, x, y]);
 
-        // Add resize listener
-        window.addEventListener('resize', handleResize);
+    // Log content and viewport sizes
+    const logSizes = () => {
+        if (contentRef && contentRef.current) {
+            const rect = contentRef.current.getBoundingClientRect();
+            console.log('Content Height:', rect.height);
+        }
 
-        // Also trigger on track size change (when active state changes)
-        handleResize();
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [isActive, y, x, thumbPosition]);
+        console.log('Viewport Height:', viewportSize.height);
+        if (trackRef.current) {
+            const trackRect = trackRef.current.getBoundingClientRect();
+            console.log('Track Height:', trackRect.height);
+        }
+        console.log('Height Proportion:', heightProportion + '%');
+        if (thumbRef.current) {
+            const thumbRect = thumbRef.current.getBoundingClientRect();
+            console.log('thumb rect height', thumbRect.height);
+            console.log('thumb rect width', thumbRect.width);
+        }
+        console.log('Content width', contentWidth);
+        console.log('Viewport width', viewportWidth);
+    };
+    thumbPosition;
 
     // Dynamic style generators
 
     const getTrackStyle = () => {
-        const baseStyle = {
-            position: 'fixed',
-            transition: `width ${scrollConfig.arrowBtnsToggleDelay}ms, height ${scrollConfig.arrowBtnsToggleDelay}ms`
-        };
-
         if (!scrollConfig.hideArrowBtnsWhenInactive || isActive) {
-            // Active state - full width/height
+            // Active state
             return {
-                ...baseStyle,
+                position: 'fixed',
                 width: x
                     ? scrollConfig.enableArrowBtns
-                        ? `calc(100vh - ${scrollConfig.arrowBtnsLength * 2}px)`
-                        : `calc(100vh)`
+                        ? `calc(100vw - ${scrollConfig.arrowBtnsLength * 2}px)`
+                        : `100vw`
                     : scrollConfig.trackThickness,
                 height: y
                     ? scrollConfig.enableArrowBtns
                         ? `calc(100vh - ${scrollConfig.arrowBtnsLength * 2}px)`
-                        : `calc(100vh)`
+                        : `100vh`
                     : scrollConfig.trackThickness
             };
         } else {
-            // Inactive state - reduced width, full height
+            // Inactive state
             return {
-                ...baseStyle,
+                position: 'fixed',
                 width: '10px',
                 height: '100vh'
             };
@@ -211,45 +288,29 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
     };
 
     const getThumbStyle = () => {
-        if (!trackRef.current) return {};
-
-        const trackRect = trackRef.current.getBoundingClientRect();
-        let thumbLength;
-
-        if (scrollConfig.thumbLength.mode === 'static') {
-            // Use the static value directly
-            thumbLength = scrollConfig.thumbLength.value;
-        } else {
-            // Use 50% of track size
-            thumbLength = x
-                ? trackRect.width * 0.5 // 50% of track width for horizontal
-                : trackRect.height * 0.5; // 50% of track height for vertical
-        }
-
         return {
             position: 'absolute',
             cursor: 'grab',
             ...(x
                 ? {
                       top: '50%',
-                      left: thumbPosition,
-                      transform: 'translateY(-50%)',
-                      height: '100%',
-                      width: thumbLength
+                      transform: `translate(${thumbPosition}px, -50%)`,
+                      width: `${heightProportion}%`,
+                      height: '100%'
                   }
                 : {
-                      top: thumbPosition,
                       left: '50%',
-                      transform: 'translateX(-50%)',
+                      transform: `translate(-50%, ${thumbPosition}px)`,
                       width: '100%',
-                      height: thumbLength
+                      height: `${heightProportion}%`
                   })
         };
     };
 
     const getArrowBtnsStyle = () => ({
         width: x ? `var(--arrow-btns-length)` : '100%',
-        height: y ? `var(--arrow-btns-length)` : '100%'
+        height: y ? `var(--arrow-btns-length)` : '100%',
+        opacity: isActive ? 1 : 0
     });
 
     // Render methods
@@ -265,7 +326,6 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
                 <div
                     className={`arrow-btn arrow-btn-${dir}`}
                     style={getArrowBtnsStyle()}
-                    onMouseDown={handleMouseDown}
                 />
             </div>
         ));
@@ -277,10 +337,7 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
 
         return (
             <div
-                ref={(el) => {
-                    scrollbarRef.current = el;
-                    trackRef.current = el;
-                }}
+                ref={trackRef}
                 className={`scrollbar-track ${!isActive ? 'inactive' : ''}`}
                 style={getTrackStyle()}
             >
@@ -290,9 +347,10 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
                             ? renderArrows('vertical')
                             : null}
                         <div
+                            ref={thumbRef}
+                            onMouseDown={handleMouseDown}
                             className="thumb"
                             style={getThumbStyle()}
-                            onMouseDown={handleMouseDown}
                         />
                     </>
                 )}
@@ -303,15 +361,21 @@ function CustomScrollbar({ x = false, y = false, config = {} }) {
                             ? renderArrows('horizontal')
                             : null}
                         <div
+                            ref={thumbRef}
+                            onMouseDown={handleMouseDown}
                             className="thumb"
                             style={getThumbStyle()}
-                            onMouseDown={handleMouseDown}
                         />
                     </>
                 )}
             </div>
         );
     };
+
+    // Call the log function after each render
+    useEffect(() => {
+        logSizes();
+    });
 
     return renderScrollbar();
 }

@@ -20,6 +20,7 @@ export default function MoviePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
     const scrollContainerRef = useRef();
+    const movieDetailRef = useRef(null); // Ref for .movie-detail-container
 
     const { id: movieId } = useParams();
     const { movie, setMovie, credits, setCredits, genresMap } = useMovieStore();
@@ -90,7 +91,9 @@ export default function MoviePage() {
     };
 
     const formattedRuntime = movie.runtime
-        ? `${Math.floor(movie.runtime / 60)} h ${movie.runtime % 60} min`
+        ? movie.runtime < 60
+            ? `${movie.runtime} min`
+            : `${Math.floor(movie.runtime / 60)} h ${movie.runtime % 60} min`
         : null;
 
     const formattedRating = movie.adult ? 'Rated R' : 'Rated PG';
@@ -102,91 +105,131 @@ export default function MoviePage() {
 
     const numberOfCastMembers = credits && credits.cast ? credits.cast.length : 0;
 
+    const getMovieTitleClass = (title) => {
+        if (!title) return 'title-small';
+        const length = title.length;
+
+        switch (true) {
+            case length < 25:
+                return 'title-large';
+            case length < 40:
+                return 'title-medium';
+            default:
+                return 'title-small';
+        }
+    };
+
     return (
-        <div className="movie-page-container">
-            <div className="movie-page-background-overlay"></div>
-            <div className="movie-detail-container">
-                <div className="details-heading-section">
-                    <div className="poster">
-                        <img
-                            className="movie-poster"
-                            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                            alt={movie.title}
-                            title={movie.title}
-                        />
+        <>
+            <div className="movie-page-container" ref={movieDetailRef}>
+                <div className="movie-page-background-overlay"></div>
+                <div className="movie-detail-container">
+                    <div className="details-heading-section">
+                        {/* Poster */}
+                        <div className="poster">
+                            <img
+                                className="movie-poster"
+                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                                alt={movie.title}
+                                title={movie.title}
+                            />
+                        </div>
+
+                        <div className="right-side">
+                            {/* Title */}
+                            <div
+                                className={`title ${getMovieTitleClass(movie.title)}`}
+                            >
+                                {movie.title}
+                            </div>
+
+                            {/* Release Year, Runtime, Adult Display */}
+                            <p className="other-info">
+                                <span
+                                    className="popup"
+                                    title={new Date(
+                                        movie.release_date
+                                    ).toLocaleDateString('en-GB')}
+                                >
+                                    {movie.release_date.slice(0, 4)}
+                                </span>
+
+                                {formattedRuntime !== null ? (
+                                    <>
+                                        <span className="separator">•</span>
+                                        {formattedRuntime}
+                                    </>
+                                ) : null}
+                                {formattedRuntime !== null ? (
+                                    <>
+                                        <span className="separator">•</span>
+                                        {formattedRuntime}
+                                    </>
+                                ) : null}
+
+                                {movie.adult !== undefined ? (
+                                    <>
+                                        <span className="separator">•</span>
+                                        <span className="popup" title={ratingTitle}>
+                                            {formattedRating}
+                                        </span>
+                                    </>
+                                ) : null}
+                            </p>
+
+                            <Genres />
+
+                            {/* Rating, Vote Count, Popularity Display */}
+                            <div className="rating-container">
+                                <IMDbRating />
+
+                                <span className="separator"></span>
+
+                                <VoteCount />
+
+                                <span className="separator"></span>
+                                <span className="separator"></span>
+
+                                <Popularity />
+                            </div>
+
+                            {/* Description Section */}
+                            <div className="description">
+                                <p className="title">Description:</p>
+                                <Overview
+                                    isExpanded={isExpanded}
+                                    toggleDescriptionExpand={toggleDescriptionExpand}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="right-side">
-                        <div className="title">{movie.title}</div>
-                        <p className="other-info">
-                            {/* {new Date(movie.release_date).getFullYear()} */}
-                            {new Date(movie.release_date).toLocaleDateString('en-US')}
 
-                            {formattedRuntime !== null ? (
-                                <>
-                                    <span className="separator">•</span>
-                                    {formattedRuntime}
-                                </>
-                            ) : null}
-
-                            {movie.adult !== undefined ? (
-                                <>
-                                    <span className="separator">•</span>
-                                    <div
-                                        title={ratingTitle}
-                                        style={{
-                                            display: 'inline',
-                                            textDecoration: 'underline'
-                                        }}
-                                    >
-                                        {formattedRating}
-                                    </div>
-                                </>
-                            ) : null}
-                        </p>
-
-                        <Genres />
-
-                        {/* Rating, Vote Count, Popularity Display */}
-                        <div className="rating-container">
-                            <IMDbRating />
-
-                            <span className="separator"></span>
-
-                            <VoteCount />
-                            
-                            <span className="separator"></span>
-
-                            <Popularity />
+                    {/* Cast Members Section */}
+                    <div className="cast-members-container">
+                        <div className="cast-members-header">
+                            <p className="title">
+                                Cast Members
+                                <span>{numberOfCastMembers}</span>
+                                <svg className="icon">
+                                    <use xlinkHref={`${sprite}#arrow-forward`} />
+                                </svg>
+                            </p>
+                            <button className="view-full-cast-button">
+                                All cast & crew
+                            </button>
                         </div>
-
-                        {/* Description Section */}
-                        <div className="description">
-                            <p className="title">Description:</p>
-                            <Overview isExpanded={isExpanded} toggleDescriptionExpand={toggleDescriptionExpand}/>
-                        </div>
+                        <CastScroller />
                     </div>
                 </div>
 
-                {/* Cast Members Section */}
-                <div className="cast-members-container">
-                    <div className="cast-members-header">
-                        <p className="title">
-                            Cast Members
-                            <span>{numberOfCastMembers}</span>
-                            <svg className="icon">
-                                <use xlinkHref={`${sprite}#arrow-forward`} />
-                            </svg>
-                        </p>
-                        <button className="view-full-cast-button">
-                            All cast & crew
-                        </button>
-                    </div>
-                    <CastScroller />
-                </div>
+                <ReactSVG src={sprite} style={{ display: 'none' }} />
             </div>
-
-            <ReactSVG src={sprite} style={{ display: 'none' }} />
-            {/* <CustomScrollbar/> */}
-        </div>
+            {/* <CustomScrollbar
+                y
+                contentRef={movieDetailRef}
+                scrollableRef={document.body}
+                scrollOffset={100}
+            /> */}
+        </>
     );
 }
