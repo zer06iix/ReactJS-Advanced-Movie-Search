@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useCallback } from 'react';
-import useTabStore from '../../store/tabStore';
+import useNavStore from '../../store/navStore';
 
 export default function Sidebar({ children, onClick }) {
-    const { isSidebarOpen, toggleSidebar } = useTabStore();
+    const { isSidebarOpen, toggleSidebar } = useNavStore();
 
     const handleClick = useCallback(() => {
         toggleSidebar();

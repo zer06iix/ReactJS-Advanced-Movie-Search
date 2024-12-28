@@ -262,7 +262,7 @@ nav {
 }
 
 .searchbar-container .query-results.active {
-    height: 300px;
+    height: 400px;
     opacity: 0.88;
 }
 
@@ -322,6 +322,7 @@ nav {
 
 .query-results.active .query-results-items:hover {
     background-color: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
 }
 
 .query-results-items .poster-container {
@@ -382,4 +383,57 @@ nav {
 
 .query-results-items .info .separator {
     padding-inline: 3px;
+}
+
+/* ResultsPage Styles */
+.search-page-container {
+    padding: 20px;
+    color: #ffffff; /* White text for readability */
+    min-height: 100vh; /* Full height for the page */
+}
+
+/* Loading and Error Messages */
+.loading-message, .error-message {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 50px;
+}
+
+/* Results Container */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Individual Result Item */
+.result-item {
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    width: 100%;
+    max-width: 600px; /* Limit width for better readability */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s;
+}
+
+/* Hover Effect for Result Items */
+.result-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+}
+
+/* Title Styling */
+.result-item h3 {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+/* No Results Found Message */
+.no-results-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #c4c1c6; /* Lighter color for no results */
+    margin-top: 20px;
 }

@@ -5,6 +5,7 @@ import MostRated from './pages/MostRated';
 import Popular from './pages/Popular';
 import Watchlist from './pages/Watchlist';
 import MoviePage from './pages/MoviePage';
+import ResultsPage from './pages/ResultsPage';
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
                     <Route path="/most-rated" element={<MostRated />} />
                     <Route path="/watchlist" element={<Watchlist />} />
                     <Route path="/movie/:id" element={<MoviePage />} />
+                    <Route path="/results" element={<ResultsPage />} />
                 </Routes>
             </div>
         </Router>

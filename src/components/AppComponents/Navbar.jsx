@@ -6,7 +6,7 @@ import NavIndicator from './NavIndicator';
 import NavTab from './NavTab';
 import Sidebar from './Sidebar';
 import SidebarTab from './SidebarTab';
-import useTabStore from '../../store/tabStore';
+import useNavStore from '../../store/navStore';
 
 export default function Navbar() {
     const location = useLocation();
@@ -18,7 +18,7 @@ export default function Navbar() {
         setMenuButtonOpacity,
         activeTabWidth,
         setActiveTabWidth
-    } = useTabStore();
+    } = useNavStore();
 
     const handleSidebarClick = () => setMenuButtonOpacity(1);
 

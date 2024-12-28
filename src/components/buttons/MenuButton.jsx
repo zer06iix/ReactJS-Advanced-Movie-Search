@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
-import useTabStore from '../../store/tabStore';
+import useNavStore from '../../store/navStore';
 
 /* eslint-disable react/prop-types */
 const MenuButton = forwardRef(({ style, onClick }, ref) => {
-    const { toggleSidebar } = useTabStore();
+    const { toggleSidebar } = useNavStore();
 
     const handleClick = () => {
         onClick();

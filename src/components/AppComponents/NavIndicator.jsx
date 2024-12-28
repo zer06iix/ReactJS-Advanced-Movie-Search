@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
-import useTabStore from '../../store/tabStore';
+import useNavStore from '../../store/navStore';
 
 export default function NavIndicator({ width }) {
-    const { activeTab, activeTabIndex: i, tabWidths } = useTabStore();
+    const { activeTab, activeTabIndex: i, tabWidths } = useNavStore();
 
     useEffect(() => {
         // This will trigger a re-render when activeTab changes

@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import useTabStore from '../../store/tabStore';
+import useNavStore from '../../store/navStore';
 
 export default function NavTab({ path, children }) {
-    const { activeTab, handleActiveTab, updateTabWidth, tabs } = useTabStore();
+    const { activeTab, handleActiveTab, updateTabWidth, tabs } = useNavStore();
     const isActive = activeTab === children;
     const tabRef = useRef(null);
     const tabIndex = tabs.indexOf(children); // Find the index of this tab

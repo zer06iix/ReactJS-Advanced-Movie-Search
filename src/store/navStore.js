@@ -1,14 +1,17 @@
 import { create } from 'zustand';
 
-const useTabStore = create((set) => {
+const useNavStore = create((set) => {
     const tabs = ['Home', 'Popular', 'Most Rated', 'Watch list'];
     const initialStates = {
         activeTab: sessionStorage.getItem('activeTab') || 'Home',
         activeTabIndex: parseInt(sessionStorage.getItem('activeTabIndex')) || 0,
-        isSidebarOpen: false,
+        activeTabWidth: 0, // Moved from Navbar
         tabWidths: [0, 0, 0, 0], // Array to store the widths of each tab
+
+        isSidebarOpen: false,
         menuButtonOpacity: 1, // Moved from Navbar
-        activeTabWidth: 0 // Moved from Navbar
+
+        query: '',
     };
 
     return {
@@ -56,8 +59,11 @@ const useTabStore = create((set) => {
 
         // New methods to update menuButtonOpacity and activeTabWidth
         setMenuButtonOpacity: (opacity) => set({ menuButtonOpacity: opacity }),
-        setActiveTabWidth: (width) => set({ activeTabWidth: width })
+        setActiveTabWidth: (width) => set({ activeTabWidth: width }),
+        
+        
+        setQuery: (newQuery) => set({ query: newQuery }),
     };
 });
 
-export default useTabStore;
+export default useNavStore;
