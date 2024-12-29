@@ -5,13 +5,11 @@ const useNavStore = create((set) => {
     const initialStates = {
         activeTab: sessionStorage.getItem('activeTab') || 'Home',
         activeTabIndex: parseInt(sessionStorage.getItem('activeTabIndex')) || 0,
-        activeTabWidth: 0, // Moved from Navbar
+        activeTabWidth: 0,
         tabWidths: [0, 0, 0, 0], // Array to store the widths of each tab
-
         isSidebarOpen: false,
-        menuButtonOpacity: 1, // Moved from Navbar
-
-        query: '',
+        menuButtonOpacity: 1,
+        query: ''
     };
 
     return {
@@ -57,12 +55,9 @@ const useNavStore = create((set) => {
             sessionStorage.setItem('activeTabIndex', newActiveTabIndex);
         },
 
-        // New methods to update menuButtonOpacity and activeTabWidth
         setMenuButtonOpacity: (opacity) => set({ menuButtonOpacity: opacity }),
         setActiveTabWidth: (width) => set({ activeTabWidth: width }),
-        
-        
-        setQuery: (newQuery) => set({ query: newQuery }),
+        setQuery: (newQuery) => set({ query: newQuery })
     };
 });
 

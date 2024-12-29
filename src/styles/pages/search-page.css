@@ -1,0 +1,72 @@
+.search-page-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 100px);
+}
+
+.results-container {
+    width: 1170px;
+    display: grid;
+    padding: 25px;
+    gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.result-item-container {
+    height: 150px;
+    background-color: rgba(128, 128, 128, 0.163);
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    border-radius: 25px;
+}
+
+.result-item-container .poster {
+    height: 100%;
+    aspect-ratio: 5.5/8;
+}
+
+.result-item-container .poster img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.result-item-container .right-side {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: rgb(196, 193, 198);
+}
+
+.result-item-container .right-side .rating {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.result-item-container .heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.result-item-container .title {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.loading-message,
+.error-message {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.no-results-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #c4c1c6;
+}
