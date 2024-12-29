@@ -160,12 +160,6 @@ export default function MoviePage() {
                                         {formattedRuntime}
                                     </>
                                 ) : null}
-                                {formattedRuntime !== null ? (
-                                    <>
-                                        <span className="separator">•</span>
-                                        {formattedRuntime}
-                                    </>
-                                ) : null}
 
                                 {movie.adult !== undefined ? (
                                     <>
@@ -187,7 +181,6 @@ export default function MoviePage() {
 
                                 <VoteCount />
 
-                                <span className="separator"></span>
                                 <span className="separator"></span>
 
                                 <Popularity />

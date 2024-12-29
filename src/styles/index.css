@@ -6,6 +6,7 @@
 @import './scrollbar.css';
 @import './pages/movie-page.css';
 @import './pages/popular-page.css';
+@import './pages/search-page.css';
 @import './media-queries.css';
 
 /* @import './layout.css'; */
