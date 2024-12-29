@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
-import useMovieStore from "../../store/movieStore";
+import useSeriesStore from "../../store/seriesStore";
 import ExpanderButton from "../buttons/ExpanderButton";
 
-export default function Overview({ isExpanded, toggleDescriptionExpand }) {
+export default function SeriesOverview({ isExpanded, toggleDescriptionExpand }) {
     
-    const { movie } = useMovieStore();
+    const { series } = useSeriesStore();
     
     return (
         <>
-            <p className="info">{movie.overview}</p>
+            <p className="info">{series.overview}</p>
             <ExpanderButton isExpanded={isExpanded} onClick={toggleDescriptionExpand}/>
         </>
     );

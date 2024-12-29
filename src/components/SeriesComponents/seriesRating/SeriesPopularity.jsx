@@ -1,9 +1,9 @@
 import sprite from '../../../styles/sprite.svg';
-import useMovieStore from '../../../store/movieStore';
+import useSeriesStore from '../../../store/seriesStore';
 
-export default function Popularity() {
+export default function SeriesPopularity() {
 
-    const { movie } = useMovieStore();
+    const { series } = useSeriesStore();
 
     return (
         <div className="item popularity">
@@ -13,9 +13,9 @@ export default function Popularity() {
                     <use xlinkHref={`${sprite}#popularity`} />
                 </svg>
                 <p className="average">
-                    {movie.popularity >= 1000
-                        ? `${(movie.popularity / 1000).toFixed(1)}k`
-                        : movie.popularity.toFixed(0)}
+                    {series.popularity >= 1000
+                        ? `${(series.popularity / 1000).toFixed(1)}k`
+                        : series.popularity.toFixed(0)}
                 </p>
             </div>
         </div>

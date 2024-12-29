@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import useMovieStore from '../../../store/movieStore';
-import CastItem from './CastItem';
+import MovieCastItem from './MovieCastItem';
 
-export default function CastScroller() {
+export default function MovieCastScroller() {
     const { credits } = useMovieStore();
     const wrapperRef = useRef(null);
     const containerRef = useRef(null); // Reference for the container
@@ -76,9 +76,10 @@ export default function CastScroller() {
                     onMouseMove={handleMouseMove}
                 >
                     {credits && credits.cast && credits.cast.length > 0
-                        ? credits.cast.map((member) => (
-                              <CastItem member={member} key={member.id} />
-                          ))
+                        ?
+                            credits.cast.map((member) => (
+                                <MovieCastItem member={member} key={member.id} />
+                            ))
                         : null}
                 </div>
                 <div

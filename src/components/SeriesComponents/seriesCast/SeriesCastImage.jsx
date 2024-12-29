@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import sprite from '../../../styles/sprite.svg';
 
-export default function CastImage({ member }) {
+export default function SeriesCastImage({ member }) {
     const [imgError, setImgError] = useState(false);
 
     const handleImageError = () => {

@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from 'react';
+/* eslint-disable no-unused-vars */
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import SearchButton from '../buttons/SearchButton';
@@ -10,20 +11,44 @@ import useFetchStore from '../../store/fetchStore';
 import useNavStore from '../../store/navStore';
 
 export default function SearchBar() {
-    const { fetchQueries, fetchCredits } = useFetchStore();
+    const { fetchMovieQueries, fetchSeriesQueries, fetchMovieCredits } = useFetchStore();
     const { query, setQuery } = useNavStore();
 
     const searchBarRef = useRef(null);
     const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
 
     const {
-        data: queryData,
-        isLoading: queryLoading,
-        error: queryError
+        data: movieData,
+        isLoading: movieLoading,
+        error: movieError
     } = useQuery({
-        queryKey: ['queries', query],
-        queryFn: () => fetchQueries(query),
-        enabled: !!query && isSearchBarOpen
+        queryKey: ['movieQueries', query],
+        queryFn: () => fetchMovieQueries(query),
+        enabled: !!query
+    });
+
+    const {
+        data: seriesData,
+        isLoading: seriesLoading,
+        error: seriesError
+    } = useQuery({
+        queryKey: ['seriesQueries', query],
+        queryFn: () => fetchSeriesQueries(query),
+        enabled: !!query
+    });
+
+    const queryLoading = movieLoading || seriesLoading;
+    const queryError = movieError || seriesError;
+    const queryData = [
+        ...(movieData ? movieData.slice(0, 5) : []),
+        ...(seriesData ? seriesData.slice(0, 5) : [])
+    ];
+
+    // Sort queryData based on rating
+    const sortedQueryData = queryData.sort((a, b) => {
+        const aRating = a.vote_average || 0; // Assuming vote_average is the rating field
+        const bRating = b.vote_average || 0;
+        return bRating - aRating; // Sort in descending order
     });
 
     const handleInputChange = (event) => {
@@ -31,39 +56,37 @@ export default function SearchBar() {
         setIsSearchBarOpen(true);
     };
 
-    const queryResults = queryData?.slice(0, 10) || []; // Handle potential undefined
+    const queryResultState = query
+        ? queryLoading
+            ? 'loading'
+            : sortedQueryData.length > 0
+            ? 'active'
+            : 'failed'
+        : 'inactive';
 
-    const creditsQueries = queryResults.map((movie) => ({
-        queryKey: ['credits', movie.id],
-        queryFn: () => fetchCredits(movie.id),
-        enabled: !!movie.id
+    const creditsQueries = sortedQueryData.map((item) => ({
+        queryKey: ['credits', item.id],
+        queryFn: () => fetchMovieCredits(item.id),
+        enabled: !!item.id
     }));
 
     const creditsData = useQueries({
         queries: creditsQueries
     });
 
-    const handleClickOutside = (event) => {
+    const handleClickOutside = useCallback((event) => {
         if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
             setIsSearchBarOpen(false);
             setQuery('');
         }
-    };
+    }, [setQuery]);
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
-
-    const queryResultState = query
-        ? queryLoading
-            ? 'loading'
-            : queryData && queryData.length > 0
-              ? 'active'
-              : 'failed'
-        : 'inactive';
+    }, [handleClickOutside]);
 
     return (
         <div className="searchbar-container" ref={searchBarRef}>
@@ -76,107 +99,97 @@ export default function SearchBar() {
             <SearchButton className="searchbar-btn" disabled={!query} />
 
             <div className={`query-results ${queryResultState}`}>
-                {queryData && queryData.length > 0
-                    ? queryResults.map((movie, index) => {
-                          const creditsQueryResult = creditsData[index];
-                          const title = movie.title;
+                {sortedQueryData.length > 0 ? (
+                    sortedQueryData.map((item, index) => {
+                        const creditsQueryResult = creditsData[index];
+                        const title = item.title || item.name;
 
-                          const imageUrl = movie?.poster_path
-                              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                              : null;
+                        const imageUrl = item?.poster_path
+                            ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                            : null;
 
-                          //   const hasCreditsError = creditsQueryResult.isError;
-                          const isLoadingCredits = creditsQueryResult.isLoading;
-                          const credits = creditsQueryResult.data;
+                        const isLoadingCredits = creditsQueryResult.isLoading;
+                        const credits = creditsQueryResult.data;
 
-                          const director = credits?.crew?.find(
-                              (member) => member.job === 'Director'
-                          );
-                          const directorName = director
-                              ? director.name
-                              : isLoadingCredits
-                                ? 'Loading director...'
-                                : null;
+                        const director = credits?.crew?.find(
+                            (member) => member.job === 'Director'
+                        );
+                        const directorName = director
+                            ? director.name
+                            : isLoadingCredits
+                            ? 'Loading director...'
+                            : null;
 
-                          const isTitleOverflowing = title.length > 16;
-                          const directorNameString = directorName || '';
-                          const infoText = movie.release_date
-                              ? movie.release_date.slice(0, 4) +
+                        const isTitleOverflowing = title.length > 16;
+                        const directorNameString = directorName || '';
+                        const infoText = item.release_date || item.first_air_date
+                            ? (item.release_date || item.first_air_date).slice(0, 4) +
                                 ' • By ' +
                                 directorNameString
-                              : directorNameString;
-                          const infoLength = infoText.length;
-                          const isInfoOverflowing = infoLength > 20;
+                            : directorNameString;
+                        const infoLength = infoText.length;
+                        const isInfoOverflowing = infoLength > 20;
 
-                          return (
-                              <Link
-                                  to={`/movie/${movie.id}`}
-                                  className="query-results-items"
-                                  key={movie.id}
-                              >
-                                  <div className="poster-container">
-                                      {imageUrl ? (
-                                          <div className="poster-container">
-                                              <img
-                                                  src={imageUrl}
-                                                  alt={movie.title}
-                                              />
-                                          </div>
-                                      ) : (
-                                          <div className="poster-container">
-                                              <svg className="placeholder-icon">
-                                                  <use
-                                                      xlinkHref={`${sprite}#image-placeholder`}
-                                                  />
-                                              </svg>
-                                          </div>
-                                      )}
-                                  </div>
-                                  <div className="right-section">
-                                      <p
-                                          className="title"
-                                          title={isTitleOverflowing ? title : ''}
-                                      >
-                                          {title}
-                                      </p>
-                                      <p
-                                          className="info"
-                                          title={isInfoOverflowing ? infoText : ''}
-                                      >
-                                          {movie.release_date && directorName ? (
-                                              <>
-                                                  {movie.release_date.slice(0, 4)}
-                                                  <span className="separator">
-                                                      •
-                                                  </span>
-                                                  By {directorName}
-                                              </>
-                                          ) : (
-                                              <>
-                                                  {movie.release_date
-                                                      ? movie.release_date.slice(
-                                                            0,
-                                                            4
-                                                        )
-                                                      : null}
-                                                  {directorName ? (
-                                                      <>By {directorName}</>
-                                                  ) : null}
-                                              </>
-                                          )}
-                                      </p>
-                                  </div>
-                              </Link>
-                          );
-                      })
-                    : null}
+                        const mediaType = item.name ? 'series' : 'movie'
+
+                        return (
+                            <Link to={`/${mediaType}/${item.id}`} className="query-results-items" key={item.id}>
+                                <div className="poster-container">
+                                    {imageUrl ? (
+                                        <div className="poster-container">
+                                            <img
+                                                src={imageUrl}
+                                                alt={title}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="poster-container">
+                                            <svg className="placeholder-icon">
+                                                <use
+                                                    xlinkHref={`${sprite}#image-placeholder`}
+                                                />
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="right-section">
+                                    <p
+                                        className="title"
+                                        title={isTitleOverflowing ? title : ''}
+                                    >
+                                        {title}
+                                    </p>
+                                    <p
+                                        className="info"
+                                        title={isInfoOverflowing ? infoText : ''}
+                                    >
+                                        {item.release_date || (item.first_air_date && directorName) ? (
+                                            <>
+                                                {(item.release_date || item.first_air_date).slice(0, 4)}
+                                                <span className="separator">•</span>
+                                                {mediaType === 'movie' ? <>In Movies</> : <>In TV Series</>}
+                                            </>
+                                        ) : (
+                                            <>
+                                                {item.release_date || item.first_air_date
+                                                    ? (item.release_date || item.first_air_date).slice(0, 4)
+                                                    : null}
+                                                {mediaType === 'movie' ? <>In Movies</> : <>In TV Series</>}
+                                            </>
+                                        )}
+                                    </p>
+                                </div>
+                            </Link>
+                        );
+                    })
+                ) : null}
 
                 {queryLoading ? (
                     <Loading />
                 ) : (
                     <p
                         className="query-results-error-message"
-                        title={queryError && `: ${queryError.message}`}
+                        title={queryError ? `: ${queryError.message}` : ''}
                     >
                         No results for &quot;{query}&quot;
                     </p>

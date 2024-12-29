@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../AppComponents/Loading';
 
 const UpNextItem = ({ movie, index, translateY }) => {
-    const { fetchCredits } = useFetchStore();
+    const { fetchMovieCredits } = useFetchStore();
 
     const {
         data: creditsData,
@@ -16,7 +16,7 @@ const UpNextItem = ({ movie, index, translateY }) => {
         error: creditsError
     } = useQuery({
         queryKey: ['credits', movie?.id],
-        queryFn: () => fetchCredits(movie?.id)
+        queryFn: () => fetchMovieCredits(movie?.id)
     });
 
     if (creditsLoading) {
@@ -64,7 +64,7 @@ const UpNextItem = ({ movie, index, translateY }) => {
 
                 <div className="genres-container">
                     {' '}
-                    {/* Genres will be links later */}
+                    {/* MovieGenres will be links later */}
                     <div className="genre-scroll-container">
                         {movie.genre_ids && movie.genre_ids.length > 0 ? (
                             <Genre genreIds={movie.genre_ids} />

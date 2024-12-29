@@ -1,7 +1,7 @@
 import sprite from '../../../styles/sprite.svg';
-import VoteAverage from "./VoteAverage"
+import MovieVoteAverage from "./MovieVoteAverage"
 
-export default function IMDbRating() {
+export default function MovieIMDbRating() {
     return (
         <div className="item imdb-rating">
             <p className="label">IMDb Rating</p>
@@ -9,9 +9,7 @@ export default function IMDbRating() {
                 <svg className="icon">
                     <use xlinkHref={`${sprite}#rating-icon`} />
                 </svg>
-                <p className="average">
-                    <VoteAverage />
-                </p>
+                <MovieVoteAverage />
             </div>
         </div>
     );

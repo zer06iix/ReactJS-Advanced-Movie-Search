@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -7,14 +7,14 @@ import { ReactSVG } from 'react-svg';
 import useFetchStore from '../store/fetchStore';
 import Loading from '../components/AppComponents/Loading';
 import useMovieStore from '../store/movieStore';
-import Overview from '../components/MovieComponents/Overview';
-import CastScroller from '../components/MovieComponents/cast/CastScroller';
+import MovieOverview from '../components/MovieComponents/MovieOverview';
+import MovieCastScroller from '../components/MovieComponents/movieCast/MovieCastScroller';
 import CustomScrollbar from '../components/AppComponents/Scrollbar';
 import sprite from '../styles/sprite.svg';
-import Genres from '../components/MovieComponents/Genres';
-import IMDbRating from '../components/MovieComponents/rating/IMDbRating';
-import VoteCount from '../components/MovieComponents/rating/VoteCount';
-import Popularity from '../components/MovieComponents/rating/Popularity';
+import MovieGenres from '../components/MovieComponents/MovieGenres';
+import MovieIMDbRating from '../components/MovieComponents/movieRating/MovieIMDbRating';
+import MovieVoteCount from '../components/MovieComponents/movieRating/MovieVoteCount';
+import MoviePopularity from '../components/MovieComponents/movieRating/MoviePopularity';
 
 export default function MoviePage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function MoviePage() {
 
     const { id: movieId } = useParams();
     const { movie, setMovie, credits, setCredits, genresMap } = useMovieStore();
-    const { fetchMovieDetails, fetchCredits, fetchGenres } = useFetchStore();
+    const { fetchMovieDetails, fetchMovieCredits, fetchGenres } = useFetchStore();
 
     // Fetch movie details
     const { data: movieData, error: movieError } = useQuery({
@@ -36,7 +36,7 @@ export default function MoviePage() {
     // Fetch movie credits
     const { data: movieCreditsData, error: movieCreditsError } = useQuery({
         queryKey: ['movieCredits', movieId],
-        queryFn: () => fetchCredits(movieId),
+        queryFn: () => fetchMovieCredits(movieId),
         enabled: !!movieId
     });
 
@@ -171,25 +171,25 @@ export default function MoviePage() {
                                 ) : null}
                             </p>
 
-                            <Genres />
+                            <MovieGenres />
 
-                            {/* Rating, Vote Count, Popularity Display */}
+                            {/* Rating, Vote Count, MoviePopularity Display */}
                             <div className="rating-container">
-                                <IMDbRating />
+                                <MovieIMDbRating />
 
                                 <span className="separator"></span>
 
-                                <VoteCount />
+                                <MovieVoteCount />
 
                                 <span className="separator"></span>
 
-                                <Popularity />
+                                <MoviePopularity />
                             </div>
 
                             {/* Description Section */}
                             <div className="description">
                                 <p className="title">Description:</p>
-                                <Overview
+                                <MovieOverview
                                     isExpanded={isExpanded}
                                     toggleDescriptionExpand={toggleDescriptionExpand}
                                 />
@@ -211,7 +211,7 @@ export default function MoviePage() {
                                 All cast & crew
                             </button>
                         </div>
-                        <CastScroller />
+                        <MovieCastScroller />
                     </div>
                 </div>
 

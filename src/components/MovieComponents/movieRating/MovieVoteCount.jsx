@@ -1,7 +1,7 @@
 import sprite from '../../../styles/sprite.svg';
 import useMovieStore from '../../../store/movieStore';
 
-export default function VoteCount() {
+export default function MovieVoteCount() {
 
     const { movie } = useMovieStore();
 

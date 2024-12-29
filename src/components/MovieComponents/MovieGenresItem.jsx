@@ -1,6 +1,6 @@
 import useMovieStore from "../../store/movieStore";
 
-export default function Genre() {
+export default function MovieGenresItem() {
     const { movie } = useMovieStore();
     const genreNames = movie.genres ? movie.genres.map((genre) => genre.name) : [];
 

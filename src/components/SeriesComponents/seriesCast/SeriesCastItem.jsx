@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
-import CastImage from './CastImage';
+/* eslint-disable react/prop-types */
+import { useRef, useEffect, useState } from 'react';
+import SeriesCastImage from './SeriesCastImage';
 
-export default function CastItem({ member }) {
+export default function SeriesCastItem({ member }) {
     const nameRef = useRef(null);
     const characterRef = useRef(null);
     const [nameTitle, setNameTitle] = useState('');
@@ -13,21 +14,19 @@ export default function CastItem({ member }) {
     };
 
     useEffect(() => {
-        // Check if name overflows
         if (nameRef.current) {
             const overflow =
                 nameRef.current.scrollWidth > nameRef.current.clientWidth;
             if (overflow) {
-                setNameTitle(member.name); // Set the full name if it overflows
+                setNameTitle(member.name);
             }
         }
 
-        // Check if character overflows
         if (characterRef.current) {
             const overflow =
                 characterRef.current.scrollWidth > characterRef.current.clientWidth;
             if (overflow) {
-                setCharacterTitle(member.character || 'Unknown Character'); // Set the full character name if it overflows
+                setCharacterTitle(member.character || 'Unknown Character');
             }
         }
     }, [member]);
@@ -36,7 +35,7 @@ export default function CastItem({ member }) {
         <div className="cast-member">
             <div className="cast-image-container">
                 {!imgError ? (
-                    <CastImage member={member} onError={handleImageError} />
+                    <SeriesCastImage member={member} onError={handleImageError} />
                 ) : null}
             </div>
             <div className="detail">

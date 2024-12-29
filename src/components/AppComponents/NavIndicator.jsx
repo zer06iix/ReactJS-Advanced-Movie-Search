@@ -13,6 +13,7 @@ export default function NavIndicator({ width }) {
     if (activeTab === null) return null;
 
     const indicatorOffset = -20;
+    const tabWidth = tabWidths[i] || 0;
     const tabWidthOffset = tabWidths
         .slice(0, i)
         .reduce((acc, width) => acc + width, 0);
@@ -21,7 +22,7 @@ export default function NavIndicator({ width }) {
         <div
             className="nav-indicator"
             style={{
-                width: tabWidths[i] + indicatorOffset * 2,
+                width: tabWidth + indicatorOffset * 2,
                 transform: `translate(
                 calc(${i} * 30px + ${tabWidthOffset}px + ${-indicatorOffset}px),
                 calc(-50% - 50px)

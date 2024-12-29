@@ -22,7 +22,15 @@ const useFetchStore = create((set) => ({
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
     },
+    fetchPopularSeries: async (page) => {
+        console.log('Fetching popular series'); // Log when fetching starts
+        const url = createApiUrlWithPage('/tv/popular', page);
+        const response = await axios.get(url);
+        const movies = response.data.results;
+        return movies; // Ensure this is returning an array
+    },
 
+    //Movie page
     fetchMovieDetails: async (id) => {
         console.log(`Fetching movie details.`);
         const url = createApiUrl(`/movie/${id}`);
@@ -30,9 +38,24 @@ const useFetchStore = create((set) => ({
         console.log('Movie details got fetched');
         return response.data; // Return the movie details
     },
-
-    fetchCredits: async (id) => {
+    
+    fetchMovieCredits: async (id) => {
         const url = createApiUrl(`/movie/${id}/credits`);
+        const response = await axios.get(url);
+        return response.data;
+    },
+
+    //Series page
+    fetchSeriesDetails: async (id) => {
+        console.log(`Fetching tv details.`);
+        const url = createApiUrl(`/tv/${id}`);
+        const response = await axios.get(url);
+        console.log('Series details got fetched');
+        return response.data; // Return the movie details
+    },
+    
+    fetchSeriesCredits: async (id) => {
+        const url = createApiUrl(`/tv/${id}/credits`);
         const response = await axios.get(url);
         return response.data;
     },
@@ -42,9 +65,9 @@ const useFetchStore = create((set) => ({
         try {
             console.log('Fetching genres');
             // const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
-            const url = createApiUrl(`/genre/movie/list`);
+            const url = createApiUrl(`/genre/list`);
             const response = await axios.get(url);
-            console.log('Genres fetched successfully');
+            console.log('MovieGenres fetched successfully');
             return response.data.genres; // Return the genres
         } catch (error) {
             console.error('Error fetching genres:', error);
@@ -67,8 +90,15 @@ const useFetchStore = create((set) => ({
         }
     },
 
-    fetchQueries: async (query) => {
+    fetchMovieQueries: async (query) => {
         const url = createApiUrlWithQuery(`/search/movie`, query);
+        const response = await axios.get(url);
+        
+        return response.data.results;
+    },
+
+    fetchSeriesQueries: async (query) => {
+        const url = createApiUrlWithQuery(`/search/tv`, query)
         const response = await axios.get(url);
         
         return response.data.results;
