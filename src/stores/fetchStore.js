@@ -23,14 +23,14 @@ const useFetchStore = create((set) => ({
         return movies; // Ensure this is returning an array
     },
     fetchPopularSeries: async (page) => {
-        console.log('Fetching popular series'); // Log when fetching starts
+        console.log('Fetching popular shows'); // Log when fetching starts
         const url = createApiUrlWithPage('/tv/popular', page);
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
     },
 
-    //Movie page
+    // Movie page
     fetchMovieDetails: async (id) => {
         console.log(`Fetching movie details.`);
         const url = createApiUrl(`/movie/${id}`);
@@ -45,12 +45,12 @@ const useFetchStore = create((set) => ({
         return response.data;
     },
 
-    //Series page
+    // Shows page
     fetchSeriesDetails: async (id) => {
         console.log(`Fetching tv details.`);
         const url = createApiUrl(`/tv/${id}`);
         const response = await axios.get(url);
-        console.log('Series details got fetched');
+        console.log('Shows details got fetched');
         return response.data; // Return the movie details
     },
 

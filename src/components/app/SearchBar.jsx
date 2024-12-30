@@ -136,7 +136,7 @@ export default function SearchBar() {
                           const infoLength = infoText.length;
                           const isInfoOverflowing = infoLength > 20;
 
-                          const mediaType = item.name ? 'series' : 'movie';
+                          const mediaType = item.name ? 'shows' : 'movie';
 
                           return (
                               <Link
@@ -196,7 +196,7 @@ export default function SearchBar() {
                                                   {mediaType === 'movie' ? (
                                                       <>In Movies</>
                                                   ) : (
-                                                      <>In TV Series</>
+                                                      <>In Shows</>
                                                   )}
                                               </>
                                           )}

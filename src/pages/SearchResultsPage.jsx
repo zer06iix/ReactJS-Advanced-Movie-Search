@@ -53,7 +53,7 @@ export default function ResultsPage() {
                 <div className="results-container">
                     {sortedResults.length > 0 ? (
                         sortedResults.map((item) => {
-                            const mediaType = item.name ? 'series' : 'movie';
+                            const mediaType = item.name ? 'shows' : 'movie';
                             const title = mediaType === 'movie' ? item.title : item.name;
                             const imageUrl = item?.poster_path
                                 ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
@@ -83,7 +83,7 @@ export default function ResultsPage() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        Series
+                                                        Shows
                                                         <span className="separator">
                                                             {' '}
                                                             •{' '}
