@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import useFetchStore from '../stores/fetchStore';
 import useNavStore from '../stores/navStore';
 
 export default function ResultsPage() {
-    const { fetchMovieQueries, fetchSeriesQueries } = useFetchStore();
+    const { fetchMovieQueries, fetchShowsQueries } = useFetchStore();
     const { query } = useNavStore();
     const [results, setResults] = useState(null); // State to hold search results
 
@@ -17,8 +15,8 @@ export default function ResultsPage() {
             enabled: !!query
         },
         {
-            queryKey: ['seriesQueries', query],
-            queryFn: () => fetchSeriesQueries(query),
+            queryKey: ['showsQueries', query],
+            queryFn: () => fetchShowsQueries(query),
             enabled: !!query
         }
     ];
@@ -31,10 +29,10 @@ export default function ResultsPage() {
     // Handle search submission
     useEffect(() => {
         const movieData = queryResults[0].data || [];
-        const seriesData = queryResults[1].data || [];
+        const showsData = queryResults[1].data || [];
 
-        if (movieData.length > 0 || seriesData.length > 0) {
-            setResults([...movieData, ...seriesData]);
+        if (movieData.length > 0 || showsData.length > 0) {
+            setResults([...movieData, ...showsData]);
         }
     }, [queryResults]);
 

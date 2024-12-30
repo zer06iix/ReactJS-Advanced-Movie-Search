@@ -10,7 +10,7 @@ import useFetchStore from '../../stores/fetchStore';
 import useNavStore from '../../stores/navStore';
 
 export default function SearchBar() {
-    const { fetchMovieQueries, fetchSeriesQueries, fetchMovieCredits } = useFetchStore();
+    const { fetchMovieQueries, fetchShowsQueries, fetchMovieCredits } = useFetchStore();
     const { query, setQuery } = useNavStore();
 
     const searchBarRef = useRef(null);
@@ -27,20 +27,20 @@ export default function SearchBar() {
     });
 
     const {
-        data: seriesData,
-        isLoading: seriesLoading,
-        error: seriesError
+        data: showsData,
+        isLoading: showsLoading,
+        error: showsError
     } = useQuery({
-        queryKey: ['seriesQueries', query],
-        queryFn: () => fetchSeriesQueries(query),
+        queryKey: ['showsQueries', query],
+        queryFn: () => fetchShowsQueries(query),
         enabled: !!query
     });
 
-    const queryLoading = movieLoading || seriesLoading;
-    const queryError = movieError || seriesError;
+    const queryLoading = movieLoading || showsLoading;
+    const queryError = movieError || showsError;
     const queryData = [
         ...(movieData ? movieData.slice(0, 5) : []),
-        ...(seriesData ? seriesData.slice(0, 5) : [])
+        ...(showsData ? showsData.slice(0, 5) : [])
     ];
 
     // Sort queryData based on rating

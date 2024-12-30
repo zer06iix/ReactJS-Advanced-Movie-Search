@@ -14,7 +14,7 @@ import useFetchStore from '../stores/fetchStore';
 
 export default function ShowsPage() {
     const { id } = useParams();
-    const { fetchSeriesDetails, fetchSeriesCredits } = useFetchStore();
+    const { fetchShowsDetails, fetchShowsCredits } = useFetchStore();
     const { show, setShow, credits, setCredits } = useShowStore();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -24,7 +24,7 @@ export default function ShowsPage() {
         error: showsError
     } = useQuery({
         queryKey: ['showsDetails', id],
-        queryFn: () => fetchSeriesDetails(id),
+        queryFn: () => fetchShowsDetails(id),
         enabled: !!id,
         onSuccess: (data) => setShow(data)
     });
@@ -34,8 +34,8 @@ export default function ShowsPage() {
         isLoading: creditsLoading,
         error: creditsError
     } = useQuery({
-        queryKey: ['seriesCredits', id],
-        queryFn: () => fetchSeriesCredits(id),
+        queryKey: ['showsCredits', id],
+        queryFn: () => fetchShowsCredits(id),
         enabled: !!id,
         onSuccess: (data) => setCredits(data)
     });

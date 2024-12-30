@@ -22,7 +22,7 @@ const useFetchStore = create((set) => ({
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
     },
-    fetchPopularSeries: async (page) => {
+    fetchPopularShows: async (page) => {
         console.log('Fetching popular shows'); // Log when fetching starts
         const url = createApiUrlWithPage('/tv/popular', page);
         const response = await axios.get(url);
@@ -46,7 +46,7 @@ const useFetchStore = create((set) => ({
     },
 
     // Shows page
-    fetchSeriesDetails: async (id) => {
+    fetchShowsDetails: async (id) => {
         console.log(`Fetching tv details.`);
         const url = createApiUrl(`/tv/${id}`);
         const response = await axios.get(url);
@@ -54,7 +54,7 @@ const useFetchStore = create((set) => ({
         return response.data; // Return the movie details
     },
 
-    fetchSeriesCredits: async (id) => {
+    fetchShowsCredits: async (id) => {
         const url = createApiUrl(`/tv/${id}/credits`);
         const response = await axios.get(url);
         return response.data;
@@ -97,7 +97,7 @@ const useFetchStore = create((set) => ({
         return response.data.results;
     },
 
-    fetchSeriesQueries: async (query) => {
+    fetchShowsQueries: async (query) => {
         const url = createApiUrlWithQuery(`/search/tv`, query);
         const response = await axios.get(url);
 
