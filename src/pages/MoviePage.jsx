@@ -1,20 +1,20 @@
 /* eslint-disable no-unused-vars */
-import { useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ReactSVG } from 'react-svg';
-import useFetchStore from '../store/fetchStore';
-import Loading from '../components/AppComponents/Loading';
-import useMovieStore from '../store/movieStore';
-import MovieOverview from '../components/MovieComponents/MovieOverview';
-import MovieCastScroller from '../components/MovieComponents/movieCast/MovieCastScroller';
-import CustomScrollbar from '../components/AppComponents/Scrollbar';
+
+import Loading from '../components/app/Loading';
+import CustomScrollbar from '../components/app/Scrollbar';
+import MovieOverview from '../components/moviePage/MovieOverview';
+import MovieCastScroller from '../components/moviePage/movieCast/MovieCastScroller';
+import MovieGenres from '../components/moviePage/MovieGenres';
+import MovieIMDbRating from '../components/moviePage/movieRating/MovieIMDbRating';
+import MovieVoteCount from '../components/moviePage/movieRating/MovieVoteCount';
+import MoviePopularity from '../components/moviePage/movieRating/MoviePopularity';
+import useFetchStore from '../stores/fetchStore';
+import useMovieStore from '../stores/movieStore';
 import sprite from '../styles/sprite.svg';
-import MovieGenres from '../components/MovieComponents/MovieGenres';
-import MovieIMDbRating from '../components/MovieComponents/movieRating/MovieIMDbRating';
-import MovieVoteCount from '../components/MovieComponents/movieRating/MovieVoteCount';
-import MoviePopularity from '../components/MovieComponents/movieRating/MoviePopularity';
 
 export default function MoviePage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -70,9 +70,7 @@ export default function MoviePage() {
     // Handle and display movie fetch errors
     if (movieError) {
         console.log('MovieError:', movieError);
-        return (
-            <div className="error-container">MovieError: {movieError.message}</div>
-        );
+        return <div className="error-container">MovieError: {movieError.message}</div>;
     }
 
     // Handle and display credits fetch errors
@@ -137,9 +135,7 @@ export default function MoviePage() {
 
                         <div className="right-side">
                             {/* Title */}
-                            <div
-                                className={`title ${getMovieTitleClass(movie.title)}`}
-                            >
+                            <div className={`title ${getMovieTitleClass(movie.title)}`}>
                                 {movie.title}
                             </div>
 
