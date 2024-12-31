@@ -8,10 +8,7 @@ export default function MovieOverview({ isExpanded, toggleDescriptionExpand }) {
     return (
         <>
             <p className="info">{movie.overview}</p>
-            <ExpanderButton
-                isExpanded={isExpanded}
-                onClick={toggleDescriptionExpand}
-            />
+            <ExpanderButton isExpanded={isExpanded} onClick={toggleDescriptionExpand} />
         </>
     );
 }

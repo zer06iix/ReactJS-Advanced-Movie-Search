@@ -102,47 +102,38 @@ export default function SearchBar() {
 
             <div className={`query-results ${queryResultState}`}>
                 {sortedQueryData.length > 0
-                    ? sortedQueryData.map((item, index) => {
-                          const creditsQueryResult = creditsData[index];
-                          const title = item.title || item.name;
-
-                          const imageUrl = item?.poster_path
-                              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                    ? sortedQueryData.map((media, index) => {
+                          const title = media.title || media.name;
+                          const imageUrl = media?.poster_path
+                              ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
                               : null;
 
-                          const isLoadingCredits = creditsQueryResult.isLoading;
-                          const credits = creditsQueryResult.data;
-
-                          const director = credits?.crew?.find(
-                              (member) => member.job === 'Director'
-                          );
-                          const directorName = director
-                              ? director.name
-                              : isLoadingCredits
-                                ? 'Loading director...'
-                                : null;
-
                           const isTitleOverflowing = title.length > 16;
-                          const directorNameString = directorName || '';
-                          const infoText =
-                              item.release_date || item.first_air_date
-                                  ? (item.release_date || item.first_air_date).slice(
-                                        0,
-                                        4
-                                    ) +
-                                    ' • By ' +
-                                    directorNameString
-                                  : directorNameString;
-                          const infoLength = infoText.length;
-                          const isInfoOverflowing = infoLength > 20;
+                          let isMovie = media.title !== undefined ? true : false;
+                          const infoText = isMovie ? (
+                              media.release_date.slice(0, 4)
+                          ) : (
+                              <>{media.first_air_date.slice(0, 4)}</>
+                          );
+                          //   ) : media.in_production ? (
+                          //   ) : (
+                          //       <>
+                          //           {media.first_air_date.slice(0, 4)}
+                          //           <span className="date-separator">–</span>
+                          //           {`${media.last_air_date}`}
+                          //       </>
+                          //   );
 
-                          const mediaType = item.name ? 'shows' : 'movie';
+                          //   const infoLength = infoText.length;
+                          //   const isInfoOverflowing = infoLength > 20;
+
+                          const mediaType = media.name ? 'shows' : 'movie';
 
                           return (
                               <Link
-                                  to={`/${mediaType}/${item.id}`}
+                                  to={`/${mediaType}/${media.id}`}
                                   className="query-results-items"
-                                  key={item.id}
+                                  key={media.id}
                               >
                                   <div className="poster-container">
                                       {imageUrl ? (
@@ -168,38 +159,9 @@ export default function SearchBar() {
                                       </p>
                                       <p
                                           className="info"
-                                          title={isInfoOverflowing ? infoText : ''}
+                                          //   title={isInfoOverflowing ? infoText : ''}
                                       >
-                                          {item.release_date ||
-                                          (item.first_air_date && directorName) ? (
-                                              <>
-                                                  {(
-                                                      item.release_date ||
-                                                      item.first_air_date
-                                                  ).slice(0, 4)}
-                                                  <span className="separator">•</span>
-                                                  {mediaType === 'movie' ? (
-                                                      <>In Movies</>
-                                                  ) : (
-                                                      <>In Shows</>
-                                                  )}
-                                              </>
-                                          ) : (
-                                              <>
-                                                  {item.release_date ||
-                                                  item.first_air_date
-                                                      ? (
-                                                            item.release_date ||
-                                                            item.first_air_date
-                                                        ).slice(0, 4)
-                                                      : null}
-                                                  {mediaType === 'movie' ? (
-                                                      <>In Movies</>
-                                                  ) : (
-                                                      <>In Shows</>
-                                                  )}
-                                              </>
-                                          )}
+                                          {infoText}
                                       </p>
                                   </div>
                               </Link>

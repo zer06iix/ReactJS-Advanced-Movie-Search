@@ -7,10 +7,12 @@ export default function MovieGenresItem() {
     return (
         <div className="genre-container">
             {genreNames.map((name, index) => (
-                <span key={index} className="genre-item">
-                    {name}
-                    {','}
-                </span>
+                <>
+                    <span key={index} className="genre-item">
+                        {name}
+                    </span>
+                    {index < genreNames.length - 1 && ', '}
+                </>
             ))}
         </div>
     );

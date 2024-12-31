@@ -4,19 +4,15 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import Loading from '../components/app/Loading';
-import useShowStore from '../stores/showStore';
 import useFetchStore from '../stores/fetchStore';
-// import ShowsGenres from '../components/showsPage/ShowsGenres';
-// import ShowsOverview from '../components/showsPage/ShowsOverview';
-// import ShowsCastScroller from '../components/showsPage/showsCast/ShowsCastScroller';
-// import ShowsIMDbRating from '../components/showsPage/showsRating/ShowsIMDbRating';
-// import ShowsPopularity from '../components/showsPage/showsRating/ShowsPopularity';
+import useShowStore from '../stores/showStore';
+import ContentTemplate from './ContentTemplate';
 
 export default function ShowsPage() {
     const { id } = useParams();
-    const { fetchShowsDetails, fetchShowsCredits } = useFetchStore();
-    const { show, setShow, credits, setCredits } = useShowStore();
-    const [isExpanded, setIsExpanded] = useState(false);
+    const { fetchShowsDetails, fetchShowsCredits, fetchGenres } = useFetchStore(); // Make sure fetchGenres is available
+    const { show, setShow, credits, setCredits, genresMap } = useShowStore();
+    const [isLoading, setIsLoading] = useState(true);
 
     const {
         data: showsData,
@@ -25,8 +21,7 @@ export default function ShowsPage() {
     } = useQuery({
         queryKey: ['showsDetails', id],
         queryFn: () => fetchShowsDetails(id),
-        enabled: !!id,
-        onSuccess: (data) => setShow(data)
+        enabled: !!id
     });
 
     const {
@@ -36,9 +31,12 @@ export default function ShowsPage() {
     } = useQuery({
         queryKey: ['showsCredits', id],
         queryFn: () => fetchShowsCredits(id),
-        enabled: !!id,
-        onSuccess: (data) => setCredits(data)
+        enabled: !!id
     });
+
+    useEffect(() => {
+        fetchGenres(); // Fetch genres
+    }, [fetchGenres]);
 
     useEffect(() => {
         if (showsData) {
@@ -49,19 +47,25 @@ export default function ShowsPage() {
         }
     }, [showsData, showsCreditsData, setShow, setCredits]);
 
-    if (showsLoading || creditsLoading) return <Loading />;
-    if (showsError) return <p>Error loading shows details: {showsError.message}</p>;
-    if (creditsError) return <p>Error loading shows credits: {creditsError.message}</p>;
+    useEffect(() => {
+        if (genresMap && show) {
+            setIsLoading(false);
+        }
+    }, [genresMap, show]);
 
-    const toggleDescriptionExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
+    if (!show || isLoading || showsLoading || creditsLoading) return <Loading />; // Handle loading
+    if (showsError) return <p>Error loading show details: {showsError.message}</p>;
+    if (creditsError) return <p>Error loading show credits: {creditsError.message}</p>;
+    if (!genresMap) {
+        return <Loading />;
+    }
 
     return (
-        <div className="show-page-container">
-            <div className="show-detail-container">
-                <h1 className="show-title">{show ? show.name : 'Loading...'}</h1>
-            </div>
-        </div>
+        <ContentTemplate
+            type="Show"
+            media={show}
+            creditsData={credits}
+            genresMap={genresMap}
+        />
     );
 }
