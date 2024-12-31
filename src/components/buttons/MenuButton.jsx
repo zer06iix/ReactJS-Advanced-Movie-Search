@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import useNavStore from '../../store/navStore';
+import useNavStore from '../../stores/navStore';
 
 /* eslint-disable react/prop-types */
 const MenuButton = forwardRef(({ style, onClick }, ref) => {

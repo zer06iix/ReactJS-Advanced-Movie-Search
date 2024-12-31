@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
-import PopularCarousel from '../components/PopularComponents/imageCarousel/PopularCarousel';
-import UpNextSection from '../components/PopularComponents/upNext/UpNextSection';
-import useFetchStore from '../store/fetchStore';
-import useMovieStore from '../store/movieStore';
 import { useQuery } from '@tanstack/react-query';
-import Loading from '../components/AppComponents/Loading';
+
+import Loading from '../components/app/Loading';
+import PopularCarousel from '../components/popularPage/imageCarousel/PopularCarousel';
+import UpNextSection from '../components/popularPage/upNext/UpNextSection';
+import useFetchStore from '../stores/fetchStore';
+import useMovieStore from '../stores/movieStore';
 
 export default function Popular() {
     const { fetchPopularMovies } = useFetchStore();

@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/AppComponents/Navbar';
+import Navbar from './components/app/Navbar';
 import Home from './pages/Home';
 import MostRated from './pages/MostRated';
 import Popular from './pages/Popular';
 import Watchlist from './pages/Watchlist';
 import MoviePage from './pages/MoviePage';
-import ResultsPage from './pages/ResultsPage';
-import SeriesPage from './pages/SeriesPage';
+import ResultsPage from './pages/SearchResultsPage';
+import ShowsPage from './pages/ShowsPage';
 
 const App = () => {
     return (
@@ -19,7 +19,7 @@ const App = () => {
                     <Route path="/most-rated" element={<MostRated />} />
                     <Route path="/watchlist" element={<Watchlist />} />
                     <Route path="/movie/:id" element={<MoviePage />} />
-                    <Route path="/series/:id" element={<SeriesPage />} />
+                    <Route path="/shows/:id" element={<ShowsPage />} />
                     <Route path="/results" element={<ResultsPage />} />
                 </Routes>
             </div>
