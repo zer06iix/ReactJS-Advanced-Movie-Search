@@ -33,22 +33,18 @@ const useNavStore = create((set) => {
 
         setActiveTabFromLocation: (location) => {
             const path = location.pathname;
-            let newActiveTab = 'Home'; // Default tab
-            let newActiveTabIndex = 0; // Default index
+            const tabMapping = {
+                '/': {tab: 'Home', index: 0},
+                '/popular': { tab: 'Popular', index: 1 },
+                '/most-rated': { tab: 'Most Rated', index: 2 },
+                '/watchlist': { tab: 'Watch list', index: 3 }
+            };
 
-            if (path === '/popular') {
-                newActiveTab = 'Popular';
-                newActiveTabIndex = 1;
-            } else if (path === '/most-rated') {
-                newActiveTab = 'Most Rated';
-                newActiveTabIndex = 2;
-            } else if (path === '/watchlist') {
-                newActiveTab = 'Watch list';
-                newActiveTabIndex = 3;
-            } else if (path.startsWith('/movie')) {
-                newActiveTab = null;
-                newActiveTabIndex = -1; // Use an invalid index to represent no active tab
-            }
+            const { tab: newActiveTab, index: newActiveTabIndex } = tabMapping[path] || { tab: null, index: -1 };
+
+            set({ activeTab: newActiveTab, activeTabIndex: newActiveTabIndex });
+            sessionStorage.setItem('activeTab', newActiveTab);
+            sessionStorage.setItem('activeTabIndex', newActiveTabIndex);
 
             set({ activeTab: newActiveTab, activeTabIndex: newActiveTabIndex });
             sessionStorage.setItem('activeTab', newActiveTab);
