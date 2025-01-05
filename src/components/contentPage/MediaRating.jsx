@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import sprite from '../../styles/sprite.svg';
 
-const MediaRating = ({ voteAverage, voteCount, popularity }) => {
+const MediaRating = ({ voteAverage, voteCount, popularity, sprite }) => {
     return (
         <div className="rating-container">
             <div className="item imdb-rating">

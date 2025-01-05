@@ -115,21 +115,9 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const mediaTitle = isMovie ? media.title : media.name;
     const showFormattedDate = !isMovie ? (
         media.in_production ? (
-            <>
-                <span className="date" title={`${media.first_air_date} (in production)`}>
-                    Since {media.first_air_date.slice(0, 4)}
-                </span>
-            </>
+            `Since ${media.first_air_date.slice(0, 4)} (in production)`
         ) : (
-            <>
-                <span className="date" title={media.first_air_date}>
-                    {media.first_air_date.slice(0, 4)}
-                </span>
-                <span className="date-separator">–</span>
-                <span className="date" title={media.last_air_date}>
-                    {media.last_air_date.slice(0, 4)}
-                </span>
-            </>
+            `${media.first_air_date.slice(0, 4)} – ${media.last_air_date.slice(0, 4)}`
         )
     ) : null;
 
@@ -144,10 +132,10 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         ? media.runtime < 60
             ? `${media.runtime} min`
             : (() => {
-                  const hours = Math.floor(media.runtime / 60);
-                  const minutes = media.runtime % 60;
-                  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-              })()
+                const hours = Math.floor(media.runtime / 60);
+                const minutes = media.runtime % 60;
+                return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
+            })()
         : null;
 
     // Format content rating and tooltip text
@@ -221,6 +209,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             voteAverage={media.vote_average}
                             voteCount={media.vote_count}
                             popularity={media.popularity}
+                            sprite={sprite} // Pass the sprite prop to MediaRating
                         />
 
                         {/* Overview section */}

@@ -3,7 +3,7 @@ import useMovieStore from '../../../stores/movieStore';
 import MovieCastItem from './MovieCastItem';
 
 export default function MovieCastScroller() {
-    const { credits } = useMovieStore();
+    const { movieCredits } = useMovieStore();
     const wrapperRef = useRef(null);
     const containerRef = useRef(null); // Reference for the container
     const [translateX, setTranslateX] = useState(0);
@@ -20,7 +20,7 @@ export default function MovieCastScroller() {
             setMaxTranslateX(-maxX); // Set max translateX
             setTranslateX(Math.max(Math.min(translateX, 0), -maxX)); // Constrain translateX
         }
-    }, [credits, translateX]); // Recalculate when credits change
+    }, [movieCredits, translateX]); // Recalculate when credits change
 
     useEffect(() => {
         const handleMouseUp = () => setIsDragging(false);
@@ -75,10 +75,10 @@ export default function MovieCastScroller() {
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                 >
-                    {credits && credits.cast && credits.cast.length > 0
-                        ? credits.cast.map((member) => (
-                              <MovieCastItem member={member} key={member.id} />
-                          ))
+                    {movieCredits && movieCredits.cast && movieCredits.cast.length > 0
+                        ? movieCredits.cast.map((member) => (
+                            <MovieCastItem member={member} key={member.id} />
+                        ))
                         : null}
                 </div>
                 <div

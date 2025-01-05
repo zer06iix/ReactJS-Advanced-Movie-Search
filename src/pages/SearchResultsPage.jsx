@@ -6,7 +6,7 @@ import useNavStore from '../stores/navStore';
 export default function ResultsPage() {
     const { fetchMovieQueries, fetchShowsQueries } = useFetchStore();
     const { query } = useNavStore();
-    const [results, setResults] = useState(null); // State to hold search results
+    const [results, setResults] = useState([]); // State to hold search results
 
     const queries = [
         {
@@ -34,7 +34,7 @@ export default function ResultsPage() {
         if (movieData.length > 0 || showsData.length > 0) {
             setResults([...movieData, ...showsData]);
         }
-    }, [queryResults]);
+    }, []);
 
     // Sort results based on rating
     const sortedResults = results
