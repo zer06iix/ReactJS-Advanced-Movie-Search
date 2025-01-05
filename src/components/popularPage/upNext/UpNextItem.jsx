@@ -5,7 +5,7 @@ import Genre from './Genre';
 import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../../../stores/fetchStore';
 import { Link } from 'react-router-dom';
-import Loading from '../../../components/App/Loading';
+import Loading from '../../../components/app/Loading';
 
 const UpNextItem = ({ movie, index, translateY }) => {
     const { fetchMovieCredits } = useFetchStore();

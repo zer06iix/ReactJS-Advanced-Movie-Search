@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import useNavStore from '../../stores/navStore';
