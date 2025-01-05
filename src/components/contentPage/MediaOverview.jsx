@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import ExpanderButton from '../buttons/ExpanderButton';
 
 const MediaOverview = ({
     media,
@@ -20,8 +21,9 @@ const MediaOverview = ({
             <div className="heading">
                 <p className="title">Overview</p>
                 {showExpanderBtn && (
-                    <button
+                    <ExpanderButton
                         ref={expanderBtnRef}
+                        className={`expander ${isExpanded ? 'expanded' : 'collapsed'}`}
                         onClick={() => {
                             setIsExpanded(!isExpanded);
                             if (shadowOverlayRef.current) {
@@ -30,11 +32,8 @@ const MediaOverview = ({
                                     : '1';
                             }
                         }}
-                        className={`expander ${isExpanded ? 'expanded' : 'collapsed'}`}
-                    >
-                        <p>Expand</p>
-                        <p>Collapse</p>
-                    </button>
+                        isExpanded={isExpanded}
+                    />
                 )}
             </div>
 

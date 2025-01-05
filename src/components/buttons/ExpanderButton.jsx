@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 
-export default function ExpanderButton({ isExpanded, onClick }) {
+export default function ExpanderButton({ isExpanded, onClick, className }) {
     return (
         <>
-            <button className="expander" onClick={onClick}>
+            <button 
+                onClick={onClick}
+                className={className}
+            >
                 {isExpanded ? 'Collapse' : 'Expand'}
             </button>
         </>
