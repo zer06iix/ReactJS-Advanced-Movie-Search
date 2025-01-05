@@ -12,7 +12,7 @@ export default function MoviePage() {
     const [isLoading, setIsLoading] = useState(true);
 
     const { id: movieId } = useParams();
-    const { movie, setMovie, credits, setCredits, genresMap } = useMovieStore();
+    const { movie, setMovie, movieCredits, setCredits, genresMap } = useMovieStore();
     const { fetchMovieDetails, fetchMovieCredits, fetchGenres } = useFetchStore();
 
     // Fetch movie details
@@ -76,7 +76,7 @@ export default function MoviePage() {
         <ContentTemplate
             type="Movie"
             media={movie}
-            creditsData={credits}
+            creditsData={movieCredits}
             genresMap={genresMap}
         />
     );

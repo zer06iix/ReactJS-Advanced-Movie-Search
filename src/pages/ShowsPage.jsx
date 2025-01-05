@@ -9,9 +9,9 @@ import useShowStore from '../stores/showStore';
 import ContentTemplate from './ContentTemplate';
 
 export default function ShowsPage() {
-    const { id } = useParams();
+    const { id: showsId } = useParams();
     const { fetchShowsDetails, fetchShowsCredits, fetchGenres } = useFetchStore(); // Make sure fetchGenres is available
-    const { show, setShow, credits, setCredits, genresMap } = useShowStore();
+    const { shows, setShows, showsCredits, setCredits, genresMap } = useShowStore();
     const [isLoading, setIsLoading] = useState(true);
 
     const {
@@ -19,9 +19,9 @@ export default function ShowsPage() {
         isLoading: showsLoading,
         error: showsError
     } = useQuery({
-        queryKey: ['showsDetails', id],
-        queryFn: () => fetchShowsDetails(id),
-        enabled: !!id
+        queryKey: ['showsDetails', showsId],
+        queryFn: () => fetchShowsDetails(showsId),
+        enabled: !!showsId
     });
 
     const {
@@ -29,9 +29,9 @@ export default function ShowsPage() {
         isLoading: creditsLoading,
         error: creditsError
     } = useQuery({
-        queryKey: ['showsCredits', id],
-        queryFn: () => fetchShowsCredits(id),
-        enabled: !!id
+        queryKey: ['showsCredits', showsId],
+        queryFn: () => fetchShowsCredits(showsId),
+        enabled: !!showsId
     });
 
     useEffect(() => {
@@ -40,31 +40,31 @@ export default function ShowsPage() {
 
     useEffect(() => {
         if (showsData) {
-            setShow(showsData);
+            setShows(showsData);
         }
         if (showsCreditsData) {
             setCredits(showsCreditsData);
         }
-    }, [showsData, showsCreditsData, setShow, setCredits]);
+    }, [showsData, showsCreditsData, setShows, setCredits]);
 
     useEffect(() => {
-        if (genresMap && show) {
+        if (genresMap && shows) {
             setIsLoading(false);
         }
-    }, [genresMap, show]);
+    }, [genresMap, shows]);
 
-    if (!show || isLoading || showsLoading || creditsLoading) return <Loading />; // Handle loading
-    if (showsError) return <p>Error loading show details: {showsError.message}</p>;
-    if (creditsError) return <p>Error loading show credits: {creditsError.message}</p>;
+    if (!shows || isLoading || showsLoading || creditsLoading) return <Loading />; // Handle loading
+    if (showsError) return <p>Error loading shows details: {showsError.message}</p>;
+    if (creditsError) return <p>Error loading shows credits: {creditsError.message}</p>;
     if (!genresMap) {
         return <Loading />;
     }
 
     return (
         <ContentTemplate
-            type="Show"
-            media={show}
-            creditsData={credits}
+            type="Shows"
+            media={shows}
+            creditsData={showsCredits}
             genresMap={genresMap}
         />
     );

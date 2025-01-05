@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 
 const useShowStore = create((set) => ({
-    show: null, // Shows details on the movie page
-    setShow: (showDetail) => set({ show: showDetail }),
+    shows: null, // Shows details on the movie page
+    setShows: (showDetails) => set({ shows: showDetails }),
 
-    popularShow: [], // State to hold popular shows
-    setPopularShow: (show) => set({ popularShow: show }),
+    popularShows: [], // State to hold popular shows
+    setPopularShow: (show) => set({ popularShows: show }),
 
-    credits: [],
-    setCredits: (credit) => set({ credits: credit }),
+    showsCredits: [],
+    setCredits: (showsCredit) => set({ showsCredits: showsCredit }),
 
     genresMap: {}, // State to hold genres
     setGenresMap: (genres) => set({ genresMap: genres })
