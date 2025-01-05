@@ -10,7 +10,7 @@ import useFetchStore from '../../stores/fetchStore';
 import useNavStore from '../../stores/navStore';
 
 export default function SearchBar() {
-    const { fetchMovieQueries, fetchShowsQueries, fetchMovieCredits } = useFetchStore();
+    const { fetchMovieQueries, fetchShowsQueries, fetchShowsDetails } = useFetchStore();
     const { query, setQuery } = useNavStore();
 
     const searchBarRef = useRef(null);
@@ -59,19 +59,31 @@ export default function SearchBar() {
         ? queryLoading
             ? 'loading'
             : sortedQueryData.length > 0
-              ? 'active'
-              : 'failed'
+                ? 'active'
+                : 'failed'
         : 'inactive';
 
-    const creditsQueries = sortedQueryData.map((item) => ({
-        queryKey: ['credits', item.id],
-        queryFn: () => fetchMovieCredits(item.id),
-        enabled: !!item.id
-    }));
+    // const creditsQueries = sortedQueryData.map((item) => ({
+    //     queryKey: ['credits', item.id],
+    //     queryFn: () => fetchMovieCredits(item.id),
+    //     enabled: !!item.id
+    // }));
 
-    const creditsData = useQueries({
-        queries: creditsQueries
-    });
+    // const creditsData = useQueries({
+    //     queries: creditsQueries
+    // });
+
+    // Fetch show details for each media item
+    const showsDetailsQueries = sortedQueryData
+        .filter(media => media.name)
+        .map(media => ({
+            queryKey: ['showsDetails', media.id],
+            queryFn: () => fetchShowsDetails(media.id),
+            enabled: Boolean(media.id)
+        }));
+
+    const showsDetailsData = useQueries({ queries: showsDetailsQueries });
+
 
     const handleClickOutside = useCallback(
         (event) => {
@@ -103,76 +115,80 @@ export default function SearchBar() {
             <div className={`query-results ${queryResultState}`}>
                 {sortedQueryData.length > 0
                     ? sortedQueryData.map((media, index) => {
-                          const title = media.title || media.name;
-                          const imageUrl = media?.poster_path
-                              ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
-                              : null;
+                        const title = media.title || media.name;
+                        const imageUrl = media?.poster_path
+                            ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
+                            : null;
+                            
+                        const mediaType = media.name ? 'shows' : 'movie';
 
-                          const isTitleOverflowing = title.length > 16;
-                          let isMovie = media.title !== undefined ? true : false;
-                          console.log(`the ${index} media:`);
-                          console.log(media);
+                        const shows = showsDetailsData[index]?.data;
+                        const inProduction = showsDetailsData[index]?.data?.in_production;
 
-                          const infoText = isMovie
-                              ? media.release_date.slice(0, 4)
-                              : !media.in_production
-                                ? null
-                                : media.in_production
-                                  ? 'In Production'
-                                  : `${media.in_production}`;
+                        // {mediaType === 'shows' ? console.log(showsDetailsData[index]?.data) : console.log('not found')}
 
-                          //   ) : media.in_production ? (
-                          //   ) : (
-                          //       <>
-                          //           {media.first_air_date.slice(0, 4)}
-                          //           <span className="date-separator">–</span>
-                          //           {`${media.last_air_date}`}
-                          //       </>
-                          //   );
-
-                          //   const infoLength = infoText.length;
-                          //   const isInfoOverflowing = infoLength > 20;
-
-                          const mediaType = media.name ? 'shows' : 'movie';
-
-                          return (
-                              <Link
-                                  to={`/${mediaType}/${media.id}`}
-                                  className="query-results-items"
-                                  key={media.id}
-                              >
-                                  <div className="poster-container">
-                                      {imageUrl ? (
-                                          <div className="poster-container">
-                                              <img src={imageUrl} alt={title} />
-                                          </div>
-                                      ) : (
-                                          <div className="poster-container">
-                                              <svg className="placeholder-icon">
-                                                  <use
-                                                      xlinkHref={`${sprite}#image-placeholder`}
-                                                  />
-                                              </svg>
-                                          </div>
-                                      )}
-                                  </div>
-                                  <div className="right-section">
-                                      <p
-                                          className="title"
-                                          title={isTitleOverflowing ? title : ''}
-                                      >
-                                          {title}
-                                      </p>
-                                      <p
-                                          className="info"
-                                          //   title={isInfoOverflowing ? infoText : ''}
-                                      >
-                                          {infoText}
-                                      </p>
-                                  </div>
-                              </Link>
-                          );
-                      })
+                        const isTitleOverflowing = title.length > 16;
+                        let isMovie = media.title !== undefined ? true : false;
+                        const infoText = isMovie ? (
+                            media.release_date.slice(0, 4)
+                        ) : (
+                            inProduction ? (
+                                <>
+                                    <span className="date" title={`${shows?.first_air_date} (in production)`}>
+                                        Since {shows?.first_air_date?.slice(0, 4) || 'N/A'}
+                                    </span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="date" title={shows?.first_air_date}>
+                                        {shows?.first_air_date?.slice(0, 4) || 'N/A'}
+                                    </span>
+                                    <span className="date-separator">–</span>
+                                    <span className="date" title={shows?.last_air_date}>
+                                        {shows?.last_air_date?.slice(0, 4) || 'N/A'}
+                                    </span>
+                                </>
+                            )
+                        );
+                        
+                        return (
+                            <Link
+                                to={`/${mediaType}/${media.id}`}
+                                className="query-results-items"
+                                key={media.id}
+                            >
+                                <div className="poster-container">
+                                    {imageUrl ? (
+                                        <div className="poster-container">
+                                            <img src={imageUrl} alt={title} />
+                                        </div>
+                                    ) : (
+                                        <div className="poster-container">
+                                            <svg className="placeholder-icon">
+                                                <use
+                                                    xlinkHref={`${sprite}#image-placeholder`}
+                                                />
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="right-section">
+                                    <p
+                                        className="title"
+                                        title={isTitleOverflowing ? title : ''}
+                                    >
+                                        {title}
+                                    </p>
+                                    <p
+                                        className="info"
+                                        //   title={isInfoOverflowing ? infoText : ''}
+                                    >
+                                        {infoText}
+                                    </p>
+                                </div>
+                            </Link>
+                        );
+                    })
                     : null}
 
                 {queryLoading ? (
