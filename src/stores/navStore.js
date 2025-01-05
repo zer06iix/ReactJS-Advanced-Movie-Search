@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
 const useNavStore = create((set) => {
-    const tabs = ['Home', 'Popular', 'Most Rated', 'Watch list'];
+    const tabs = ['Home', 'Most Rated', 'Watch list'];
     const initialStates = {
         activeTab: sessionStorage.getItem('activeTab') || 'Home',
         activeTabIndex: parseInt(sessionStorage.getItem('activeTabIndex')) || 0,
         activeTabWidth: 0,
-        tabWidths: [0, 0, 0, 0], // Array to store the widths of each tab
+        tabWidths: [0, 0, 0], // Array to store the widths of each tab
         isSidebarOpen: false,
         menuButtonOpacity: 1,
         query: ''
@@ -34,10 +34,9 @@ const useNavStore = create((set) => {
         setActiveTabFromLocation: (location) => {
             const path = location.pathname;
             const tabMapping = {
-                '/': {tab: 'Home', index: 0},
-                '/popular': { tab: 'Popular', index: 1 },
-                '/most-rated': { tab: 'Most Rated', index: 2 },
-                '/watchlist': { tab: 'Watch list', index: 3 }
+                '/': { tab: 'Home', index: 0 },
+                '/most-rated': { tab: 'Most Rated', index: 1 },
+                '/watchlist': { tab: 'Watch list', index: 2 }
             };
 
             const { tab: newActiveTab, index: newActiveTabIndex } = tabMapping[path] || { tab: null, index: -1 };

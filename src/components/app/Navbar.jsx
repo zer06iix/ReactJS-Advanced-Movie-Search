@@ -71,13 +71,6 @@ export default function Navbar() {
                         </NavTab>
 
                         <NavTab
-                            path="/popular"
-                            onTabWidthChange={handleTabWidthChange}
-                        >
-                            Popular
-                        </NavTab>
-
-                        <NavTab
                             path="/most-rated"
                             onTabWidthChange={handleTabWidthChange}
                         >
@@ -100,9 +93,6 @@ export default function Navbar() {
                 <Sidebar onClick={handleSidebarClick}>
                     <SidebarTab path="/" onClick={handleSidebarTabClick}>
                         Home
-                    </SidebarTab>
-                    <SidebarTab path="/popular" onClick={handleSidebarTabClick}>
-                        Popular
                     </SidebarTab>
                     <SidebarTab path="/most-rated" onClick={handleSidebarTabClick}>
                         Most Rated
