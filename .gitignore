@@ -26,9 +26,11 @@ dist-ssr
 .env.production.local
 
 # Specific sensitive files (like TMDB API key file)
-tmdb.js
-src/api/tmdb.js
-**/tmdb.js
+# The tmdb.js file is being ignored, which is necessary for security reasons.
+# However, the following lines are redundant and can be simplified.
+# Start of Selection
+/src/api/tmdb.js
+# End of Selection
 
 # API key or configuration files
 *.key
