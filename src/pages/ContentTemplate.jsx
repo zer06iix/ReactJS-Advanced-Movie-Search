@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import Loading from '../components/app/Loading';
 import MovieCastScroller from '../components/moviePage/movieCast/MovieCastScroller';
+import MediaOverview from '../components/contentPage/MediaOverview';
+import MovieMeta from '../components/moviePage/MovieMeta';
+import ShowsMeta from '../components/showsPage/ShowsMeta';
+import MediaGenre from '../components/contentPage/MediaGenre';
+import MediaRating from '../components/contentPage/MediaRating';
+import MediaPoster from '../components/contentPage/MediaPoster';
 import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
 
@@ -174,30 +180,13 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
             : null;
 
-    console.log(media);
-
     return (
         <div className="content-container">
             <div className="content-background-overlay"></div>
             <div className="content-detail-container">
                 <div className="details-heading-section">
                     {/* Media poster image or placeholder */}
-                    <div className="poster">
-                        {imagePath != null ? (
-                            <img
-                                className="item-poster"
-                                src={imagePath}
-                                alt={media.title || media.name}
-                            />
-                        ) : (
-                            <div className="poster-placeholder">
-                                <svg className="icon">
-                                    <use xlinkHref={`${sprite}#image-placeholder`} />
-                                </svg>
-                                <p className="text">Not available</p>
-                            </div>
-                        )}
-                    </div>
+                    <MediaPoster imagePath={imagePath} mediaTitle={mediaTitle} />
 
                     <div className="right-side">
                         <div className={`media-title ${getMovieTitleClass(mediaTitle)}`}>
@@ -206,133 +195,46 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
                         {isMovie ? (
                             // Movie metadata: release year, runtime, rating
-                            <p className="other-info">
-                                <span
-                                    title={new Date(
-                                        media.release_date
-                                    ).toLocaleDateString('en-GB')}
-                                >
-                                    {media.release_date.slice(0, 4)}
-                                </span>
-
-                                {formattedRuntime !== null && (
-                                    <>
-                                        <span className="separator">•</span>
-                                        {formattedRuntime}
-                                    </>
-                                )}
-
-                                {media.adult !== undefined && (
-                                    <>
-                                        <span className="separator">•</span>
-                                        <span title={ratingTitle}>{formattedRating}</span>
-                                    </>
-                                )}
-                            </p>
+                            <MovieMeta
+                                releaseDate={media.release_date}
+                                adult={media.adult}
+                                ratingTitle={ratingTitle}
+                                formattedRating={formattedRating}
+                                formattedRuntime={formattedRuntime}
+                            />
                         ) : (
                             // TV show metadata: air dates, seasons, rating
-                            <p className="other-info">
-                                {showFormattedDate}
-
-                                <span className="separator">•</span>
-
-                                {`${media.seasons.length} Seasons`}
-
-                                {media.adult !== undefined && (
-                                    <>
-                                        <span className="separator">•</span>
-                                        <span title={ratingTitle}>{formattedRating}</span>
-                                    </>
-                                )}
-                            </p>
+                            <ShowsMeta
+                                showFormattedDate={showFormattedDate}
+                                seasonsCount={media.seasons.length}
+                                adult={media.adult}
+                                ratingTitle={ratingTitle}
+                                formattedRating={formattedRating}
+                            />
                         )}
 
                         {/* Genre tags */}
-                        <div className="genre-container">
-                            {genreNames.map((name, index) => (
-                                <a key={index} className="genre-item">
-                                    {name}
-                                </a>
-                            ))}
-                        </div>
+                        <MediaGenre genreNames={genreNames} />
 
                         {/* Rating metrics */}
-                        <div className="rating-container">
-                            <div className="item imdb-rating">
-                                <p className="label">IMDb Rating</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#rating-icon`} />
-                                    </svg>
-                                    <p className="average">
-                                        {media.vote_average.toFixed(1)}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <span className="separator"></span>
-
-                            <div className="item vote-count">
-                                <p className="label">Vote Count</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#vote-count`} />
-                                    </svg>
-                                    <p className="average">{media.vote_count}</p>
-                                </div>
-                            </div>
-
-                            <span className="separator"></span>
-
-                            <div className="item popularity">
-                                <p className="label">Popularity</p>
-                                <div className="value">
-                                    <svg className="icon">
-                                        <use xlinkHref={`${sprite}#popularity`} />
-                                    </svg>
-                                    <p className="average">
-                                        {media.popularity >= 1000
-                                            ? `${(media.popularity / 1000).toFixed(1)}k`
-                                            : media.popularity.toFixed(0)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <MediaRating
+                            voteAverage={media.vote_average}
+                            voteCount={media.vote_count}
+                            popularity={media.popularity}
+                        />
 
                         {/* Overview section */}
-                        <div
-                            ref={overviewSection}
-                            style={{ display: showOverview ? 'block' : 'none' }}
-                            className={`overview ${isExpanded ? 'expanded' : 'collapsed'}`}
-                        >
-                            <div className="heading">
-                                <p className="title">Overview</p>
-                                {showExpanderBtn && (
-                                    <button
-                                        ref={expanderBtnRef}
-                                        onClick={() => {
-                                            setIsExpanded(!isExpanded);
-                                            if (shadowOverlayRef.current) {
-                                                shadowOverlayRef.current.style.opacity =
-                                                    !isExpanded ? '0' : '1';
-                                            }
-                                        }}
-                                        className={`expander ${isExpanded ? 'expanded' : 'collapsed'}`}
-                                    >
-                                        <p>Expand</p>
-                                        <p>Collapse</p>
-                                    </button>
-                                )}
-                            </div>
-
-                            <p
-                                ref={infoRef}
-                                className={`info ${isExpanded ? 'expanded' : 'collapsed'}`}
-                            >
-                                {media.overview}
-                            </p>
-                            <div ref={shadowOverlayRef} className="shadow-overlay"></div>
-                        </div>
+                        <MediaOverview
+                            media={media}
+                            showOverview={showOverview}
+                            isExpanded={isExpanded}
+                            setIsExpanded={setIsExpanded}
+                            showExpanderBtn={showExpanderBtn}
+                            overviewSection={overviewSection}
+                            expanderBtnRef={expanderBtnRef}
+                            infoRef={infoRef}
+                            shadowOverlayRef={shadowOverlayRef}
+                        />
                     </div>
                 </div>
 
@@ -351,7 +253,9 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 All cast & crew
                             </button>
                         </div>
-                        {isMovie && <MovieCastScroller />}
+
+                        {/* Only displays cast for movies (for now) */}
+                        {isMovie ? <MovieCastScroller /> : null}
                     </div>
                 )}
             </div>
