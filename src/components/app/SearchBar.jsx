@@ -110,11 +110,17 @@ export default function SearchBar() {
 
                           const isTitleOverflowing = title.length > 16;
                           let isMovie = media.title !== undefined ? true : false;
-                          const infoText = isMovie ? (
-                              media.release_date.slice(0, 4)
-                          ) : (
-                              <>{media.first_air_date.slice(0, 4)}</>
-                          );
+                          console.log(`the ${index} media:`);
+                          console.log(media);
+
+                          const infoText = isMovie
+                              ? media.release_date.slice(0, 4)
+                              : !media.in_production
+                                ? null
+                                : media.in_production
+                                  ? 'In Production'
+                                  : `${media.in_production}`;
+
                           //   ) : media.in_production ? (
                           //   ) : (
                           //       <>

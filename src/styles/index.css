@@ -9,7 +9,7 @@
 @import './scrollbar.css';
 
 /* Layouts */
-@import './layouts/moviePage.css';
+@import './layouts/contentPage.css';
 @import './layouts/showsPage.css';
 @import './layouts/popularPage.css';
 @import './layouts/searchResultsPage.css';

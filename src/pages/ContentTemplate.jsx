@@ -1,17 +1,110 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-// import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Loading from '../components/app/Loading';
-import MovieGenres from '../components/moviePage/MovieGenres';
-import MovieIMDbRating from '../components/moviePage/movieRating/MovieIMDbRating';
-import MovieVoteCount from '../components/moviePage/movieRating/MovieVoteCount';
-import MoviePopularity from '../components/moviePage/movieRating/MoviePopularity';
-import MovieOverview from '../components/moviePage/MovieOverview';
 import MovieCastScroller from '../components/moviePage/movieCast/MovieCastScroller';
 import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
-    // const [isExpanded, setIsExpanded] = useState(false);
+    const [lastViewportWidth, setLastViewportWidth] = useState(window.innerWidth);
+    const [showExpanderBtn, setShowExpanderBtn] = useState(true);
+    const [showOverview, setShowOverview] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [lastVisibleWidth, setLastVisibleWidth] = useState(null);
+    const overviewSection = useRef(null);
+    const expanderBtnRef = useRef(null);
+    const infoRef = useRef(null);
+    const shadowOverlayRef = useRef(null);
+
+    useEffect(() => {
+        // Handles responsive layout changes based on viewport width and overview's info text height
+        const handleResize = () => {
+            const currentViewportWidth = window.innerWidth;
+
+            if (infoRef.current) {
+                const height = infoRef.current.clientHeight;
+                if (height === 96) {
+                    // For 4 lines of overview text
+                    document.documentElement.style.setProperty(
+                        '--overview-height-offset',
+                        '96px'
+                    );
+                } else if (height === 120) {
+                    // For 5 lines of overview text
+                    document.documentElement.style.setProperty(
+                        '--overview-height-offset',
+                        '120px'
+                    );
+                }
+
+                if (height > 122) {
+                    // Hide overview section when text is too long
+                    setShowExpanderBtn(false);
+                    setShowOverview(false);
+                    if (!lastVisibleWidth) {
+                        setLastVisibleWidth(currentViewportWidth);
+                    }
+                    if (overviewSection.current) {
+                        overviewSection.current.style.display = 'none';
+                    }
+                } else if (height <= 72) {
+                    // Show overview without expander for short text
+                    setShowExpanderBtn(true);
+                    setShowOverview(true);
+                    if (overviewSection.current) {
+                        overviewSection.current.style.display = 'block';
+                        if (shadowOverlayRef.current) {
+                            shadowOverlayRef.current.style.opacity = '0';
+                        }
+                        if (expanderBtnRef.current) {
+                            expanderBtnRef.current.style.opacity = '0';
+                        }
+                    }
+                } else {
+                    // Show overview with expander for medium length text
+                    setShowExpanderBtn(true);
+                    setShowOverview(true);
+                    if (overviewSection.current) {
+                        overviewSection.current.style.display = 'block';
+                        if (shadowOverlayRef.current) {
+                            shadowOverlayRef.current.style.opacity = isExpanded
+                                ? '0'
+                                : '1';
+                        }
+                        if (expanderBtnRef.current) {
+                            expanderBtnRef.current.style.opacity = '1';
+                        }
+                    }
+                }
+            }
+
+            // Handle overview visibility based on viewport width changes
+            if (lastVisibleWidth && currentViewportWidth <= lastVisibleWidth) {
+                setShowOverview(false);
+                if (overviewSection.current) {
+                    overviewSection.current.style.display = 'none';
+                }
+            } else if (lastVisibleWidth && currentViewportWidth > lastVisibleWidth) {
+                setShowOverview(true);
+                setShowExpanderBtn(true);
+                if (overviewSection.current) {
+                    overviewSection.current.style.display = 'block';
+                }
+                setLastVisibleWidth(null);
+            }
+
+            // Update viewport width tracking only when overview height is manageable
+            if (!infoRef.current || infoRef.current.clientHeight <= 122) {
+                setLastViewportWidth(currentViewportWidth);
+            }
+        };
+
+        handleResize(); // Initial layout setup
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [media.overview, lastViewportWidth, showOverview, lastVisibleWidth, isExpanded]);
+
     const isMovie = type === 'Movie' ? true : false;
     const mediaTitle = isMovie ? media.title : media.name;
     const showFormattedDate = !isMovie ? (
@@ -40,6 +133,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         return <Loading />;
     }
 
+    // Format runtime into hours and minutes
     const formattedRuntime = media.runtime
         ? media.runtime < 60
             ? `${media.runtime} min`
@@ -50,6 +144,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
               })()
         : null;
 
+    // Format content rating and tooltip text
     const formattedRating = media.adult ? 'Rated R' : 'Rated PG';
     const ratingTitle = media.adult
         ? `R-rated movies are for adults, containing \nstrong language, sexual content, violence, \nor drug use. Viewer discretion is advised.`
@@ -58,6 +153,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const numberOfCastMembers =
         creditsData && creditsData.cast ? creditsData.cast.length : 0;
 
+    // Determine title size class based on length
     const getMovieTitleClass = (title) => {
         if (!title) return 'title-small';
         const length = title.length;
@@ -72,40 +168,44 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         }
     };
 
-    // const toggleDescriptionExpand = () => {
-    //     setIsExpanded(!isExpanded);
-    // };
-
+    // Get poster image path or return null (going to be replaced by placeholder) if false
     const imagePath =
-        media.poster_path || media.profile_path // Use poster_path, fallback to profile_path if needed
+        media.poster_path || media.profile_path
             ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
             : null;
-    // : placeholderImage; // Use a placeholder image if neither exists
 
     console.log(media);
 
     return (
-        <div className="movie-page-container">
-            <div className="movie-page-background-overlay"></div>
-            <div className="movie-detail-container">
+        <div className="content-container">
+            <div className="content-background-overlay"></div>
+            <div className="content-detail-container">
                 <div className="details-heading-section">
-                    {/* Poster */}
+                    {/* Media poster image or placeholder */}
                     <div className="poster">
-                        <img
-                            className="item-poster"
-                            src={imagePath}
-                            alt={media.title || media.name}
-                            title={media.title || media.name}
-                        />
+                        {imagePath != null ? (
+                            <img
+                                className="item-poster"
+                                src={imagePath}
+                                alt={media.title || media.name}
+                            />
+                        ) : (
+                            <div className="poster-placeholder">
+                                <svg className="icon">
+                                    <use xlinkHref={`${sprite}#image-placeholder`} />
+                                </svg>
+                                <p className="text">Not available</p>
+                            </div>
+                        )}
                     </div>
 
                     <div className="right-side">
-                        <div className={`title ${getMovieTitleClass(mediaTitle)}`}>
+                        <div className={`media-title ${getMovieTitleClass(mediaTitle)}`}>
                             {mediaTitle}
                         </div>
 
                         {isMovie ? (
-                            // Other info - movies
+                            // Movie metadata: release year, runtime, rating
                             <p className="other-info">
                                 <span
                                     title={new Date(
@@ -130,7 +230,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 )}
                             </p>
                         ) : (
-                            // Other info - shows
+                            // TV show metadata: air dates, seasons, rating
                             <p className="other-info">
                                 {showFormattedDate}
 
@@ -147,20 +247,16 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             </p>
                         )}
 
-                        {/* Genres */}
-                        <p className="genres">
-                            <div className="genre-container">
-                                {genreNames.map((name, index) => (
-                                    <>
-                                        <a key={index} className="genre-item">
-                                            {name}
-                                        </a>
-                                    </>
-                                ))}
-                            </div>
-                        </p>
+                        {/* Genre tags */}
+                        <div className="genre-container">
+                            {genreNames.map((name, index) => (
+                                <a key={index} className="genre-item">
+                                    {name}
+                                </a>
+                            ))}
+                        </div>
 
-                        {/* Rating */}
+                        {/* Rating metrics */}
                         <div className="rating-container">
                             <div className="item imdb-rating">
                                 <p className="label">IMDb Rating</p>
@@ -203,19 +299,44 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             </div>
                         </div>
 
-                        <div className="description">
-                            <p className="title">Description</p>
-                            <p className="info">{media.overview}</p>
-                            <button className="expander">Expand</button>
-                        </div>
+                        {/* Overview section */}
+                        <div
+                            ref={overviewSection}
+                            style={{ display: showOverview ? 'block' : 'none' }}
+                            className={`overview ${isExpanded ? 'expanded' : 'collapsed'}`}
+                        >
+                            <div className="heading">
+                                <p className="title">Overview</p>
+                                {showExpanderBtn && (
+                                    <button
+                                        ref={expanderBtnRef}
+                                        onClick={() => {
+                                            setIsExpanded(!isExpanded);
+                                            if (shadowOverlayRef.current) {
+                                                shadowOverlayRef.current.style.opacity =
+                                                    !isExpanded ? '0' : '1';
+                                            }
+                                        }}
+                                        className={`expander ${isExpanded ? 'expanded' : 'collapsed'}`}
+                                    >
+                                        <p>Expand</p>
+                                        <p>Collapse</p>
+                                    </button>
+                                )}
+                            </div>
 
-                        {/* <p className="info">{movie.overview}</p>
-                            <button className="expander" onClick={onClick}>
-                                {isExpanded ? 'Collapse' : 'Expand'}
-                            </button> */}
+                            <p
+                                ref={infoRef}
+                                className={`info ${isExpanded ? 'expanded' : 'collapsed'}`}
+                            >
+                                {media.overview}
+                            </p>
+                            <div ref={shadowOverlayRef} className="shadow-overlay"></div>
+                        </div>
                     </div>
                 </div>
 
+                {/* Cast section */}
                 {creditsData && creditsData.cast && (
                     <div className="cast-members-container">
                         <div className="cast-members-header">
