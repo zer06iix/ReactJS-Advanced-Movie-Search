@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import useNavStore from '../../stores/navStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function NavTab({ path, children }) {
     const { activeTab, handleActiveTab, updateTabWidth, tabs } = useNavStore();

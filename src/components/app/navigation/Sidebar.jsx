@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useCallback } from 'react';
-import useNavStore from '../../stores/navStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function Sidebar({ children, onClick }) {
     const { isSidebarOpen, toggleSidebar } = useNavStore();

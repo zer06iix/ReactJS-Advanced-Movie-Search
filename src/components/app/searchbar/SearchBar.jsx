@@ -2,12 +2,12 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import SearchButton from '../buttons/SearchButton';
+import SearchButton from '../../buttons/SearchButton';
 import SearchInput from './SearchInput';
-import Loading from './Loading';
-import sprite from '../../styles/sprite.svg';
-import useFetchStore from '../../stores/fetchStore';
-import useNavStore from '../../stores/navStore';
+import Loading from '../Loading';
+import sprite from '../../../styles/sprite.svg';
+import useFetchStore from '../../../stores/fetchStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function SearchBar() {
     const { fetchMovieQueries, fetchShowsQueries, fetchShowsDetails } = useFetchStore();
@@ -124,11 +124,11 @@ export default function SearchBar() {
 
                         const shows = showsDetailsData[index]?.data;
                         const inProduction = showsDetailsData[index]?.data?.in_production;
-
+                        
                         // {mediaType === 'shows' ? console.log(showsDetailsData[index]?.data) : console.log('not found')}
-
                         const isTitleOverflowing = title.length > 16;
                         let isMovie = media.title !== undefined ? true : false;
+                        
                         const infoText = isMovie ? (
                             media.release_date.slice(0, 4)
                         ) : (

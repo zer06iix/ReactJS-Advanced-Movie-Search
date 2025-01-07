@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import MenuButton from '../buttons/MenuButton';
-import SearchBar from './SearchBar';
+import MenuButton from '../../buttons/MenuButton';
+import SearchBar from '../searchbar/SearchBar';
 import NavIndicator from './NavIndicator';
 import NavTab from './NavTab';
 import Sidebar from './Sidebar';
 import SidebarTab from './SidebarTab';
-import useNavStore from '../../stores/navStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function Navbar() {
     const location = useLocation();

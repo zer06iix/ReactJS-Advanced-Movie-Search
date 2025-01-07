@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link } from 'react-router-dom';
-import useNavStore from '../../stores/navStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function SidebarTab({ path, children, onClick }) {
     const { activeTab, handleActiveTab } = useNavStore();

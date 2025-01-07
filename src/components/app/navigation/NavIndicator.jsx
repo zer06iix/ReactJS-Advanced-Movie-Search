@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
-import useNavStore from '../../stores/navStore';
+import useNavStore from '../../../stores/navStore';
 
 export default function NavIndicator({ width }) {
     const { activeTab, activeTabIndex: i, tabWidths } = useNavStore();
