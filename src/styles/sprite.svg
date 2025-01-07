@@ -26,4 +26,12 @@
     <symbol id="fullscreen-exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
         <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
     </symbol>
+
+    <symbol id="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 6L6 19M6 6l13 13" stroke="currentColor" stroke-width="2" fill="none" />
+    </symbol>
+
+    <symbol id="help" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v2h2v-2zm0 4h-2v6h2v-6z" fill="currentColor"/>
+    </symbol>
 </svg>

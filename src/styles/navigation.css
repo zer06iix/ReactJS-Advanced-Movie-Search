@@ -261,6 +261,10 @@ nav {
     user-select: none;
 }
 
+.searchbar-container .query-results::-webkit-scrollbar {
+    display: none;
+}
+
 .searchbar-container .query-results.active {
     height: 400px;
     opacity: 0.88;
