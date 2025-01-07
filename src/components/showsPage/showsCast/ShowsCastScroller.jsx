@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
-import useMovieStore from '../../../stores/movieStore';
+import useShowStore from '../../../stores/showStore';
 import CastItem from '../../contentPage/cast/CastItem';
 
-export default function MovieCastScroller() {
-    const { movieCredits } = useMovieStore();
+export default function ShowsCastScroller() {
+    const { showsCredits } = useShowStore();
     const wrapperRef = useRef(null);
     const containerRef = useRef(null); // Reference for the container
     const [translateX, setTranslateX] = useState(0);
@@ -20,7 +20,7 @@ export default function MovieCastScroller() {
             setMaxTranslateX(-maxX); // Set max translateX
             setTranslateX(Math.max(Math.min(translateX, 0), -maxX)); // Constrain translateX
         }
-    }, [movieCredits, translateX]); // Recalculate when credits change
+    }, [showsCredits, translateX]); // Recalculate when credits change
 
     useEffect(() => {
         const handleMouseUp = () => setIsDragging(false);
@@ -75,8 +75,8 @@ export default function MovieCastScroller() {
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                 >
-                    {movieCredits && movieCredits.cast && movieCredits.cast.length > 0
-                        ? movieCredits.cast.map((member) => (
+                    {showsCredits && showsCredits.cast && showsCredits.cast.length > 0
+                        ? showsCredits.cast.map((member) => (
                             <CastItem member={member} key={member.id} />
                         ))
                         : null}

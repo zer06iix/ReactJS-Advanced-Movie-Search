@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useRef, useEffect, useState } from 'react';
-import MovieCastImage from './MovieCastImage';
+import CastImage from './CastImage';
 
-export default function MovieCastItem({ member }) {
+export default function CastItem({ member }) {
     const nameRef = useRef(null);
     const characterRef = useRef(null);
     const [nameTitle, setNameTitle] = useState('');
@@ -37,7 +37,7 @@ export default function MovieCastItem({ member }) {
         <div className="cast-member">
             <div className="cast-image-container">
                 {!imgError ? (
-                    <MovieCastImage member={member} onError={handleImageError} />
+                    <CastImage member={member} onError={handleImageError} />
                 ) : null}
             </div>
             <div className="detail">

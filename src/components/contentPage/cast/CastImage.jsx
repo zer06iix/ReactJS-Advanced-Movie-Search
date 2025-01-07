@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import sprite from '../../../styles/sprite.svg';
 
-export default function MovieCastImage({ member }) {
+export default function CastImage({ member }) {
     const [imgError, setImgError] = useState(false);
 
     const handleImageError = () => {

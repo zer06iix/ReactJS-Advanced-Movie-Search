@@ -2,7 +2,10 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
 import Loading from '../components/app/Loading';
+
 import MovieCastScroller from '../components/moviePage/movieCast/MovieCastScroller';
+import ShowsCastScroller from '../components/showsPage/showsCast/ShowsCastScroller';
+
 import MediaOverview from '../components/contentPage/MediaOverview';
 import MovieMeta from '../components/moviePage/MovieMeta';
 import ShowsMeta from '../components/showsPage/ShowsMeta';
@@ -56,7 +59,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                     }
                 } else if (height <= 72) {
                     // Show overview without expander for short text
-                    setShowExpanderBtn(true);
+                    setShowExpanderBtn(false);
                     setShowOverview(true);
                     if (overviewSection.current) {
                         overviewSection.current.style.display = 'block';
@@ -244,7 +247,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         </div>
 
                         {/* Only displays cast for movies (for now) */}
-                        {isMovie ? <MovieCastScroller /> : null}
+                        {isMovie ? <MovieCastScroller /> : <ShowsCastScroller />}
                     </div>
                 )}
             </div>
