@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,21 +9,27 @@ import Loading from '../components/app/Loading';
 import ContentTemplate from './ContentTemplate';
 
 export default function MoviePage() {
-    const [isLoading, setIsLoading] = useState(true);
-
     const { id: movieId } = useParams();
     const { movie, setMovie, movieCredits, setCredits, genresMap } = useMovieStore();
     const { fetchMovieDetails, fetchMovieCredits, fetchGenres } = useFetchStore();
 
     // Fetch movie details
-    const { data: movieData, error: movieError } = useQuery({
+    const { 
+        data: movieData, 
+        error: movieError, 
+        isLoading: movieLoading 
+    } = useQuery({
         queryKey: ['movie', movieId],
         queryFn: () => fetchMovieDetails(movieId),
         enabled: !!movieId // Only run if movieId is available
     });
 
     // Fetch movie credits
-    const { data: movieCreditsData, error: movieCreditsError } = useQuery({
+    const { 
+        data: movieCreditsData, 
+        error: movieCreditsError, 
+        isLoading: movieCreditsLoading 
+    } = useQuery({
         queryKey: ['movieCredits', movieId],
         queryFn: () => fetchMovieCredits(movieId),
         enabled: !!movieId
@@ -33,12 +39,6 @@ export default function MoviePage() {
     useEffect(() => {
         fetchGenres();
     }, [fetchGenres]);
-
-    useEffect(() => {
-        if (genresMap && movie) {
-            setIsLoading(false);
-        }
-    }, [genresMap, movie]);
 
     // Update movie and credits state when data is fetched
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function MoviePage() {
         }
     }, [movieData, setMovie, movieCreditsData, setCredits]);
 
-    if (!movie || isLoading) return <Loading />;
+    if (!movie || movieLoading || movieCreditsLoading) return <Loading />;
 
     if (!genresMap) {
         return <Loading />;

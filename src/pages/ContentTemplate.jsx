@@ -118,7 +118,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const mediaTitle = isMovie ? media.title : media.name;
     const showFormattedDate = !isMovie ? (
         media.in_production ? (
-            `Since ${media.first_air_date.slice(0, 4)} (in production)`
+            `Since ${media.first_air_date.slice(0, 4)}`
         ) : (
             `${media.first_air_date.slice(0, 4)} – ${media.last_air_date.slice(0, 4)}`
         )
