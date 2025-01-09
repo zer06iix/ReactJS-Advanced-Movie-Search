@@ -16,7 +16,14 @@ const ShowsMeta = ({
 
     return (
         <p className="metadata">
-            {showFormattedDate}
+            <span title={new Date(shows.first_air_date).toLocaleDateString('en-GB')}>
+                {showFormattedDate}
+            </span>
+            <sup>
+                <svg className="icon inline" width="15" height="15">
+                    <use xlinkHref={`${sprite}#help`} />
+                </svg>
+            </sup>
 
             <span className="separator">•</span>
 
