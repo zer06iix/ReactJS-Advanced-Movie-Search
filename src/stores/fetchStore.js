@@ -64,7 +64,6 @@ const useFetchStore = create((set) => ({
         // New function to fetch genres
         try {
             console.log('Fetching genres');
-            // const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
             const url = createApiUrl(`/genre/list`);
             const response = await axios.get(url);
             console.log('MovieGenres fetched successfully');
@@ -79,9 +78,9 @@ const useFetchStore = create((set) => ({
         // New function to fetch genres and transform them into a map
         try {
             const genres = await useFetchStore.getState().fetchGenres(); // Fetch genres
-            const genresMap = genres.reduce((acc, { id, name }) => {
-                acc[id] = name;
-                return acc;
+            const genresMap = genres.reduce((accumulator, { id, name }) => {
+                accumulator[id] = name;
+                return accumulator;
             }, {});
             return genresMap; // Return the genres map
         } catch (error) {
