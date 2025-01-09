@@ -27,13 +27,12 @@ export default function UpNextSection({ movies, wrapperRef }) {
         }
     }, [genresError]);
 
-    // Caculate the items to load count based on vh
+    // Calculate the items to load count based on vh
     const calculateItemsToLoad = () => {
         const leastItems = 2;
         const mostItems = 5;
         const staticOffset = 166 + 100; // navbar height & etc.
         const itemHeight = 120;
-        const viewportHeight = window.innerHeight;
         const calculatedItems = Math.floor(
             (window.innerHeight - staticOffset) / itemHeight
         );

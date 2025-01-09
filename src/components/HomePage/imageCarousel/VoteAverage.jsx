@@ -4,12 +4,12 @@ const VoteAverage = ({ voteAverage }) => {
         voteAverage > 8
             ? '#34ff19'
             : voteAverage > 6.9
-              ? 'yellowgreen'
-              : voteAverage > 5
-                ? 'orange'
-                : voteAverage > 3
-                  ? 'red'
-                  : 'darkred';
+                ? 'yellowgreen'
+                : voteAverage > 5
+                    ? 'orange'
+                    : voteAverage > 3
+                        ? 'red'
+                        : 'darkred';
 
     return (
         <div className="carousel-detail-rating">

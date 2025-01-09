@@ -5,7 +5,7 @@ import Genre from './Genre';
 import { useQuery } from '@tanstack/react-query';
 import useFetchStore from '../../../stores/fetchStore';
 import { Link } from 'react-router-dom';
-import Loading from '../../../components/app/Loading';
+import Loading from '../../app/Loading';
 
 const UpNextItem = ({ movie, index, translateY }) => {
     const { fetchMovieCredits } = useFetchStore();
@@ -64,7 +64,6 @@ const UpNextItem = ({ movie, index, translateY }) => {
 
                 <div className="genres-container">
                     {' '}
-                    {/* MovieGenres will be links later */}
                     <div className="genre-scroll-container">
                         {movie.genre_ids && movie.genre_ids.length > 0 ? (
                             <Genre genreIds={movie.genre_ids} />

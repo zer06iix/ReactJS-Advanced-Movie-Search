@@ -34,7 +34,7 @@ export default function Genre({ genreIds }) {
         return <div>Loading genres...</div>; // Show loading state
     }
 
-    const MovieGenres =
+    const movieGenres =
         genreIds && genreIds.length > 0 ? (
             genreIds.slice(0, 3).map((id) => (
                 <div className="genres-item" key={id}>
@@ -45,5 +45,5 @@ export default function Genre({ genreIds }) {
             <div>No genres available</div>
         );
 
-    return <>{MovieGenres}</>;
+    return <>{movieGenres}</>;
 }
