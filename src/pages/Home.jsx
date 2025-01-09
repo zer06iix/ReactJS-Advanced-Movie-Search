@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import Loading from '../components/app/Loading';
-import PopularCarousel from '../components/popularPage/imageCarousel/PopularCarousel';
-import UpNextSection from '../components/popularPage/upNext/UpNextSection';
+import PopularCarousel from '../components/homePage/imageCarousel/PopularCarousel';
+import UpNextSection from '../components/homePage/upNext/UpNextSection';
 import useFetchStore from '../stores/fetchStore';
 import useMovieStore from '../stores/movieStore';
 
