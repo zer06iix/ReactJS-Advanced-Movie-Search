@@ -1,15 +1,25 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import useMovieStore from '../../../stores/movieStore';
+import useScrollerStore from '../../../stores/scrollerStore';
 import CastItem from '../../contentPage/cast/CastItem';
 
 export default function MovieCastScroller() {
     const { movieCredits } = useMovieStore();
     const wrapperRef = useRef(null);
     const containerRef = useRef(null); // Reference for the container
-    const [translateX, setTranslateX] = useState(0);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [maxTranslateX, setMaxTranslateX] = useState(0); // State for max translate
+    const { 
+        translateX, 
+        setTranslateX, 
+        isDragging,
+        setIsDragging,
+        setStartX, 
+        maxTranslateX, 
+        setMaxTranslateX
+    } = useScrollerStore();
+    // const [translateX, setTranslateX] = useState(0);
+    // const [isDragging, setIsDragging] = useState(false);
+    // const [startX, setStartX] = useState(0);
+    // const [maxTranslateX, setMaxTranslateX] = useState(0); // State for max translate
     // const scrollSpeed = 50; // Controls how fast the scroll is
 
     useEffect(() => {
@@ -20,25 +30,28 @@ export default function MovieCastScroller() {
             setMaxTranslateX(-maxX); // Set max translateX
             setTranslateX(Math.max(Math.min(translateX, 0), -maxX)); // Constrain translateX
         }
-    }, [movieCredits, translateX]); // Recalculate when credits change
+    }, [movieCredits, translateX, setTranslateX, setMaxTranslateX]); // Recalculate when credits change
 
     useEffect(() => {
         const handleMouseUp = () => setIsDragging(false);
         window.addEventListener('mouseup', handleMouseUp);
         return () => window.removeEventListener('mouseup', handleMouseUp);
-    }, []);
+    }, [setIsDragging]);
 
     const handleMouseDown = (e) => {
         setIsDragging(true);
         setStartX(e.clientX);
     };
 
-    const handleMouseMove = (e) => {
-        if (!isDragging) return;
-        const deltaX = e.clientX - startX;
-        setTranslateX((prev) => Math.max(Math.min(prev + deltaX, 0), maxTranslateX)); // Constrain during drag
-        setStartX(e.clientX);
-    };
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (!isDragging) return;
+            const deltaX = e.movementX;
+            setTranslateX(Math.max(Math.min(translateX + deltaX, 0), maxTranslateX));
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, [isDragging, maxTranslateX, translateX, setTranslateX])
 
     // const handleWheel = (e) => {
     //     e.preventDefault();
@@ -73,7 +86,6 @@ export default function MovieCastScroller() {
                     ref={wrapperRef}
                     style={{ transform: `translateX(${translateX}px)` }}
                     onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
                 >
                     {movieCredits && movieCredits.cast && movieCredits.cast.length > 0
                         ? movieCredits.cast.map((member) => (
