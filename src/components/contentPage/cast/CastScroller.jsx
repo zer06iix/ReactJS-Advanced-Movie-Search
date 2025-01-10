@@ -1,11 +1,13 @@
 import { useRef, useEffect } from 'react';
+import useMovieStore from '../../../stores/movieStore';
 import useShowStore from '../../../stores/showStore';
 import useScrollerStore from '../../../stores/scrollerStore';
 import CastItem from '../../contentPage/cast/CastItem';
 
-export default function ShowsCastScroller() {
-    const { showsCredits } = useShowStore();
-    const wrapperRef = useRef(null); // Reference for the wrapper
+export default function CastScroller() {
+    const { movieCredits } = useMovieStore();
+    const { shows, showsCredits } = useShowStore();
+    const wrapperRef = useRef(null);
     const containerRef = useRef(null); // Reference for the container
     const { 
         translateX, 
@@ -17,6 +19,8 @@ export default function ShowsCastScroller() {
         setMaxTranslateX
     } = useScrollerStore();
 
+    const mediaType = shows?.name ? 'shows' : 'movie';
+
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
             const wrapperWidth = wrapperRef.current.offsetWidth;
@@ -25,7 +29,7 @@ export default function ShowsCastScroller() {
             setMaxTranslateX(-maxX); // Set max translateX
             setTranslateX(Math.max(Math.min(translateX, 0), -maxX)); // Constrain translateX
         }
-    }, [showsCredits, translateX, setMaxTranslateX, setTranslateX]); // Recalculate when credits change
+    }, [movieCredits, translateX, setTranslateX, setMaxTranslateX]); // Recalculate when credits change
 
     useEffect(() => {
         const handleMouseUp = () => setIsDragging(false);
@@ -47,6 +51,14 @@ export default function ShowsCastScroller() {
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, [isDragging, maxTranslateX, translateX, setTranslateX])
+
+    // const handleWheel = (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+
+    //     const deltaX = e.deltaY > 0 ? -scrollSpeed : scrollSpeed; // Calculate scroll based on wheel delta
+    //     setTranslateX((prev) => Math.max(Math.min(prev + deltaX, 0), maxTranslateX));
+    // };
 
     const shadowOverlayOpacityStart =
         translateX === maxTranslateX ? 1 : translateX === 0 ? 0 : 1;
@@ -74,11 +86,23 @@ export default function ShowsCastScroller() {
                     style={{ transform: `translateX(${translateX}px)` }}
                     onMouseDown={handleMouseDown}
                 >
-                {showsCredits && showsCredits.cast && showsCredits.cast.length > 0
-                    ? showsCredits.cast.map((member) => (
-                    <CastItem member={member} key={member.id} />
-                    ))
-                    : null}
+                    { mediaType == 'movie' 
+                    ? 
+                        movieCredits && movieCredits.cast && movieCredits.cast.length > 0
+                        ? 
+                            movieCredits.cast.map((member) => (
+                                <CastItem member={member} key={member.id} />
+                            ))
+                        : null 
+                    :
+                        showsCredits && showsCredits.cast && showsCredits.cast.length > 0
+                        ? 
+                            showsCredits.cast.map((member) => (
+                                <CastItem member={member} key={member.id} />
+                            ))
+                        : null 
+
+                    }
                 </div>
                 <div
                     className="shadow-overlay shadow-overlay-end"

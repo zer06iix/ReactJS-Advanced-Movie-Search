@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Loading from '../components/app/Loading';
 
-import MovieCastScroller from '../components/moviePage/movieCast/MovieCastScroller';
-import ShowsCastScroller from '../components/showsPage/showsCast/ShowsCastScroller';
+import CastScroller from '../components/contentPage/cast/CastScroller';
 
 import MediaOverview from '../components/contentPage/MediaOverview';
 import MovieMeta from '../components/moviePage/MovieMeta';
@@ -245,9 +244,8 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 All cast & crew
                             </button>
                         </div>
-
-                        {/* Only displays cast for movies (for now) */}
-                        {isMovie ? <MovieCastScroller /> : <ShowsCastScroller />}
+                        
+                        <CastScroller />
                     </div>
                 )}
             </div>
