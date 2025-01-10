@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import CastImage from './CastImage';
 
 export default function CastItem({ member }) {
@@ -34,7 +35,10 @@ export default function CastItem({ member }) {
     }, [member]);
 
     return (
-        <div className="cast-member">
+        <Link 
+            to={`/cast/${member.id}`}
+            className="cast-member"
+        >
             <div className="cast-image-container">
                 {!imgError ? (
                     <CastImage member={member} onError={handleImageError} />
@@ -52,6 +56,6 @@ export default function CastItem({ member }) {
                     {member.character || 'Unknown Character'}
                 </p>
             </div>
-        </div>
+        </Link>
     );
 }

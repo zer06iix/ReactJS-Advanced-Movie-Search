@@ -101,6 +101,22 @@ const useFetchStore = create((set) => ({
         const response = await axios.get(url);
 
         return response.data.results;
+    },
+
+    // Shows actor/actress biography
+    fetchCastDetails: async (id) => {
+        const url = createApiUrl(`/person/${id}`);
+        const response = await axios.get(url);
+
+        return response.data;
+    },
+
+    // Shows actor/actress movies they played
+    fetchCastCredits: async (id) => {
+        const url = createApiUrl(`/person/${id}/credits`);
+        const response = await axios.get(url);
+
+        return response.data;
     }
 }));
 

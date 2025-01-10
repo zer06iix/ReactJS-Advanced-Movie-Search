@@ -4,8 +4,9 @@ import Home from './pages/Home';
 import MostRated from './pages/MostRated';
 import Watchlist from './pages/Watchlist';
 import MoviePage from './pages/MoviePage';
-import ResultsPage from './pages/SearchResultsPage';
 import ShowsPage from './pages/ShowsPage';
+import CastPage from './pages/CastPage';
+import ResultsPage from './pages/SearchResultsPage';
 
 const App = () => {
     return (
@@ -19,6 +20,7 @@ const App = () => {
                     <Route path="/watchlist" element={<Watchlist />} />
                     <Route path="/movie/:id" element={<MoviePage />} />
                     <Route path="/shows/:id" element={<ShowsPage />} />
+                    <Route path="/cast/:id" element={<CastPage />} />
                     <Route path="/results" element={<ResultsPage />} />
                 </Routes>
             </div>
