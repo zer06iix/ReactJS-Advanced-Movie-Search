@@ -119,9 +119,28 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const isMovie = type === 'Movie' ? true : false;
     const mediaTitle = isMovie ? media.title : media.name;
     const showFormattedDate = !isMovie
-        ? media.in_production
-            ? `Since ${media.first_air_date.slice(0, 4)}`
-            : `${media.first_air_date.slice(0, 4)} – ${media.last_air_date.slice(0, 4)}`
+        ?
+            media.in_production
+            ? 
+                <span 
+                    title={new Date(media.first_air_date).toLocaleDateString('en-GB')}
+                >
+                    Since {media.first_air_date.slice(0, 4)}
+                </span>
+            : 
+            <>
+                <span 
+                    title={new Date(media.first_air_date).toLocaleDateString('en-GB')}
+                >
+                    {media.first_air_date.slice(0, 4)}
+                </span>
+                {' '}- {' '}
+                <span 
+                    title={new Date(media.last_air_date).toLocaleDateString('en-GB')}
+                >
+                    {media.last_air_date.slice(0, 4)}
+                </span>
+            </>
         : null;
 
     const genreNames = media.genres ? media.genres.map((genre) => genre.name) : [];
@@ -132,13 +151,16 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     // Format runtime into hours and minutes
     const formattedRuntime = media.runtime
-        ? media.runtime < 60
-            ? `${media.runtime} min`
-            : (() => {
-                  const hours = Math.floor(media.runtime / 60);
-                  const minutes = media.runtime % 60;
-                  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-              })()
+        ? 
+            media.runtime < 60
+            ? 
+                `${media.runtime} min`
+            : 
+                (() => {
+                    const hours = Math.floor(media.runtime / 60);
+                    const minutes = media.runtime % 60;
+                    return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
+                })()
         : null;
 
     // Format content rating and tooltip text
