@@ -11,6 +11,7 @@
 /* Layouts */
 @import './layouts/contentPage.css';
 @import './layouts/popularPage.css';
+@import './layouts/castPage.css';
 @import './layouts/searchResultsPage.css';
 
 /* Media Queries */

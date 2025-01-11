@@ -34,10 +34,6 @@
     height: 500px;
     display: flex;
     padding-top: 35px;
-}
-
-.details-heading-section {
-    display: flex;
     gap: 30px;
 }
 

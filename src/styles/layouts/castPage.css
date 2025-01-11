@@ -1,0 +1,214 @@
+:root {
+    --biography-height-offset: 72px;
+}
+
+.cast-page-container {
+    position: relative;
+    min-height: calc(100vh - 100px);
+    height: 100%;
+    width: calc(100vw - 17px);
+    display: flex;
+    justify-content: center;
+}
+
+.cast-page-wrapper {
+    width: min(1170px, 100%);
+    padding-inline: 40px;
+}
+
+.cast-page-heading {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    padding-top: 35px;
+    gap: 30px;
+}
+
+.cast-page-poster-container {
+    aspect-ratio: 5.5/8;
+    flex-shrink: 0;
+    border-radius: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.cast-page-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.right-side {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cast-metadata {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: rgb(196, 193, 198);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cast-metadata .separator {
+    margin-inline: 8px;
+    color: rgba(196, 193, 198, 0.5);
+}
+
+.cast-metadata .icon.inline {
+    display: inline;
+    margin-left: 4px;
+    fill: rgb(196, 193, 198);
+    opacity: 0.7;
+    vertical-align: super;
+    width: 15px;
+    height: 15px;
+}
+
+.cast-metadata span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.cast-metadata sup {
+    display: inline-flex;
+}
+
+/* Biography Section */
+
+.biography {
+    width: 100%;
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: height 0.35s ease;
+}
+
+.biography .info {
+    position: absolute;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    color: rgb(196, 193, 198);
+}
+
+.biography:has(.expanded) {
+    height: calc(var(--biography-height-offset) + 44px);
+}
+
+.biography:has(.collapsed) {
+    height: calc(72px + 44px);
+}
+
+.biography .heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.biography .title {
+    padding: 0;
+    font-size: 1.5rem;
+    display: inline;
+    color: rgb(196, 193, 198);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.biography .expander {
+    position: relative;
+    color: black;
+    height: 30px;
+    background-color: rgb(175, 187, 242);
+    border-radius: 50px;
+    padding: 4px 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: inline;
+    overflow: hidden;
+    transition:
+        width 0.35s ease,
+        opacity 0.15s ease;
+    user-select: none;
+}
+
+.biography .expander p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+.biography .expander.expanded {
+    width: 52px;
+}
+
+.biography .expander.collapsed {
+    width: 60px;
+}
+
+.biography .expander.expanded p:first-child {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 20px));
+}
+
+.biography .expander.expanded p:last-child {
+    opacity: 1;
+}
+
+.biography .expander.collapsed p:first-child {
+    opacity: 1;
+}
+
+.biography .expander.collapsed p:last-child {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 20px));
+}
+
+.biography .shadow-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 24px;
+    background: linear-gradient(to top, rgb(13, 17, 24) 10%, transparent);
+    transition: opacity 0.3s ease;
+}
+
+.biography:has(.expanded) .shadow-overlay {
+    opacity: 0;
+}
+
+.biography:has(.collapsed) .shadow-overlay {
+    opacity: 1;
+}
+
+.cast-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(196, 193, 198, 0.1);
+    gap: 5px;
+}
+
+.cast-image-placeholder .placeholder-icon {
+    width: 70px;
+    aspect-ratio: 1;
+    fill: rgb(196, 193, 198);
+    opacity: 0.35;
+}
+
+.cast-image-placeholder .placeholder-text {
+    color: rgb(196, 193, 198);
+    opacity: 0.35;
+    font-size: 0.9rem;
+}
