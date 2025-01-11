@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Loading from '../components/app/Loading';
 
 import CastScroller from '../components/contentPage/cast/CastScroller';
+import useContentStore from '../stores/contentStore';
 
 import MediaOverview from '../components/contentPage/MediaOverview';
 import MovieMeta from '../components/moviePage/MovieMeta';
@@ -15,11 +16,13 @@ import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
-    const [lastViewportWidth, setLastViewportWidth] = useState(window.innerWidth);
-    const [showExpanderBtn, setShowExpanderBtn] = useState(true);
-    const [showOverview, setShowOverview] = useState(true);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [lastVisibleWidth, setLastVisibleWidth] = useState(null);
+    const {
+        lastViewportWidth, setLastViewportWidth,
+        showExpanderBtn, setShowExpanderBtn,
+        showOverview, setShowOverview,
+        isExpanded, setIsExpanded,
+        lastVisibleWidth, setLastVisibleWidth
+    } = useContentStore();
     const overviewSection = useRef(null);
     const expanderBtnRef = useRef(null);
     const infoRef = useRef(null);
@@ -111,7 +114,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         handleResize(); // Initial layout setup
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [media.overview, lastViewportWidth, showOverview, lastVisibleWidth, isExpanded]);
+    }, [isExpanded, lastVisibleWidth, setLastViewportWidth, setLastVisibleWidth, setShowExpanderBtn, setShowOverview]);
 
     const isMovie = type === 'Movie' ? true : false;
     const mediaTitle = isMovie ? media.title : media.name;

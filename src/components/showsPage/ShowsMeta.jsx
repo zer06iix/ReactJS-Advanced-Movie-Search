@@ -16,7 +16,7 @@ const ShowsMeta = ({
 
     return (
         <p className="metadata">
-            <span title={new Date(shows.first_air_date).toLocaleDateString('en-GB')}>
+            <span>
                 {showFormattedDate}
             </span>
             <sup>
