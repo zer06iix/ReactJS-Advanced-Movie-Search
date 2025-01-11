@@ -1,9 +1,4 @@
 /* Content Page */
-
-:root {
-    --overview-height-offset: 72px;
-}
-
 .content-container {
     position: relative;
     min-height: calc(100vh - 100px);
@@ -367,14 +362,6 @@
     font-size: 1rem;
 }
 
-.overview:has(.expanded) {
-    height: calc(var(--overview-height-offset) + 44px);
-}
-
-.overview:has(.collapsed) {
-    height: calc(72px + 44px);
-}
-
 .overview .heading {
     display: inline-flex;
     align-items: center;
@@ -462,7 +449,6 @@
 /* Cast Section */
 
 .cast-members-container {
-    height: fit-content;
     height: fit-content;
     padding-block: 50px;
     color: rgb(196, 193, 198);
