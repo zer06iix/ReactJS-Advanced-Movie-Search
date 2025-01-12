@@ -6,7 +6,7 @@ import Loading from '../components/app/Loading';
 import CastScroller from '../components/contentPage/cast/CastScroller';
 import useContentStore from '../stores/contentStore';
 
-import MediaOverview from '../components/contentPage/MediaOverview';
+import MediaExpandable from '../components/contentPage/MediaExpandable';
 import MovieMeta from '../components/moviePage/MovieMeta';
 import ShowsMeta from '../components/showsPage/ShowsMeta';
 import MediaGenre from '../components/contentPage/MediaGenre';
@@ -16,132 +16,25 @@ import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
-    const {
-        lastViewportWidth, setLastViewportWidth,
-        showExpanderBtn, setShowExpanderBtn,
-        showOverview, setShowOverview,
-        isExpanded, setIsExpanded,
-        lastVisibleWidth, setLastVisibleWidth
-    } = useContentStore();
-    const overviewSection = useRef(null);
-    const expanderBtnRef = useRef(null);
-    const infoRef = useRef(null);
-    const shadowOverlayRef = useRef(null);
-
-    useEffect(() => {
-        // Handles responsive layout changes based on viewport width and overview's info text height
-        const handleResize = () => {
-            const currentViewportWidth = window.innerWidth;
-
-            if (infoRef.current) {
-                const height = infoRef.current.clientHeight;
-                if (height === 96) {
-                    // For 4 lines of overview text
-                    document.documentElement.style.setProperty(
-                        '--overview-height-offset',
-                        '96px'
-                    );
-                } else if (height === 120) {
-                    // For 5 lines of overview text
-                    document.documentElement.style.setProperty(
-                        '--overview-height-offset',
-                        '120px'
-                    );
-                }
-
-                if (height > 122) {
-                    // Hide overview section when text is too long
-                    setShowExpanderBtn(false);
-                    setShowOverview(false);
-                    if (!lastVisibleWidth) {
-                        setLastVisibleWidth(currentViewportWidth);
-                    }
-                    if (overviewSection.current) {
-                        overviewSection.current.style.display = 'none';
-                    }
-                } else if (height <= 72) {
-                    // Show overview without expander for short text
-                    setShowExpanderBtn(false);
-                    setShowOverview(true);
-                    if (overviewSection.current) {
-                        overviewSection.current.style.display = 'block';
-                        if (shadowOverlayRef.current) {
-                            shadowOverlayRef.current.style.opacity = '0';
-                        }
-                        if (expanderBtnRef.current) {
-                            expanderBtnRef.current.style.opacity = '0';
-                        }
-                    }
-                } else {
-                    // Show overview with expander for medium length text
-                    setShowExpanderBtn(true);
-                    setShowOverview(true);
-                    if (overviewSection.current) {
-                        overviewSection.current.style.display = 'block';
-                        if (shadowOverlayRef.current) {
-                            shadowOverlayRef.current.style.opacity = isExpanded
-                                ? '0'
-                                : '1';
-                        }
-                        if (expanderBtnRef.current) {
-                            expanderBtnRef.current.style.opacity = '1';
-                        }
-                    }
-                }
-            }
-
-            // Handle overview visibility based on viewport width changes
-            if (lastVisibleWidth && currentViewportWidth <= lastVisibleWidth) {
-                setShowOverview(false);
-                if (overviewSection.current) {
-                    overviewSection.current.style.display = 'none';
-                }
-            } else if (lastVisibleWidth && currentViewportWidth > lastVisibleWidth) {
-                setShowOverview(true);
-                setShowExpanderBtn(true);
-                if (overviewSection.current) {
-                    overviewSection.current.style.display = 'block';
-                }
-                setLastVisibleWidth(null);
-            }
-
-            // Update viewport width tracking only when overview height is manageable
-            if (!infoRef.current || infoRef.current.clientHeight <= 122) {
-                setLastViewportWidth(currentViewportWidth);
-            }
-        };
-
-        handleResize(); // Initial layout setup
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [isExpanded, lastVisibleWidth, setLastViewportWidth, setLastVisibleWidth, setShowExpanderBtn, setShowOverview]);
-
     const isMovie = type === 'Movie' ? true : false;
     const mediaTitle = isMovie ? media.title : media.name;
-    const showFormattedDate = !isMovie
-        ?
-            media.in_production
-            ? 
-                <span 
-                    title={new Date(media.first_air_date).toLocaleDateString('en-GB')}
-                >
-                    Since {media.first_air_date.slice(0, 4)}
-                </span>
-            : 
+    const showFormattedDate = !isMovie ? (
+        media.in_production ? (
+            <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
+                Since {media.first_air_date.slice(0, 4)}
+            </span>
+        ) : (
             <>
-                <span 
-                    title={new Date(media.first_air_date).toLocaleDateString('en-GB')}
-                >
+                <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
                     {media.first_air_date.slice(0, 4)}
-                </span>
-                {' '}- {' '}
-                <span 
-                    title={new Date(media.last_air_date).toLocaleDateString('en-GB')}
-                >
+                </span>{' '}
+                -{' '}
+                <span title={new Date(media.last_air_date).toLocaleDateString('en-GB')}>
                     {media.last_air_date.slice(0, 4)}
                 </span>
             </>
-        : null;
+        )
+    ) : null;
 
     const genreNames = media.genres ? media.genres.map((genre) => genre.name) : [];
 
@@ -151,16 +44,13 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     // Format runtime into hours and minutes
     const formattedRuntime = media.runtime
-        ? 
-            media.runtime < 60
-            ? 
-                `${media.runtime} min`
-            : 
-                (() => {
-                    const hours = Math.floor(media.runtime / 60);
-                    const minutes = media.runtime % 60;
-                    return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-                })()
+        ? media.runtime < 60
+            ? `${media.runtime} min`
+            : (() => {
+                  const hours = Math.floor(media.runtime / 60);
+                  const minutes = media.runtime % 60;
+                  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
+              })()
         : null;
 
     // Format content rating and tooltip text
@@ -238,16 +128,10 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         />
 
                         {/* Overview section */}
-                        <MediaOverview
-                            media={media}
-                            showOverview={showOverview}
-                            isExpanded={isExpanded}
-                            setIsExpanded={setIsExpanded}
-                            showExpanderBtn={showExpanderBtn}
-                            overviewSection={overviewSection}
-                            expanderBtnRef={expanderBtnRef}
-                            infoRef={infoRef}
-                            shadowOverlayRef={shadowOverlayRef}
+                        <MediaExpandable
+                            titleText="Overview"
+                            content={media.overview}
+                            expanderText={['Expand', 'Collapse']}
                         />
                     </div>
                 </div>

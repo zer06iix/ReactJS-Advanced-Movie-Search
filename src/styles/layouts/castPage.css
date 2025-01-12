@@ -90,6 +90,7 @@
 
 .biography .info {
     position: absolute;
+    height: var(--biography-height-offset);
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     color: rgb(196, 193, 198);

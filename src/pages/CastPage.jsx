@@ -5,17 +5,31 @@ import { useParams } from 'react-router-dom';
 import useFetchStore from '../stores/fetchStore';
 import useCastStore from '../stores/castStore';
 import sprite from '../styles/sprite.svg';
+import useContentStore from '../stores/contentStore';
+import MediaExpandable from '../components/contentPage/MediaExpandable';
+import ExpanderButton from '../components/buttons/ExpanderButton';
 
 export default function CastPage() {
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
     const { cast, castCredits } = useCastStore();
 
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [showExpanderBtn, setShowExpanderBtn] = useState(true);
-    const [showBiography, setShowBiography] = useState(true);
-    const [lastVisibleWidth, setLastVisibleWidth] = useState(null);
-    const biographyRef = useRef(null);
+    const {
+        lastViewportWidth,
+        setLastViewportWidth,
+        showExpanderBtn,
+        setShowExpanderBtn,
+        showOverview,
+        setShowOverview,
+        isExpanded,
+        setIsExpanded,
+        lastVisibleWidth,
+        setLastVisibleWidth
+    } = useContentStore();
+    const biographySection = useRef(null);
+    const expanderBtnRef = useRef(null);
+    const infoRef = useRef(null);
+    const shadowOverlayRef = useRef(null);
 
     const {
         data: castDetailsData,
@@ -55,16 +69,14 @@ export default function CastPage() {
         const handleResize = () => {
             const currentViewportWidth = window.innerWidth;
 
-            if (biographyRef.current) {
-                const height = biographyRef.current.clientHeight;
+            if (infoRef.current) {
+                const height = infoRef.current.clientHeight;
                 if (height === 96) {
-                    // For 4 lines of overview text
                     document.documentElement.style.setProperty(
                         '--biography-height-offset',
                         '96px'
                     );
                 } else if (height === 120) {
-                    // For 5 lines of overview text
                     document.documentElement.style.setProperty(
                         '--biography-height-offset',
                         '120px'
@@ -73,61 +85,86 @@ export default function CastPage() {
 
                 if (height > 122) {
                     setShowExpanderBtn(false);
-                    setShowBiography(false);
+                    setShowOverview(false);
                     if (!lastVisibleWidth) {
                         setLastVisibleWidth(currentViewportWidth);
                     }
-                    biographyRef.current.style.display = 'none';
+                    if (biographySection.current) {
+                        biographySection.current.style.display = 'none';
+                    }
                 } else if (height <= 72) {
                     setShowExpanderBtn(false);
-                    setShowBiography(true);
-                    biographyRef.current.style.display = 'block';
-                    const shadowOverlay =
-                        biographyRef.current.querySelector('.shadow-overlay');
-                    const expanderBtn = biographyRef.current.querySelector('.expander');
-                    if (shadowOverlay) shadowOverlay.style.opacity = 0;
-                    if (expanderBtn) expanderBtn.style.opacity = 0;
+                    setShowOverview(true);
+                    if (biographySection.current) {
+                        biographySection.current.style.display = 'block';
+                        if (shadowOverlayRef.current) {
+                            shadowOverlayRef.current.style.opacity = '0';
+                        }
+                        if (expanderBtnRef.current) {
+                            expanderBtnRef.current.style.opacity = '0';
+                        }
+                    }
                 } else {
                     setShowExpanderBtn(true);
-                    setShowBiography(true);
-                    biographyRef.current.style.display = 'block';
-                    const shadowOverlay =
-                        biographyRef.current.querySelector('.shadow-overlay');
-                    if (shadowOverlay) {
-                        shadowOverlay.style.opacity = isExpanded ? 0 : 1;
+                    setShowOverview(true);
+                    if (biographySection.current) {
+                        biographySection.current.style.display = 'block';
+                        if (shadowOverlayRef.current) {
+                            shadowOverlayRef.current.style.opacity = isExpanded
+                                ? '0'
+                                : '1';
+                        }
+                        if (expanderBtnRef.current) {
+                            expanderBtnRef.current.style.opacity = '1';
+                        }
                     }
-
-                    const expanderBtn = biographyRef.current.querySelector('.expander');
-                    if (expanderBtn) expanderBtn.style.opacity = 1;
                 }
             }
 
             if (lastVisibleWidth && currentViewportWidth <= lastVisibleWidth) {
-                setShowBiography(false);
-                if (biographyRef.current) {
-                    biographyRef.current.style.display = 'none';
+                setShowOverview(false);
+                if (biographySection.current) {
+                    biographySection.current.style.display = 'none';
                 }
             } else if (lastVisibleWidth && currentViewportWidth > lastVisibleWidth) {
-                setShowBiography(true);
+                setShowOverview(true);
                 setShowExpanderBtn(true);
-                if (biographyRef.current) {
-                    biographyRef.current.style.display = 'block';
+                if (biographySection.current) {
+                    biographySection.current.style.display = 'block';
                 }
                 setLastVisibleWidth(null);
+            }
+
+            if (!infoRef.current || infoRef.current.clientHeight <= 122) {
+                setLastViewportWidth(currentViewportWidth);
             }
         };
 
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [castDetailsData?.biography, isExpanded, lastVisibleWidth]);
+    }, [
+        castDetailsData?.biography,
+        isExpanded,
+        lastVisibleWidth,
+        setLastViewportWidth,
+        setLastVisibleWidth,
+        setShowExpanderBtn,
+        setShowOverview
+    ]);
+
+    console.log(castDetailsData?.biography);
 
     return (
         <div className="cast-page-container">
             <div className="cast-page-wrapper">
                 <div className="cast-page-heading">
                     <div className="cast-page-poster-container">
-                        {castDetailsData?.profile_path ? (
+                        {castDetailsLoading ? (
+                            <div>Loading poster...</div>
+                        ) : castDetailsError ? (
+                            <div>Error loading poster.</div>
+                        ) : castDetailsData?.profile_path ? (
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${castDetailsData.profile_path}`}
                                 alt={castDetailsData?.name}
@@ -189,26 +226,16 @@ export default function CastPage() {
                         </p>
 
                         {/* Biography section */}
-                        {castDetailsData?.biography && showBiography && (
-                            <div
-                                className={`biography ${isExpanded ? 'expanded' : 'collapsed'}`}
-                                ref={biographyRef}
-                            >
-                                <div className="heading">
-                                    <p className="title">Biography</p>
-                                    {showExpanderBtn && (
-                                        <button
-                                            className={`expander ${isExpanded ? 'expanded' : 'collapsed'}`}
-                                            onClick={() => setIsExpanded(!isExpanded)}
-                                        >
-                                            <p>More</p>
-                                            <p>Less</p>
-                                        </button>
-                                    )}
-                                </div>
-                                <p className="info">{castDetailsData.biography}</p>
-                                <div className="shadow-overlay"></div>
-                            </div>
+                        {castDetailsLoading ? (
+                            <div>Loading biography...</div>
+                        ) : castDetailsError ? (
+                            <div>Error loading biography.</div>
+                        ) : (
+                            <MediaExpandable
+                                titleText="Biography"
+                                content={castDetailsData?.biography}
+                                expanderText={['More', 'Less']}
+                            />
                         )}
                     </div>
                 </div>

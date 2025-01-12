@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 // const [lastViewportWidth, setLastViewportWidth] = useState(window.innerWidth);
 // const [showExpanderBtn, setShowExpanderBtn] = useState(true);
@@ -8,19 +8,21 @@ import { create } from "zustand";
 
 const useContentStore = create((set) => ({
     lastViewportWidth: window.innerWidth,
-    setLastViewportWidth: (newLastViewportWidth) => set({ lastViewportWidth: newLastViewportWidth }),
+    setLastViewportWidth: (newLastViewportWidth) =>
+        set({ lastViewportWidth: newLastViewportWidth }),
 
     lastVisibleWidth: null,
-    setLastVisibleWidth: (newLastVisibleWidth) => set({ lastVisibleWidth: newLastVisibleWidth }),
+    setLastVisibleWidth: (newLastVisibleWidth) =>
+        set({ lastVisibleWidth: newLastVisibleWidth }),
 
     showExpanderBtn: true,
     setShowExpanderBtn: (boolean) => set({ showExpanderBtn: boolean }),
 
-    showOverview: true,
-    setShowOverview: (boolean) => set({ showOverview: boolean }),
+    showExpandable: true,
+    setShowExpandable: (boolean) => set({ showExpandable: boolean }),
 
     isExpanded: false,
-    setIsExpanded: (boolean) => set({ isExpanded: boolean }),
-}))
+    setIsExpanded: (boolean) => set({ isExpanded: boolean })
+}));
 
 export default useContentStore;
