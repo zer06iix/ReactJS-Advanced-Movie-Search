@@ -117,6 +117,13 @@ const useFetchStore = create((set) => ({
         const response = await axios.get(url);
 
         return response.data;
+    },
+
+    fetchMovieRecommendations: async (id) => {
+        const url = createApiUrl(`/movie/${id}/recommendations`);
+        const response = await axios.get(url);
+
+        return response.data;
     }
 }));
 
