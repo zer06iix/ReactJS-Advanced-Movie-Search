@@ -124,7 +124,6 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             voteAverage={media.vote_average}
                             voteCount={media.vote_count}
                             popularity={media.popularity}
-                            sprite={sprite} // Pass the sprite prop to MediaRating
                         />
 
                         {/* Overview section */}

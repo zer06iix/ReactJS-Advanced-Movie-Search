@@ -19,14 +19,8 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
     const [isDragging, setIsDragging] = useState(false);
 
     const totalSlides = movies.length;
-    const prevSlideIndex = Math.max(
-        0,
-        (currentSlide - 1 + totalSlides) % totalSlides
-    );
-    const nextSlideIndex = Math.min(
-        totalSlides - 1,
-        (currentSlide + 1) % totalSlides
-    );
+    const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides);
+    const nextSlideIndex = Math.min(totalSlides - 1, (currentSlide + 1) % totalSlides);
 
     // Click Cooldown
     const [carouselDisabled, setCarouselDisabled] = useState(false);
@@ -138,10 +132,7 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
 
                 <div className="carousel-wrapper" ref={wrapperRef}>
                     <PreviousSlide slide={movies[prevSlideIndex]} />
-                    <CurrentSlide
-                        slide={movies[currentSlide]}
-                        ref={currentSlideRef}
-                    />
+                    <CurrentSlide slide={movies[currentSlide]} ref={currentSlideRef} />
                     <NextSlide slide={movies[nextSlideIndex]} />
                 </div>
 

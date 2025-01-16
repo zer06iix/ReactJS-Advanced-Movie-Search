@@ -497,7 +497,8 @@
     position: relative;
     width: 100%;
     height: 220px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
     transition: transform 0.15s ease;
     -ms-overflow-style: none;
@@ -515,6 +516,17 @@
     pointer-events: none;
     z-index: 3;
     transition: opacity 0.3s ease;
+}
+
+.cast-scroller-container .shadow-overlay > * {
+    pointer-events: visible;
+    transform: translateY(-50px);
+}
+.cast-scroller-container .shadow-overlay-start > * {
+    transform: translate(-12px, -50px);
+}
+.cast-scroller-container .shadow-overlay-end > * {
+    transform: translate(12px, -50px);
 }
 
 .cast-scroller-container .shadow-overlay-start {
