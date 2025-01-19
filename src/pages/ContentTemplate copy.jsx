@@ -26,11 +26,11 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         ) : (
             <>
                 <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
-                    {media.first_air_date.slice(0, 4)}
-                </span>{' '}
-                -{' '}
+                    content-template__air-date-start {media.first_air_date.slice(0, 4)}
+                </span>
+                {' - '}
                 <span title={new Date(media.last_air_date).toLocaleDateString('en-GB')}>
-                    {media.last_air_date.slice(0, 4)}
+                    content-template__air-date-end {media.last_air_date.slice(0, 4)}
                 </span>
             </>
         )
@@ -65,11 +65,12 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     // Determine title size class based on length
     const getMovieTitleClass = (title) => {
         if (!title) return 'media-title--small';
+
         const length = title.length;
 
         switch (true) {
-            case length < 25:
-                return 'media-title--large';
+            case length < 20:
+                return 'media-title--small';
             case length < 40:
                 return 'media-title--medium';
             default:
@@ -84,7 +85,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             : null;
 
     return (
-        <div className="content-container">
+        <div className="content-template">
             <div className="content-template__background-overlay"></div>
             <div className="content-template__detail-container">
                 <div className="content-template__heading-section">
@@ -134,13 +135,16 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         />
                     </div>
                 </div>
+
                 {/* Cast section */}
                 {creditsData && creditsData.cast && (
                     <div className="content-template__cast-section">
                         <div className="content-template__cast-header">
                             <p className="content-template__cast-title">
                                 Cast Members
-                                <span>{numberOfCastMembers}</span>
+                                <span className="content-template__cast-count">
+                                    {numberOfCastMembers}
+                                </span>
                                 <svg className="content-template__cast-icon">
                                     <use xlinkHref={`${sprite}#arrow-forward`} />
                                 </svg>

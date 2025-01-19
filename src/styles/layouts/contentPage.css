@@ -10,21 +10,22 @@
     justify-content: center;
 }
 
-.content-background-overlay {
+.content-template__background-overlay {
     position: fixed;
     background-color: rgba(0, 0, 0, 0); /*******/
     height: 100vh;
     width: 100vw;
-    transform: translateY(-100px);
+    transform: translate(8px, -100px);
     z-index: -100;
+    /* border: 1px solid lime; */
 }
 
-.content-detail-container {
+.content-template__detail-container {
     width: min(1170px, 100%);
     padding-inline: 40px;
 }
 
-.details-heading-section {
+.content-template__heading-section {
     width: 100%;
     height: 500px;
     display: flex;
@@ -32,7 +33,7 @@
     gap: 30px;
 }
 
-.details-heading-section .poster-container {
+.content-template__heading-section .poster-container {
     aspect-ratio: 5.5/8;
     flex-shrink: 0;
     border-radius: 20px;
@@ -40,13 +41,13 @@
     overflow: hidden;
 }
 
-.details-heading-section .poster-wrapper {
+.content-template__heading-section .poster-wrapper {
     position: relative;
     height: 100%;
     width: 100%;
 }
 
-.details-heading-section .poster-wrapper.fullscreen {
+.content-template__heading-section .poster-wrapper.fullscreen {
     position: fixed;
     width: 100vw;
     top: 0;
@@ -55,7 +56,7 @@
     z-index: 100;
 }
 
-.details-heading-section .poster-wrapper .overlay {
+.content-template__heading-section .poster-wrapper .overlay {
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
@@ -69,7 +70,7 @@
     transition: opacity 0.3s ease;
 }
 
-.details-heading-section .poster-wrapper.fullscreen .overlay {
+.content-template__heading-section .poster-wrapper.fullscreen .overlay {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -78,7 +79,7 @@
     aspect-ratio: 5.5/8;
 }
 
-.details-heading-section .poster-wrapper .fullscreen-btn {
+.content-template__heading-section .poster-wrapper .fullscreen-btn {
     padding: 15px;
     height: 120px;
     aspect-ratio: 1;
@@ -89,28 +90,28 @@
     transition: background-color 0.25s ease;
 }
 
-.details-heading-section .poster-wrapper .fullscreen-btn:hover {
+.content-template__heading-section .poster-wrapper .fullscreen-btn:hover {
     background-color: rgba(255, 255, 255, 0.08);
 }
 
-.details-heading-section .poster-wrapper .overlay .icon {
+.content-template__heading-section .poster-wrapper .overlay .icon {
     fill: rgb(196, 193, 198);
     aspect-ratio: 1;
     width: 75px;
     height: 75px;
 }
 
-.details-heading-section .poster-wrapper:no:hover .overlay {
+.content-template__heading-section .poster-wrapper:no:hover .overlay {
     opacity: 1;
 }
 
-.details-heading-section .poster-image {
+.content-template__heading-section .poster-image {
     object-fit: cover;
     height: 100%;
     width: 100%;
 }
 
-.details-heading-section .poster-wrapper.fullscreen .poster-image {
+.content-template__heading-section .poster-wrapper.fullscreen .poster-image {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -120,7 +121,7 @@
     aspect-ratio: 5.5/8;
 }
 
-.details-heading-section .poster-placeholder {
+.content-template__heading-section .poster-placeholder {
     background-color: rgba(196, 193, 198, 0.1);
     width: 100%;
     height: 100%;
@@ -131,20 +132,20 @@
     justify-content: center;
 }
 
-.details-heading-section .poster-placeholder .icon {
+.content-template__heading-section .poster-placeholder .icon {
     width: 70px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
     opacity: 0.35;
 }
 
-.details-heading-section .poster-placeholder .text {
+.content-template__heading-section .poster-placeholder .text {
     color: rgb(196, 193, 198);
     opacity: 0.35;
     font-size: 0.9rem;
 }
 
-.details-heading-section .poster > img {
+.content-template__heading-section .poster > img {
     height: 100%;
     width: 100%;
     object-fit: cover;
@@ -200,48 +201,37 @@
     opacity: 1;
 }
 
-.details-heading-section .right-side {
+.content-template__heading-section .content-template__main-details {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.details-heading-section .right-side > * {
+.content-template__heading-section .content-template__main-details > * {
     color: rgb(196, 193, 198);
     font-family: 'Montserrat', sans-serif;
 }
 
-.details-heading-section .media-title {
+.content-template__heading-section .media-title {
     color: white;
     font-weight: 500;
 }
 
-.details-heading-section .title-large {
+.content-template__heading-section .media-title--large {
     font-size: 2rem;
 }
 
-.details-heading-section .title-medium {
+.content-template__heading-section .media-title--medium {
     font-size: 1.85rem;
 }
 
-.details-heading-section .title-small {
+.content-template__heading-section .media-title--small {
     font-size: 1.7rem;
 }
 
-.details-heading-section .title-large {
-    font-size: 2rem;
-}
-
-.details-heading-section .title-medium {
-    font-size: 1.85rem;
-}
-
-.details-heading-section .title-small {
-    font-size: 1.7rem;
-}
-
-.details-heading-section .metadata {
+.content-template__heading-section .metadata {
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 10px;
@@ -448,20 +438,20 @@
 
 /* Cast Section */
 
-.cast-members-container {
+.content-template__cast-section {
     height: fit-content;
     padding-block: 50px;
     color: rgb(196, 193, 198);
 }
 
-.cast-members-container .title {
+.content-template__cast-section .content-template__cast-title {
     font-size: 2.2rem;
     font-weight: 500;
     font-family: Montserrat;
     padding-bottom: 18px;
 }
 
-.cast-members-container .title span {
+.content-template__cast-section .content-template__cast-title span {
     padding-inline: 10px;
     border-radius: 50px;
     margin-left: 10px;
@@ -471,20 +461,22 @@
     font-weight: 600;
 }
 
-.cast-members-container .title .icon {
+.content-template__cast-section
+    .content-template__cast-title
+    .content-template__cast-icon {
     display: inline;
     height: 35px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
 }
 
-.cast-members-header {
+.content-template__cast-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.view-full-cast-button {
+.content-template__view-full-cast-button {
     padding: 3px 12px;
     border-radius: 50px;
     background-color: rgb(175, 187, 242);

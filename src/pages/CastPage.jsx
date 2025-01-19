@@ -9,7 +9,7 @@ import useContentStore from '../stores/contentStore';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
 import ExpanderButton from '../components/buttons/ExpanderButton';
 
-export default function CastPage() {
+export default function CastMemberDetailsPage() {
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
     const { cast, castCredits } = useCastStore();
@@ -156,10 +156,10 @@ export default function CastPage() {
     console.log(castDetailsData?.biography);
 
     return (
-        <div className="cast-page-container">
-            <div className="cast-page-wrapper">
-                <div className="cast-page-heading">
-                    <div className="cast-page-poster-container">
+        <div className="cast-member-details-page">
+            <div className="cast-member-details-page__content-wrapper">
+                <div className="cast-member-details-page__header">
+                    <div className="cast-member-details-page__poster-container">
                         {castDetailsLoading ? (
                             <div>Loading poster...</div>
                         ) : castDetailsError ? (
@@ -170,17 +170,21 @@ export default function CastPage() {
                                 alt={castDetailsData?.name}
                             />
                         ) : (
-                            <div className="cast-image-placeholder">
-                                <svg className="placeholder-icon">
+                            <div className="cast-member-details-page__image-placeholder">
+                                <svg className="cast-member-details-page__placeholder-icon">
                                     <use xlinkHref={`${sprite}#image-placeholder`} />
                                 </svg>
-                                <p className="placeholder-text">No image available</p>
+                                <p className="cast-member-details-page__placeholder-text">
+                                    No image available
+                                </p>
                             </div>
                         )}
                     </div>
-                    <div className="right-side">
-                        <div className="cast-page-title">{castDetailsData?.name}</div>
-                        <p className="cast-metadata">
+                    <div className="cast-member-details-page__info">
+                        <div className="cast-member-details-page__title">
+                            {castDetailsData?.name}
+                        </div>
+                        <p className="cast-member-details-page__metadata">
                             {castDetailsData?.birthday && (
                                 <span
                                     title={new Date(
@@ -189,7 +193,7 @@ export default function CastPage() {
                                 >
                                     {age} years old
                                     <sup>
-                                        <svg className="icon inline">
+                                        <svg className="cast-member-details-page__metadata-icon">
                                             <use xlinkHref={`${sprite}#help`} />
                                         </svg>
                                     </sup>
@@ -198,11 +202,13 @@ export default function CastPage() {
 
                             {castDetailsData?.place_of_birth && (
                                 <>
-                                    <span className="separator">•</span>
+                                    <span className="cast-member-details-page__metadata-separator">
+                                        •
+                                    </span>
                                     <span title="Place of Birth">
                                         {castDetailsData.place_of_birth}
                                         <sup>
-                                            <svg className="icon inline">
+                                            <svg className="cast-member-details-page__metadata-icon ">
                                                 <use xlinkHref={`${sprite}#help`} />
                                             </svg>
                                         </sup>
@@ -212,11 +218,13 @@ export default function CastPage() {
 
                             {castDetailsData?.known_for_department && (
                                 <>
-                                    <span className="separator">•</span>
+                                    <span className="cast-member-details-page__metadata-separator">
+                                        •
+                                    </span>
                                     <span title="Known For">
                                         {castDetailsData.known_for_department}
                                         <sup>
-                                            <svg className="icon inline">
+                                            <svg className="cast-member-details-page__metadata-icon">
                                                 <use xlinkHref={`${sprite}#help`} />
                                             </svg>
                                         </sup>
@@ -226,17 +234,20 @@ export default function CastPage() {
                         </p>
 
                         {/* Biography section */}
-                        {castDetailsLoading ? (
-                            <div>Loading biography...</div>
-                        ) : castDetailsError ? (
-                            <div>Error loading biography.</div>
-                        ) : (
-                            <MediaExpandable
-                                titleText="Biography"
-                                content={castDetailsData?.biography}
-                                expanderText={['More', 'Less']}
-                            />
-                        )}
+                        <div className="cast-member-details-page__biography">
+                            <p className="cast-member-details-page__biography-title">
+                                Biography
+                            </p>
+                            {castDetailsLoading ? (
+                                <div>Loading biography...</div>
+                            ) : castDetailsError ? (
+                                <div>Error loading biography.</div>
+                            ) : (
+                                <div className="cast-member-details-page__biography-content">
+                                    <p>{castDetailsData.biography}</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
