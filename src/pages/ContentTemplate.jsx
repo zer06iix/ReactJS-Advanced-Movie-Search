@@ -7,6 +7,7 @@ import CastScroller from '../components/contentPage/cast/CastScroller';
 import useContentStore from '../stores/contentStore';
 
 import MediaExpandable from '../components/contentPage/MediaExpandable';
+import DynamicButton from '../components/buttons/DynamicButton';
 import MovieMeta from '../components/moviePage/MovieMeta';
 import ShowsMeta from '../components/showsPage/ShowsMeta';
 import MediaGenre from '../components/contentPage/MediaGenre';
@@ -36,22 +37,17 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         )
     ) : null;
 
-    const genreNames = media.genres ? media.genres.map((genre) => genre.name) : [];
-
     if (!media || !genresMap) {
         return <Loading />;
     }
 
     // Format runtime into hours and minutes
-    const formattedRuntime = media.runtime
-        ? media.runtime < 60
-            ? `${media.runtime} min`
-            : (() => {
-                  const hours = Math.floor(media.runtime / 60);
-                  const minutes = media.runtime % 60;
-                  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-              })()
-        : null;
+    const formatRuntime = (runtime) =>
+        !runtime
+            ? null
+            : runtime < 60
+              ? `${runtime} min`
+              : `${Math.floor(runtime / 60)} h${runtime % 60 ? ` ${runtime % 60} min` : ''}`;
 
     // Format content rating and tooltip text
     const formattedRating = media.adult ? 'Rated R' : 'Rated PG';
@@ -103,7 +99,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 adult={media.adult}
                                 ratingTitle={ratingTitle}
                                 formattedRating={formattedRating}
-                                formattedRuntime={formattedRuntime}
+                                formattedRuntime={formatRuntime(media.runtime)}
                             />
                         ) : (
                             // TV show metadata: air dates, seasons, rating
@@ -117,7 +113,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         )}
 
                         {/* Genre tags */}
-                        <MediaGenre genreNames={genreNames} />
+                        <MediaGenre genres={media.genres} />
 
                         {/* Rating metrics */}
                         <MediaRating
@@ -140,14 +136,16 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         <div className="content-template__cast-header">
                             <p className="content-template__cast-title">
                                 Cast Members
-                                <span>{numberOfCastMembers}</span>
+                                <DynamicButton className="content-template__cast-count">
+                                    {numberOfCastMembers}
+                                </DynamicButton>
                                 <svg className="content-template__cast-icon">
                                     <use xlinkHref={`${sprite}#arrow-forward`} />
                                 </svg>
                             </p>
-                            <button className="content-template__view-full-cast-button">
-                                All cast & crew
-                            </button>
+                            <DynamicButton className="content-template__view-full-credits-button">
+                                Cast & crew
+                            </DynamicButton>
                         </div>
 
                         <CastScroller />
