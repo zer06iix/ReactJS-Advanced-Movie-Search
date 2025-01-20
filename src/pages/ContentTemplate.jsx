@@ -28,8 +28,8 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             <>
                 <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
                     {media.first_air_date.slice(0, 4)}
-                </span>{' '}
-                -{' '}
+                </span>
+                {' - '}
                 <span title={new Date(media.last_air_date).toLocaleDateString('en-GB')}>
                     {media.last_air_date.slice(0, 4)}
                 </span>
