@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import useMovieStore from '../../../stores/movieStore';
 import useShowStore from '../../../stores/showStore';
+import useScrollerStore from '../../../stores/scrollerStore';
 import CastItem from '../../contentPage/cast/CastItem';
 
 import NextButton from '../../buttons/NextButton';
@@ -11,6 +12,12 @@ export default function CastScroller() {
     const { shows, showsCredits } = useShowStore();
     const wrapperRef = useRef(null);
     const containerRef = useRef(null);
+    // const { 
+    //     translateX, setTranslateX,
+    //     isScrolling, setIsScrolling,
+    //     isScrollEnd, setIsScrollEnd,
+    //     isInitialLoad, setIsInitialLoad
+    // } = useScrollerStore();
     const [translateX, setTranslateX] = useState(0);
     const [isScrollEnd, setIsScrollEnd] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -29,7 +36,7 @@ export default function CastScroller() {
                 setIsScrolling(false);
             }, scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay]);
+    }, [scrollStep, isScrolling, scrollDelay, setIsScrolling, setTranslateX]);
 
     const scrollRight = useCallback(() => {
         if (wrapperRef.current && containerRef.current && !isScrolling) {
@@ -43,7 +50,7 @@ export default function CastScroller() {
                 setIsScrolling(false);
             }, scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay]);
+    }, [scrollStep, isScrolling, scrollDelay, setIsScrolling, setTranslateX]);
 
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
@@ -52,7 +59,7 @@ export default function CastScroller() {
             const containerWidth = containerRef.current.offsetWidth;
             setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
         }
-    }, [translateX]);
+    }, [translateX, setIsInitialLoad, setIsScrollEnd]);
 
     useEffect(() => {
         if (!isInitialLoad && wrapperRef.current && containerRef.current) {
@@ -60,7 +67,7 @@ export default function CastScroller() {
             const containerWidth = containerRef.current.offsetWidth;
             setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
         }
-    }, [isInitialLoad]);
+    }, [isInitialLoad, translateX, setIsScrollEnd]);
 
     return (
         <div className="cast-scroller-container" ref={containerRef}>

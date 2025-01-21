@@ -1,19 +1,20 @@
 import { create } from "zustand";
 
 const useScrollerStore = create((set) => ({
-    scrollSpeed: 50, // Controls how fast the scroll is. (changeable)
+    // scrollStep: 600,
+    // scrollDelay: 500,
 
     translateX: 0, 
     setTranslateX: (newTranslateX) => set({ translateX: newTranslateX }),
 
-    isDragging: false,
-    setIsDragging: (boolean) => set({ isDragging: boolean}),
+    isScrolling: false,
+    setIsScrolling: (boolean) => set({ isScrolling: boolean }),
 
-    startX: 0,
-    setStartX: (newStartX) => set({ startX: newStartX }),
+    isScrollEnd: true,
+    setIsScrollEnd: (boolean) => set({ isScrollEnd: boolean }),
 
-    maxTranslateX: 0, // State for max translate
-    setMaxTranslateX: (newMaxTranslateX) => set({ maxTranslateX: newMaxTranslateX })
+    isInitialLoad: true,
+    setIsInitialLoad: (boolean) => set({ isInitialLoad: boolean })
 }));
 
 export default useScrollerStore;

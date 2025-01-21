@@ -7,6 +7,9 @@ import useCastStore from '../stores/castStore';
 import sprite from '../styles/sprite.svg';
 import useContentStore from '../stores/contentStore';
 import MediaPoster from '../components/contentPage/MediaPoster';
+import DynamicButton from '../components/buttons/DynamicButton';
+import Loading from '../components/app/Loading';
+import MediaScroller from '../components/castPage/media/MediaScroller';
 
 const BIO_HEIGHT_THRESHOLD = 122;
 const BIO_SHORT_HEIGHT_THRESHOLD = 72;
@@ -15,7 +18,7 @@ const INFO_MAX_LINES_THRESHOLD = 2; // Adjust as needed based on your styling
 export default function CastMemberDetailsPage() {
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
-    const { cast, castCredits } = useCastStore();
+    const { cast, setCast, castCredits, setCastCredits } = useCastStore();
 
     // Simplified state management for biography section
     const {
@@ -55,6 +58,20 @@ export default function CastMemberDetailsPage() {
         queryFn: () => fetchCastCredits(castId),
         enabled: !!castId
     });
+
+    const numberOfMedia =
+        castCreditsData && castCreditsData.cast ? castCreditsData.cast.length : 0;
+
+    useEffect(() => {
+        if (castDetailsData) {
+            setCast(castDetailsData);
+        }
+        if (castCreditsData) {
+            setCastCredits(castCreditsData);
+        }
+    }, [castCreditsData, castDetailsData, setCast, setCastCredits]);
+
+    // if (!cast || castDetailsLoading || castCreditsLoading) return <Loading />
 
     const calculateAge = useCallback((birthDate) => {
         if (!birthDate) return null;
@@ -251,6 +268,28 @@ export default function CastMemberDetailsPage() {
                         </div>
                     </div>
                 </div>
+                
+                {/* Meida section */}
+                {castCreditsData && castCreditsData.cast && (
+                    <div className="content-template__cast-section">
+                        <div className="content-template__cast-header">
+                            <p className="content-template__cast-title">
+                                Cast Members
+                                <DynamicButton className="content-template__cast-count">
+                                    {numberOfMedia}
+                                </DynamicButton>
+                                <svg className="content-template__cast-icon">
+                                    <use xlinkHref={`${sprite}#arrow-forward`} />
+                                </svg>
+                            </p>
+                            <DynamicButton className="content-template__view-full-credits-button">
+                                Movies & TV shows
+                            </DynamicButton>
+                        </div>
+
+                        <MediaScroller />
+                    </div>
+                )}
             </div>
         </div>
     );
