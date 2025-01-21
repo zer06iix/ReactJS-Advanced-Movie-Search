@@ -7,10 +7,13 @@
 /* Components */
 @import './navigation.css';
 @import './scrollbar.css';
+@import './dynamic-button.css';
+@import './media-expandable.css';
+@import './media-poster.css';
 
 /* Layouts */
 @import './layouts/contentPage.css';
-@import './layouts/popularPage.css';
+@import './layouts/homePage.css';
 @import './layouts/castPage.css';
 @import './layouts/searchResultsPage.css';
 

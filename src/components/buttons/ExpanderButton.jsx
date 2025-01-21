@@ -14,7 +14,7 @@ const ExpanderButton = forwardRef(
             const moreWidth = moreRef.current?.offsetWidth || 0;
             const lessWidth = lessRef.current?.offsetWidth || 0;
             setButtonWidth(Math.min(moreWidth, lessWidth) + widthOffset);
-        }, [widthOffset, expanderText]); // Added expanderText as a dependency
+        }, [widthOffset, expanderText]);
 
         const handleClick = useCallback(() => {
             onClick(); // Call the original onClick handler

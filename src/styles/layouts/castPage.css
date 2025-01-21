@@ -2,7 +2,7 @@
     --biography-height-offset: 72px;
 }
 
-.cast-page-container {
+.cast-member-details-page {
     position: relative;
     min-height: calc(100vh - 100px);
     height: 100%;
@@ -11,12 +11,12 @@
     justify-content: center;
 }
 
-.cast-page-wrapper {
+.cast-member-details-page__content-wrapper {
     width: min(1170px, 100%);
     padding-inline: 40px;
 }
 
-.cast-page-heading {
+.cast-member-details-page__header {
     width: 100%;
     height: 500px;
     display: flex;
@@ -24,7 +24,7 @@
     gap: 30px;
 }
 
-.cast-page-poster-container {
+.cast-member-details-page__poster-container {
     aspect-ratio: 5.5/8;
     flex-shrink: 0;
     border-radius: 20px;
@@ -32,21 +32,33 @@
     overflow: hidden;
 }
 
-.cast-page-title {
+.cast-member-details-page__title {
     color: white;
     font-size: 2rem;
     font-weight: 500;
     font-family: 'Montserrat', sans-serif;
 }
 
-.right-side {
+.cast-member-details-page__info {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: rgb(196, 193, 198);
+    font-family: 'Montserrat', sans-serif;
 }
 
-.cast-metadata {
+.cast-member-details-page__biography {
+    width: 100%;
+}
+
+.cast-member-details-page__biography-title {
+    padding: 0;
+    font-size: 1.5rem;
+    display: inline;
+}
+
+.cast-member-details-page__metadata {
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 10px;
@@ -54,12 +66,12 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.cast-metadata .separator {
+.cast-member-details-page__metadata-separator {
     margin-inline: 8px;
     color: rgba(196, 193, 198, 0.5);
 }
 
-.cast-metadata .icon.inline {
+.cast-member-details-page__metadata-icon {
     display: inline;
     margin-left: 4px;
     fill: rgb(196, 193, 198);
@@ -69,18 +81,23 @@
     height: 15px;
 }
 
-.cast-metadata span {
+.cast-member-details-page__metadata-icon--inline {
     display: inline-flex;
     align-items: center;
 }
 
-.cast-metadata sup {
+.cast-member-details-page__metadata span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.cast-member-details-page__metadata sup {
     display: inline-flex;
 }
 
 /* Biography Section */
 
-.biography {
+.cast-member-details-page__biography-container {
     width: 100%;
     margin-top: 12px;
     position: relative;
@@ -88,30 +105,30 @@
     transition: height 0.35s ease;
 }
 
-.biography .info {
-    position: absolute;
-    height: var(--biography-height-offset);
+.cast-member-details-page__biography-content {
+    /* position: absolute; */
+    /* height: var(--biography-height-offset); */
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     color: rgb(196, 193, 198);
 }
 
-.biography:has(.expanded) {
+.cast-member-details-page__biography-container--expanded {
     height: calc(var(--biography-height-offset) + 44px);
 }
 
-.biography:has(.collapsed) {
+.cast-member-details-page__biography-container--collapsed {
     height: calc(72px + 44px);
 }
 
-.biography .heading {
+.cast-member-details-page__biography-heading {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
 }
 
-.biography .title {
+.cast-member-details-page__biography-title {
     padding: 0;
     font-size: 1.5rem;
     display: inline;
@@ -119,7 +136,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.biography .expander {
+.cast-member-details-page__biography-expander {
     position: relative;
     color: black;
     height: 30px;
@@ -136,7 +153,7 @@
     user-select: none;
 }
 
-.biography .expander p {
+.cast-member-details-page__biography-expander p {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -146,33 +163,33 @@
         opacity 0.3s ease;
 }
 
-.biography .expander.expanded {
+.cast-member-details-page__biography-expander--expanded {
     width: 52px;
 }
 
-.biography .expander.collapsed {
+.cast-member-details-page__biography-expander--collapsed {
     width: 60px;
 }
 
-.biography .expander.expanded p:first-child {
+.cast-member-details-page__biography-expander--expanded p:first-child {
     opacity: 0;
     transform: translate(-50%, calc(-50% - 20px));
 }
 
-.biography .expander.expanded p:last-child {
+.cast-member-details-page__biography-expander--expanded p:last-child {
     opacity: 1;
 }
 
-.biography .expander.collapsed p:first-child {
+.cast-member-details-page__biography-expander--collapsed p:first-child {
     opacity: 1;
 }
 
-.biography .expander.collapsed p:last-child {
+.cast-member-details-page__biography-expander--collapsed p:last-child {
     opacity: 0;
     transform: translate(-50%, calc(-50% + 20px));
 }
 
-.biography .shadow-overlay {
+.cast-member-details-page__biography-shadow-overlay {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -182,15 +199,17 @@
     transition: opacity 0.3s ease;
 }
 
-.biography:has(.expanded) .shadow-overlay {
+.cast-member-details-page__biography-container--expanded
+    .cast-member-details-page__biography-shadow-overlay {
     opacity: 0;
 }
 
-.biography:has(.collapsed) .shadow-overlay {
+.cast-member-details-page__biography-container--collapsed
+    .cast-member-details-page__biography-shadow-overlay {
     opacity: 1;
 }
 
-.cast-image-placeholder {
+.cast-member-details-page__image-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
@@ -201,14 +220,14 @@
     gap: 5px;
 }
 
-.cast-image-placeholder .placeholder-icon {
+.cast-member-details-page__placeholder-icon {
     width: 70px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
     opacity: 0.35;
 }
 
-.cast-image-placeholder .placeholder-text {
+.cast-member-details-page__placeholder-text {
     color: rgb(196, 193, 198);
     opacity: 0.35;
     font-size: 0.9rem;

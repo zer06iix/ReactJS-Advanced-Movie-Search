@@ -10,21 +10,22 @@
     justify-content: center;
 }
 
-.content-background-overlay {
+.content-template__background-overlay {
     position: fixed;
     background-color: rgba(0, 0, 0, 0); /*******/
     height: 100vh;
     width: 100vw;
-    transform: translateY(-100px);
+    transform: translate(8px, -100px);
     z-index: -100;
+    /* border: 1px solid lime; */
 }
 
-.content-detail-container {
+.content-template__detail-container {
     width: min(1170px, 100%);
     padding-inline: 40px;
 }
 
-.details-heading-section {
+.content-template__heading-section {
     width: 100%;
     height: 500px;
     display: flex;
@@ -32,126 +33,19 @@
     gap: 30px;
 }
 
-.details-heading-section .poster-container {
-    aspect-ratio: 5.5/8;
-    flex-shrink: 0;
-    border-radius: 20px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-}
-
-.details-heading-section .poster-wrapper {
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
-
-.details-heading-section .poster-wrapper.fullscreen {
-    position: fixed;
-    width: 100vw;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 100;
-}
-
-.details-heading-section .poster-wrapper .overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.hover-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
+    right: 0;
+    bottom: 0;
+    background: rgba(12, 12, 12, 0.3);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
-}
-
-.details-heading-section .poster-wrapper.fullscreen .overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 90vh;
-    aspect-ratio: 5.5/8;
-}
-
-.details-heading-section .poster-wrapper .fullscreen-btn {
-    padding: 15px;
-    height: 120px;
-    aspect-ratio: 1;
-    border-radius: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.25s ease;
-}
-
-.details-heading-section .poster-wrapper .fullscreen-btn:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-}
-
-.details-heading-section .poster-wrapper .overlay .icon {
-    fill: rgb(196, 193, 198);
-    aspect-ratio: 1;
-    width: 75px;
-    height: 75px;
-}
-
-.details-heading-section .poster-wrapper:no:hover .overlay {
-    opacity: 1;
-}
-
-.details-heading-section .poster-image {
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-}
-
-.details-heading-section .poster-wrapper.fullscreen .poster-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 90vh;
-    object-fit: contain;
-    aspect-ratio: 5.5/8;
-}
-
-.details-heading-section .poster-placeholder {
-    background-color: rgba(196, 193, 198, 0.1);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    row-gap: 5px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.details-heading-section .poster-placeholder .icon {
-    width: 70px;
-    aspect-ratio: 1;
-    fill: rgb(196, 193, 198);
-    opacity: 0.35;
-}
-
-.details-heading-section .poster-placeholder .text {
-    color: rgb(196, 193, 198);
-    opacity: 0.35;
-    font-size: 0.9rem;
-}
-
-.details-heading-section .poster > img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
-.poster-wrapper:hover {
-    cursor: pointer;
 }
 
 .fullscreen-overlay {
@@ -181,67 +75,37 @@
     transition: background-color 0.3s;
 }
 
-.hover-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #0c0c0c9d;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.poster-container:hover .hover-overlay {
-    opacity: 1;
-}
-
-.details-heading-section .right-side {
+.content-template__main-details {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.details-heading-section .right-side > * {
+.content-template__main-details > * {
     color: rgb(196, 193, 198);
     font-family: 'Montserrat', sans-serif;
 }
 
-.details-heading-section .media-title {
+.media-title {
     color: white;
     font-weight: 500;
 }
 
-.details-heading-section .title-large {
+.media-title--large {
     font-size: 2rem;
 }
 
-.details-heading-section .title-medium {
+.media-title--medium {
     font-size: 1.85rem;
 }
 
-.details-heading-section .title-small {
+.media-title--small {
     font-size: 1.7rem;
 }
 
-.details-heading-section .title-large {
-    font-size: 2rem;
-}
-
-.details-heading-section .title-medium {
-    font-size: 1.85rem;
-}
-
-.details-heading-section .title-small {
-    font-size: 1.7rem;
-}
-
-.details-heading-section .metadata {
+.content-template__heading-section .metadata {
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 10px;
@@ -264,7 +128,7 @@
     width: 100%;
     height: fit-content;
     display: flex;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 20px;
 }
 
@@ -448,48 +312,47 @@
 
 /* Cast Section */
 
-.cast-members-container {
+.content-template__cast-section {
     height: fit-content;
     padding-block: 50px;
     color: rgb(196, 193, 198);
 }
 
-.cast-members-container .title {
+.content-template__cast-title {
     font-size: 2.2rem;
     font-weight: 500;
-    font-family: Montserrat;
-    padding-bottom: 18px;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.cast-members-container .title span {
-    padding-inline: 10px;
+.content-template__cast-count {
+    height: 40px;
+    padding: 0 12px;
     border-radius: 50px;
     margin-left: 10px;
-    background-color: rgb(175, 187, 242);
     color: black;
     font-size: 1.7rem;
     font-weight: 600;
 }
 
-.cast-members-container .title .icon {
+.content-template__cast-section
+    .content-template__cast-title
+    .content-template__cast-icon {
     display: inline;
     height: 35px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
 }
 
-.cast-members-header {
+.content-template__cast-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: 18px;
 }
 
-.view-full-cast-button {
-    padding: 3px 12px;
-    border-radius: 50px;
-    background-color: rgb(175, 187, 242);
-    color: black;
-    font-size: 1.3rem;
+.content-template__view-full-credits-button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
     font-weight: 600;
 }
 

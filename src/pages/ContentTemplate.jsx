@@ -7,6 +7,7 @@ import CastScroller from '../components/contentPage/cast/CastScroller';
 import useContentStore from '../stores/contentStore';
 
 import MediaExpandable from '../components/contentPage/MediaExpandable';
+import DynamicButton from '../components/buttons/DynamicButton';
 import MovieMeta from '../components/moviePage/MovieMeta';
 import ShowsMeta from '../components/showsPage/ShowsMeta';
 import MediaGenre from '../components/contentPage/MediaGenre';
@@ -27,8 +28,8 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             <>
                 <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
                     {media.first_air_date.slice(0, 4)}
-                </span>{' '}
-                -{' '}
+                </span>
+                {' - '}
                 <span title={new Date(media.last_air_date).toLocaleDateString('en-GB')}>
                     {media.last_air_date.slice(0, 4)}
                 </span>
@@ -36,22 +37,17 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         )
     ) : null;
 
-    const genreNames = media.genres ? media.genres.map((genre) => genre.name) : [];
-
     if (!media || !genresMap) {
         return <Loading />;
     }
 
     // Format runtime into hours and minutes
-    const formattedRuntime = media.runtime
-        ? media.runtime < 60
-            ? `${media.runtime} min`
-            : (() => {
-                  const hours = Math.floor(media.runtime / 60);
-                  const minutes = media.runtime % 60;
-                  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-              })()
-        : null;
+    const formatRuntime = (runtime) =>
+        !runtime
+            ? null
+            : runtime < 60
+              ? `${runtime} min`
+              : `${Math.floor(runtime / 60)} h${runtime % 60 ? ` ${runtime % 60} min` : ''}`;
 
     // Format content rating and tooltip text
     const formattedRating = media.adult ? 'Rated R' : 'Rated PG';
@@ -64,16 +60,16 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     // Determine title size class based on length
     const getMovieTitleClass = (title) => {
-        if (!title) return 'title-small';
+        if (!title) return 'media-title--small';
         const length = title.length;
 
         switch (true) {
             case length < 25:
-                return 'title-large';
+                return 'media-title--large';
             case length < 40:
-                return 'title-medium';
+                return 'media-title--medium';
             default:
-                return 'title-small';
+                return 'media-title--small';
         }
     };
 
@@ -85,13 +81,13 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     return (
         <div className="content-container">
-            <div className="content-background-overlay"></div>
-            <div className="content-detail-container">
-                <div className="details-heading-section">
+            <div className="content-template__background-overlay"></div>
+            <div className="content-template__detail-container">
+                <div className="content-template__heading-section">
                     {/* Media poster image or placeholder */}
                     <MediaPoster imagePath={imagePath} mediaTitle={mediaTitle} />
 
-                    <div className="right-side">
+                    <div className="content-template__main-details">
                         <div className={`media-title ${getMovieTitleClass(mediaTitle)}`}>
                             {mediaTitle}
                         </div>
@@ -103,7 +99,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 adult={media.adult}
                                 ratingTitle={ratingTitle}
                                 formattedRating={formattedRating}
-                                formattedRuntime={formattedRuntime}
+                                formattedRuntime={formatRuntime(media.runtime)}
                             />
                         ) : (
                             // TV show metadata: air dates, seasons, rating
@@ -117,7 +113,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         )}
 
                         {/* Genre tags */}
-                        <MediaGenre genreNames={genreNames} />
+                        <MediaGenre genres={media.genres} />
 
                         {/* Rating metrics */}
                         <MediaRating
@@ -134,21 +130,22 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         />
                     </div>
                 </div>
-
                 {/* Cast section */}
                 {creditsData && creditsData.cast && (
-                    <div className="cast-members-container">
-                        <div className="cast-members-header">
-                            <p className="title">
+                    <div className="content-template__cast-section">
+                        <div className="content-template__cast-header">
+                            <p className="content-template__cast-title">
                                 Cast Members
-                                <span>{numberOfCastMembers}</span>
-                                <svg className="icon">
+                                <DynamicButton className="content-template__cast-count">
+                                    {numberOfCastMembers}
+                                </DynamicButton>
+                                <svg className="content-template__cast-icon">
                                     <use xlinkHref={`${sprite}#arrow-forward`} />
                                 </svg>
                             </p>
-                            <button className="view-full-cast-button">
-                                All cast & crew
-                            </button>
+                            <DynamicButton className="content-template__view-full-credits-button">
+                                Cast & crew
+                            </DynamicButton>
                         </div>
 
                         <CastScroller />

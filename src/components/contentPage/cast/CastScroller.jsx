@@ -14,12 +14,12 @@ export default function CastScroller() {
     const [translateX, setTranslateX] = useState(0);
     const [isScrollEnd, setIsScrollEnd] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const [isScrolling, setIsScrolling] = useState(false); // Track if scrolling is in progress
+    const [isScrolling, setIsScrolling] = useState(false);
 
     const mediaType = shows?.name ? 'shows' : 'movie';
 
     const scrollStep = 600;
-    const scrollDelay = 500; // Set the delay in milliseconds
+    const scrollDelay = 500;
 
     const scrollLeft = useCallback(() => {
         if (wrapperRef.current && !isScrolling) {
@@ -29,7 +29,7 @@ export default function CastScroller() {
                 setIsScrolling(false);
             }, scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay]); // Added isScrolling and scrollDelay to dependencies
+    }, [scrollStep, isScrolling, scrollDelay]);
 
     const scrollRight = useCallback(() => {
         if (wrapperRef.current && containerRef.current && !isScrolling) {
@@ -43,7 +43,7 @@ export default function CastScroller() {
                 setIsScrolling(false);
             }, scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay]); // Added isScrolling and scrollDelay to dependencies
+    }, [scrollStep, isScrolling, scrollDelay]);
 
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
@@ -72,7 +72,7 @@ export default function CastScroller() {
                     <PreviousButton
                         className="carouselBtns prevBtn"
                         onClick={scrollLeft}
-                        disabled={translateX === 0 || isScrolling} // Disable when at the start or scrolling
+                        disabled={translateX === 0}
                     />
                 </div>
                 <div
@@ -119,13 +119,13 @@ export default function CastScroller() {
                         className="carouselBtns nextBtn"
                         onClick={scrollRight}
                         disabled={
-                            (!isInitialLoad && wrapperRef.current && containerRef.current
+                            !isInitialLoad && wrapperRef.current && containerRef.current
                                 ? translateX <=
                                   -(
                                       wrapperRef.current.offsetWidth -
                                       containerRef.current.offsetWidth
                                   )
-                                : true) || isScrolling // Disable when at the end or scrolling
+                                : true
                         }
                     />
                 </div>
