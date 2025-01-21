@@ -274,7 +274,7 @@ export default function CastMemberDetailsPage() {
                     <div className="content-template__cast-section">
                         <div className="content-template__cast-header">
                             <p className="content-template__cast-title">
-                                Cast Members
+                                His/Her appearances
                                 <DynamicButton className="content-template__cast-count">
                                     {numberOfMedia}
                                 </DynamicButton>
