@@ -18,42 +18,33 @@ export default function MediaItem({ media }) {
     useEffect(() => {
         // Check if name overflows
         if (nameRef.current) {
-            const overflow =
-                nameRef.current.scrollWidth > nameRef.current.clientWidth;
+            const overflow = nameRef.current.scrollWidth > nameRef.current.clientWidth;
             if (overflow) {
-                setNameTitle(media.name); // Set the full name if it overflows
+                setNameTitle(media.name);
             }
         }
 
         // Check if character overflows
         if (mediaRef.current) {
-            const overflow =
-                mediaRef.current.scrollWidth > mediaRef.current.clientWidth;
+            const overflow = mediaRef.current.scrollWidth > mediaRef.current.clientWidth;
             if (overflow) {
-                setMediaTitle(media.character || 'Unknown Character'); // Set the full character name if it overflows
+                setMediaTitle(media.character || 'Unknown Character');
             }
         }
     }, [media]);
 
     return (
-        <Link 
-            to={`/cast/${media.id}`}
-            className="cast-media"
-        >
-            <div className="cast-image-container">
+        <Link to={`/cast/${media.id}`} className="cast-media">
+            <div className="media-image-container">
                 {!imgError ? (
                     <MediaImage media={media} onError={handleImageError} />
                 ) : null}
             </div>
-            <div className="detail">
-                <p
-                    className="cast-character-name"
-                    ref={mediaRef}
-                    title={mediaTitle}
-                >
+            {/* <div className="detail">
+                <p className="cast-character-name" ref={mediaRef} title={mediaTitle}>
                     {media.character || 'Unknown Character'}
                 </p>
-            </div>
+            </div> */}
         </Link>
     );
 }

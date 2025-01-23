@@ -439,29 +439,28 @@ export default function CastMemberDetailsPage() {
                                 </div>
                             </div>
                         )}
+                        {castCreditsData && castCreditsData.cast && (
+                            <div className="filmography__section">
+                                <div className="filmography__header">
+                                    <p className="filmography__title">
+                                        Filmography
+                                        <DynamicButton className="filmography__count">
+                                            {numberOfMedia}
+                                        </DynamicButton>
+                                        <svg className="filmography__heading-icon">
+                                            <use xlinkHref={`${sprite}#arrow-forward`} />
+                                        </svg>
+                                    </p>
+                                    {/* <DynamicButton className="filmography__view-full-list-button">
+                                        Movies & TV shows
+                                    </DynamicButton> */}
+                                </div>
+
+                                <MediaScroller />
+                            </div>
+                        )}
                     </div>
                 </div>
-
-                {castCreditsData && castCreditsData.cast && (
-                    <div className="content-template__cast-section">
-                        <div className="content-template__cast-header">
-                            <p className="content-template__cast-title">
-                                Filmography
-                                <DynamicButton className="content-template__cast-count">
-                                    {numberOfMedia}
-                                </DynamicButton>
-                                <svg className="content-template__cast-icon">
-                                    <use xlinkHref={`${sprite}#arrow-forward`} />
-                                </svg>
-                            </p>
-                            <DynamicButton className="content-template__view-full-credits-button">
-                                Movies & TV shows
-                            </DynamicButton>
-                        </div>
-
-                        <MediaScroller />
-                    </div>
-                )}
             </div>
         </div>
     );
@@ -494,7 +493,7 @@ const CustomDropdown = ({ bioSource, setBioSource }) => {
     return (
         <div className="custom-dropdown" ref={dropdownRef}>
             <div className="custom-dropdown__button" onClick={toggleOpen}>
-                {bioSource === 'tmdb' ? 'TMDB Biography' : 'Wikipedia Biography'}
+                {bioSource === 'tmdb' ? 'From TMDB' : 'From Wikipedia'}
                 <svg className="custom-dropdown__icon">
                     <use xlinkHref={`${sprite}#arrow-dropdown`} />
                 </svg>
@@ -504,13 +503,13 @@ const CustomDropdown = ({ bioSource, setBioSource }) => {
                     className="custom-dropdown__option"
                     onClick={() => handleOptionClick('tmdb')}
                 >
-                    TMDB Biography
+                    TMDB
                 </div>
                 <div
                     className="custom-dropdown__option"
                     onClick={() => handleOptionClick('wikipedia')}
                 >
-                    Wikipedia Biography
+                    Wikipedia
                 </div>
             </div>
         </div>

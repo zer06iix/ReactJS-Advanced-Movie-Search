@@ -20,15 +20,16 @@ export default function MediaImage({ media }) {
                     }
                     title={media.name}
                     alt={media.name}
-                    className="cast-image"
+                    className="media-item-image"
                     onError={handleImageError}
                 />
             ) : (
-                <div className="cast-image-placeholder">
+                <div>
+                    {/* <div className="cast-image-placeholder">
                     <svg className="placeholder-icon">
                         <use xlinkHref={`${sprite}#image-placeholder`} />
                     </svg>
-                    <p className="placeholder-text">Not available</p>
+                    <p className="placeholder-text">Not available</p> */}
                 </div>
             )}
         </>

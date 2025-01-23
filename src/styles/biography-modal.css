@@ -56,7 +56,6 @@
     font-size: 1.5rem;
     margin: 0;
 }
-
 .cast-member-details-page__bio-modal-close-button {
     background: none;
     border: none;
@@ -179,4 +178,48 @@
 
 .custom-dropdown__option:hover {
     background-color: rgba(107, 101, 112, 0.5);
+}
+
+/* Filmography */
+
+.filmography__section {
+    height: fit-content;
+    max-width: min(calc(1090px - 360px), calc(100vw - 430px));
+    color: rgb(196, 193, 198);
+}
+
+.filmography__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+}
+
+.filmography__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.filmography__count {
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 50px;
+    margin-left: 10px;
+    color: black;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.filmography__heading-icon {
+    display: inline;
+    height: 35px;
+    aspect-ratio: 1;
+    fill: rgb(196, 193, 198);
+}
+
+.filmography__view-full-list-button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
