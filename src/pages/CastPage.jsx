@@ -13,14 +13,17 @@ import MediaScroller from '../components/castPage/media/MediaScroller';
 
 const BIO_HEIGHT_THRESHOLD = 122;
 const BIO_SHORT_HEIGHT_THRESHOLD = 72;
-const INFO_MAX_LINES_THRESHOLD = 2; // Adjust as needed based on your styling
+const INFO_MAX_LINES_THRESHOLD = 2;
 
 export default function CastMemberDetailsPage() {
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
     const { cast, setCast, castCredits, setCastCredits } = useCastStore();
 
-    // Simplified state management for biography section
+    const [isBioModalOpen, setIsBioModalOpen] = useState(false);
+    const [renderModal, setRenderModal] = useState(false);
+    const [bioSource, setBioSource] = useState('tmdb'); // 'tmdb' or 'wikipedia'
+
     const {
         lastViewportWidth,
         setLastViewportWidth,
@@ -38,6 +41,7 @@ export default function CastMemberDetailsPage() {
     const expanderBtnRef = useRef(null);
     const infoRef = useRef(null);
     const shadowOverlayRef = useRef(null);
+    const bioModalRef = useRef(null);
 
     const {
         data: castDetailsData,
@@ -71,24 +75,57 @@ export default function CastMemberDetailsPage() {
         }
     }, [castCreditsData, castDetailsData, setCast, setCastCredits]);
 
-    // if (!cast || castDetailsLoading || castCreditsLoading) return <Loading />
+    const handleCloseBioModal = () => {
+        setIsBioModalOpen(false);
+        setTimeout(() => {
+            setRenderModal(false);
+        }, 300);
+    };
 
-    const calculateAge = useCallback((birthDate) => {
+    const handleOpenBioModal = () => {
+        setRenderModal(true);
+        setTimeout(() => {
+            setIsBioModalOpen(true);
+        }, 0);
+    };
+
+    useEffect(() => {
+        const handleEscapeKey = (event) => {
+            if (event.key === 'Escape' && isBioModalOpen) {
+                handleCloseBioModal();
+            }
+        };
+
+        if (isBioModalOpen) {
+            document.addEventListener('keydown', handleEscapeKey);
+        } else {
+            document.removeEventListener('keydown', handleEscapeKey);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [isBioModalOpen, handleCloseBioModal]);
+
+    const calculateAge = useCallback((birthDate, deathDate) => {
         if (!birthDate) return null;
-        const today = new Date();
         const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        const endDate = deathDate ? new Date(deathDate) : new Date();
+
+        let age = endDate.getFullYear() - birth.getFullYear();
+        const monthDiff = endDate.getMonth() - birth.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && endDate.getDate() < birth.getDate())) {
             age--;
         }
+
         return age;
     }, []);
 
-    const age = React.useMemo(
-        () => (castDetailsData?.birthday ? calculateAge(castDetailsData.birthday) : null),
-        [castDetailsData?.birthday, calculateAge]
-    );
+    const age = React.useMemo(() => {
+        if (!castDetailsData?.birthday) return null;
+        return calculateAge(castDetailsData.birthday, castDetailsData?.deathday);
+    }, [castDetailsData?.birthday, castDetailsData?.deathday, calculateAge]);
 
     const handleResize = useCallback(() => {
         if (!infoRef.current) return;
@@ -96,21 +133,19 @@ export default function CastMemberDetailsPage() {
         const currentViewportWidth = window.innerWidth;
         const infoHeight = infoRef.current.clientHeight;
 
-        // Set CSS variable based on initial info height
         let bioOffset;
         if (infoHeight <= 96) {
             bioOffset = '96px';
         } else if (infoHeight <= 120) {
             bioOffset = '120px';
         } else {
-            bioOffset = `${infoHeight}px`; // Fallback or more dynamic approach
+            bioOffset = `${infoHeight}px`;
         }
         document.documentElement.style.setProperty(
             '--biography-height-offset',
             bioOffset
         );
 
-        // Handle biography expander and visibility
         if (infoHeight > BIO_HEIGHT_THRESHOLD) {
             setShowExpanderBtn(false);
             setShowExpandable(false);
@@ -146,7 +181,6 @@ export default function CastMemberDetailsPage() {
             }
         }
 
-        // Handle viewport width changes and biography visibility
         if (lastVisibleWidth && currentViewportWidth <= lastVisibleWidth) {
             setShowExpandable(false);
             if (biographySectionRef.current) {
@@ -161,7 +195,6 @@ export default function CastMemberDetailsPage() {
             setLastVisibleWidth(null);
         }
 
-        // Update last viewport width if info is within threshold
         if (infoHeight <= BIO_HEIGHT_THRESHOLD) {
             setLastViewportWidth(currentViewportWidth);
         }
@@ -175,10 +208,80 @@ export default function CastMemberDetailsPage() {
     ]);
 
     useEffect(() => {
-        handleResize(); // Initial call on mount
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [handleResize]);
+
+    const fetchWikipediaBio = async (actorName) => {
+        if (!actorName) return null;
+        const searchTerm = encodeURIComponent(actorName);
+        const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&titles=${searchTerm}&exintro=true&explaintext=true`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const pages = data.query?.pages;
+            if (!pages) return null;
+
+            const pageId = Object.keys(pages)[0];
+            if (pageId === '-1') return null;
+
+            return pages[pageId]?.extract || null;
+        } catch (error) {
+            console.error('Error fetching Wikipedia biography:', error);
+            return null;
+        }
+    };
+
+    const {
+        data: wikipediaBio,
+        isLoading: wikipediaBioLoading,
+        error: wikipediaBioError
+    } = useQuery({
+        queryKey: ['wikipediaBio', castDetailsData?.name],
+        queryFn: () => fetchWikipediaBio(castDetailsData?.name),
+        enabled: !!castDetailsData?.name
+    });
+
+    const handleModalClickOutside = useCallback(
+        (event) => {
+            if (
+                isBioModalOpen &&
+                bioModalRef.current &&
+                !bioModalRef.current.contains(event.target)
+            ) {
+                handleCloseBioModal();
+            }
+        },
+        [isBioModalOpen, handleCloseBioModal]
+    );
+
+    useEffect(() => {
+        if (renderModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [renderModal]);
+
+    useEffect(() => {
+        if (isBioModalOpen) {
+            document.addEventListener('mousedown', handleModalClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleModalClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleModalClickOutside);
+        };
+    }, [isBioModalOpen, handleModalClickOutside]);
+
+    const handleBioSourceChange = (event) => {
+        setBioSource(event.target.value);
+    };
 
     return (
         <div className="cast-member-details-page">
@@ -201,19 +304,34 @@ export default function CastMemberDetailsPage() {
                             {castDetailsData?.name}
                         </div>
                         <p className="cast-member-details-page__metadata">
-                            {castDetailsData?.birthday && (
+                            {castDetailsData?.deathday ? (
                                 <span
                                     title={new Date(
-                                        castDetailsData.birthday
+                                        castDetailsData.deathday
                                     ).toLocaleDateString('en-GB')}
                                 >
-                                    {age} years old
+                                    Passed away at {age}
                                     <sup>
                                         <svg className="cast-member-details-page__metadata-icon">
                                             <use xlinkHref={`${sprite}#help`} />
                                         </svg>
                                     </sup>
                                 </span>
+                            ) : (
+                                castDetailsData?.birthday && (
+                                    <span
+                                        title={new Date(
+                                            castDetailsData.birthday
+                                        ).toLocaleDateString('en-GB')}
+                                    >
+                                        {age} years old
+                                        <sup>
+                                            <svg className="cast-member-details-page__metadata-icon">
+                                                <use xlinkHref={`${sprite}#help`} />
+                                            </svg>
+                                        </sup>
+                                    </span>
+                                )
                             )}
 
                             {castDetailsData?.place_of_birth && (
@@ -249,32 +367,86 @@ export default function CastMemberDetailsPage() {
                             )}
                         </p>
 
-                        <div
-                            className="cast-member-details-page__biography"
-                            // ref={biographySectionRef}
-                        >
-                            <p className="cast-member-details-page__biography-title">
+                        <div className="cast-member-details-page__details-container">
+                            <DynamicButton
+                                className="cast-member-details-page__details-button"
+                                onClick={handleOpenBioModal}
+                            >
                                 Biography
-                            </p>
-                            {castDetailsLoading ? (
-                                <div>Loading biography...</div>
-                            ) : castDetailsError ? (
-                                <div>Error loading biography.</div>
-                            ) : (
-                                <div className="cast-member-details-page__biography-content">
-                                    <p>{castDetailsData.biography}</p>
-                                </div>
-                            )}
+                            </DynamicButton>
+
+                            <DynamicButton className="cast-member-details-page__details-button">
+                                Awards
+                            </DynamicButton>
+
+                            <DynamicButton className="cast-member-details-page__details-button">
+                                Socials
+                            </DynamicButton>
                         </div>
+                        {renderModal && (
+                            <div
+                                className={`cast-member-details-page__bio-modal ${isBioModalOpen ? 'open' : ''}`}
+                                ref={bioModalRef}
+                            >
+                                <div className="cast-member-details-page__bio-modal-content">
+                                    <div className="cast-member-details-page__bio-modal-header">
+                                        <div className="cast-member-details-page__bio-modal-header--left-container">
+                                            <p className="cast-member-details-page__bio-modal-title">
+                                                Biography
+                                            </p>
+                                            <CustomDropdown
+                                                bioSource={bioSource}
+                                                setBioSource={setBioSource}
+                                            />
+                                        </div>
+
+                                        <DynamicButton
+                                            className="cast-member-details-page__bio-modal-close-button"
+                                            onClick={handleCloseBioModal}
+                                        >
+                                            <svg className="cast-member-details-page__bio-modal-close-icon">
+                                                <use xlinkHref={`${sprite}#close`} />
+                                            </svg>
+                                        </DynamicButton>
+                                    </div>
+
+                                    {bioSource === 'tmdb' ? (
+                                        castDetailsLoading ? (
+                                            <div>Loading biography from TMDB...</div>
+                                        ) : castDetailsError ||
+                                          !castDetailsData?.biography ? (
+                                            <div>Biography not found on TMDB.</div>
+                                        ) : (
+                                            <div className="cast-member-details-page__biography-text-container">
+                                                <p className="cast-member-details-page__biography-text">
+                                                    {castDetailsData.biography}
+                                                </p>
+                                            </div>
+                                        )
+                                    ) : bioSource === 'wikipedia' ? (
+                                        wikipediaBioLoading ? (
+                                            <div>Loading from Wikipedia...</div>
+                                        ) : wikipediaBioError || !wikipediaBio ? (
+                                            <div>Nothing found on Wikipedia.</div>
+                                        ) : (
+                                            <div className="cast-member-details-page__biography-text-container">
+                                                <p className="cast-member-details-page__biography-text">
+                                                    {wikipediaBio}
+                                                </p>
+                                            </div>
+                                        )
+                                    ) : null}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-                
-                {/* Meida section */}
+
                 {castCreditsData && castCreditsData.cast && (
                     <div className="content-template__cast-section">
                         <div className="content-template__cast-header">
                             <p className="content-template__cast-title">
-                                His/Her appearances
+                                Filmography
                                 <DynamicButton className="content-template__cast-count">
                                     {numberOfMedia}
                                 </DynamicButton>
@@ -294,3 +466,53 @@ export default function CastMemberDetailsPage() {
         </div>
     );
 }
+
+const CustomDropdown = ({ bioSource, setBioSource }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const toggleOpen = () => setIsOpen(!isOpen);
+
+    const handleOptionClick = (value) => {
+        setBioSource(value);
+        setIsOpen(false);
+    };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [dropdownRef]);
+
+    return (
+        <div className="custom-dropdown" ref={dropdownRef}>
+            <div className="custom-dropdown__button" onClick={toggleOpen}>
+                {bioSource === 'tmdb' ? 'TMDB Biography' : 'Wikipedia Biography'}
+                <svg className="custom-dropdown__icon">
+                    <use xlinkHref={`${sprite}#arrow-dropdown`} />
+                </svg>
+            </div>
+            <div className={`custom-dropdown__options ${isOpen ? 'open' : ''}`}>
+                <div
+                    className="custom-dropdown__option"
+                    onClick={() => handleOptionClick('tmdb')}
+                >
+                    TMDB Biography
+                </div>
+                <div
+                    className="custom-dropdown__option"
+                    onClick={() => handleOptionClick('wikipedia')}
+                >
+                    Wikipedia Biography
+                </div>
+            </div>
+        </div>
+    );
+};
