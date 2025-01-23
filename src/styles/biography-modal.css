@@ -31,7 +31,6 @@
 
 .cast-member-details-page__bio-modal-content {
     background-color: rgb(22, 27, 36);
-    padding: 20px;
     border-radius: 8px;
     width: 80vw;
     max-width: 600px;
@@ -44,7 +43,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    padding: 20px 20px 15px;
 }
 
 .cast-member-details-page__bio-modal-header--left-container {
@@ -80,6 +79,7 @@
     letter-spacing: 0.01rem;
     word-spacing: 0.02rem;
     line-height: 1.62rem;
+    padding: 0 20px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -126,37 +126,42 @@
 }
 
 .custom-dropdown__button {
+    position: relative;
     display: flex;
+    gap: 4px;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
-    border-radius: 4px;
-    background-color: rgba(107, 101, 112, 0.7);
+    padding: 8px 6px 8px 12px;
+    border: 1px solid rgba(107, 101, 112, 0.7);
+    border-radius: 10px;
+    background-color: rgba(107, 101, 112, 0.3);
     color: rgb(196, 193, 198);
     cursor: pointer;
-    font-size: 0.9rem;
-    min-width: 150px;
+    font-size: 1rem;
+    user-select: none;
 }
 
 .custom-dropdown__icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    aspect-ratio: 1;
     fill: rgb(196, 193, 198);
     transition: transform 0.3s ease;
 }
 
 .custom-dropdown__options {
     position: absolute;
+    width: fit-content;
     top: 100%;
-    left: 0;
-    border-radius: 4px;
+    left: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     background-color: rgb(22, 27, 36);
     border: 1px solid rgba(107, 101, 112, 0.7);
     padding: 5px 0;
     margin-top: 4px;
     z-index: 10;
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translate(-50%, -6px);
     pointer-events: none;
     transition:
         opacity 0.2s ease-out,
@@ -166,7 +171,7 @@
 
 .custom-dropdown__options.open {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, 0);
     pointer-events: auto;
 }
 

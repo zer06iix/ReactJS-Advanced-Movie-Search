@@ -493,7 +493,7 @@ const CustomDropdown = ({ bioSource, setBioSource }) => {
     return (
         <div className="custom-dropdown" ref={dropdownRef}>
             <div className="custom-dropdown__button" onClick={toggleOpen}>
-                {bioSource === 'tmdb' ? 'From TMDB' : 'From Wikipedia'}
+                {bioSource === 'tmdb' ? 'TMDB' : 'Wikipedia'}
                 <svg className="custom-dropdown__icon">
                     <use xlinkHref={`${sprite}#arrow-dropdown`} />
                 </svg>
