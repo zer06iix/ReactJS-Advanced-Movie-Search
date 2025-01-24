@@ -17,7 +17,7 @@ export default function MediaScroller() {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isScrolling, setIsScrolling] = useState(false);
 
-    const scrollStep = 600;
+    const scrollStep = 400;
     const scrollDelay = 500;
 
     const scrollLeft = useCallback(() => {

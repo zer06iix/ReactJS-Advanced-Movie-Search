@@ -6,7 +6,7 @@
     position: relative;
     min-height: calc(100vh - 100px);
     height: 100%;
-    width: calc(100vw - 17px);
+    width: 100vw;
     display: flex;
     justify-content: center;
 }
@@ -17,10 +17,11 @@
 }
 
 .cast-member-details-page__header {
-    width: 100%;
+    width: 1170px;
     height: 500px;
     display: flex;
     padding-top: 35px;
+    padding-inline: 30px;
     gap: 30px;
 }
 
@@ -238,7 +239,6 @@
 .media-image-container {
     height: 170px;
     aspect-ratio: 5.5/9;
-    /* min-width: 70px; */
     border-radius: 18px;
     display: flex;
     align-items: center;

@@ -1,46 +1,22 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import useFetchStore from '../stores/fetchStore';
 import useCastStore from '../stores/castStore';
-import sprite from '../styles/sprite.svg';
-import useContentStore from '../stores/contentStore';
+// import Loading from '../components/app/Loading';
 import MediaPoster from '../components/contentPage/MediaPoster';
-import DynamicButton from '../components/buttons/DynamicButton';
-import Loading from '../components/app/Loading';
-import MediaScroller from '../components/castPage/media/MediaScroller';
+import CastMemberDetailsInfo from '../components/castPage/CastMemberDetailsInfo';
+import FilmographySection from '../components/castPage/FilmographySection';
 
-const BIO_HEIGHT_THRESHOLD = 122;
-const BIO_SHORT_HEIGHT_THRESHOLD = 72;
-const INFO_MAX_LINES_THRESHOLD = 2;
-
-export default function CastMemberDetailsPage() {
+export default function CastPage() {
+    // Renamed to CastMemberDetailsHeader and export default changed
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
-    const { cast, setCast, castCredits, setCastCredits } = useCastStore();
-
+    const { setCast, setCastCredits } = useCastStore();
     const [isBioModalOpen, setIsBioModalOpen] = useState(false);
-    const [renderModal, setRenderModal] = useState(false);
-    const [bioSource, setBioSource] = useState('tmdb'); // 'tmdb' or 'wikipedia'
-
-    const {
-        lastViewportWidth,
-        setLastViewportWidth,
-        showExpanderBtn,
-        setShowExpanderBtn,
-        isExpanded,
-        setIsExpanded,
-        lastVisibleWidth,
-        setLastVisibleWidth,
-        showExpandable,
-        setShowExpandable
-    } = useContentStore();
-
-    const biographySectionRef = useRef(null);
-    const expanderBtnRef = useRef(null);
+    const [bioSource, setBioSource] = useState('tmdb');
     const infoRef = useRef(null);
-    const shadowOverlayRef = useRef(null);
     const bioModalRef = useRef(null);
 
     const {
@@ -55,16 +31,17 @@ export default function CastMemberDetailsPage() {
 
     const {
         data: castCreditsData,
-        isLoading: castCreditsLoading,
-        error: castCreditsError
+        isLoading: castCreditsLoading, // Added isLoading and error
+        error: castCreditsError // for castCreditsData for loading state in filmography
     } = useQuery({
         queryKey: ['castCredits', castId],
         queryFn: () => fetchCastCredits(castId),
         enabled: !!castId
     });
 
-    const numberOfMedia =
-        castCreditsData && castCreditsData.cast ? castCreditsData.cast.length : 0;
+    const numberOfMedia = useMemo(() => {
+        return castCreditsData?.cast?.length || 0;
+    }, [castCreditsData]);
 
     useEffect(() => {
         if (castDetailsData) {
@@ -75,27 +52,24 @@ export default function CastMemberDetailsPage() {
         }
     }, [castCreditsData, castDetailsData, setCast, setCastCredits]);
 
-    const handleCloseBioModal = () => {
+    const handleCloseBioModal = useCallback(() => {
         setIsBioModalOpen(false);
-        setTimeout(() => {
-            setRenderModal(false);
-        }, 300);
-    };
+    }, []);
 
-    const handleOpenBioModal = () => {
-        setRenderModal(true);
-        setTimeout(() => {
-            setIsBioModalOpen(true);
-        }, 0);
-    };
+    const handleOpenBioModal = useCallback(() => {
+        setIsBioModalOpen(true);
+    }, []);
 
-    useEffect(() => {
-        const handleEscapeKey = (event) => {
+    const handleEscapeKey = useCallback(
+        (event) => {
             if (event.key === 'Escape' && isBioModalOpen) {
                 handleCloseBioModal();
             }
-        };
+        },
+        [isBioModalOpen, handleCloseBioModal]
+    );
 
+    useEffect(() => {
         if (isBioModalOpen) {
             document.addEventListener('keydown', handleEscapeKey);
         } else {
@@ -105,7 +79,7 @@ export default function CastMemberDetailsPage() {
         return () => {
             document.removeEventListener('keydown', handleEscapeKey);
         };
-    }, [isBioModalOpen, handleCloseBioModal]);
+    }, [isBioModalOpen, handleEscapeKey]);
 
     const calculateAge = useCallback((birthDate, deathDate) => {
         if (!birthDate) return null;
@@ -118,105 +92,30 @@ export default function CastMemberDetailsPage() {
         if (monthDiff < 0 || (monthDiff === 0 && endDate.getDate() < birth.getDate())) {
             age--;
         }
-
         return age;
     }, []);
 
-    const age = React.useMemo(() => {
+    const age = useMemo(() => {
         if (!castDetailsData?.birthday) return null;
         return calculateAge(castDetailsData.birthday, castDetailsData?.deathday);
     }, [castDetailsData?.birthday, castDetailsData?.deathday, calculateAge]);
 
-    const handleResize = useCallback(() => {
-        if (!infoRef.current) return;
-
-        const currentViewportWidth = window.innerWidth;
-        const infoHeight = infoRef.current.clientHeight;
-
-        let bioOffset;
-        if (infoHeight <= 96) {
-            bioOffset = '96px';
-        } else if (infoHeight <= 120) {
-            bioOffset = '120px';
-        } else {
-            bioOffset = `${infoHeight}px`;
-        }
-        document.documentElement.style.setProperty(
-            '--biography-height-offset',
-            bioOffset
-        );
-
-        if (infoHeight > BIO_HEIGHT_THRESHOLD) {
-            setShowExpanderBtn(false);
-            setShowExpandable(false);
-            if (!lastVisibleWidth) {
-                setLastVisibleWidth(currentViewportWidth);
-            }
-            if (biographySectionRef.current) {
-                biographySectionRef.current.style.display = 'none';
-            }
-        } else if (infoHeight <= BIO_SHORT_HEIGHT_THRESHOLD) {
-            setShowExpanderBtn(false);
-            setShowExpandable(true);
-            if (biographySectionRef.current) {
-                biographySectionRef.current.style.display = 'block';
-                if (shadowOverlayRef.current) {
-                    shadowOverlayRef.current.style.opacity = '0';
-                }
-                if (expanderBtnRef.current) {
-                    expanderBtnRef.current.style.opacity = '0';
-                }
-            }
-        } else {
-            setShowExpanderBtn(true);
-            setShowExpandable(true);
-            if (biographySectionRef.current) {
-                biographySectionRef.current.style.display = 'block';
-                if (shadowOverlayRef.current) {
-                    shadowOverlayRef.current.style.opacity = isExpanded ? '0' : '1';
-                }
-                if (expanderBtnRef.current) {
-                    expanderBtnRef.current.style.opacity = '1';
-                }
-            }
-        }
-
-        if (lastVisibleWidth && currentViewportWidth <= lastVisibleWidth) {
-            setShowExpandable(false);
-            if (biographySectionRef.current) {
-                biographySectionRef.current.style.display = 'none';
-            }
-        } else if (lastVisibleWidth && currentViewportWidth > lastVisibleWidth) {
-            setShowExpandable(true);
-            setShowExpanderBtn(true);
-            if (biographySectionRef.current) {
-                biographySectionRef.current.style.display = 'block';
-            }
-            setLastVisibleWidth(null);
-        }
-
-        if (infoHeight <= BIO_HEIGHT_THRESHOLD) {
-            setLastViewportWidth(currentViewportWidth);
-        }
-    }, [
-        isExpanded,
-        lastVisibleWidth,
-        setLastViewportWidth,
-        setLastVisibleWidth,
-        setShowExpanderBtn,
-        setShowExpandable
-    ]);
-
-    useEffect(() => {
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [handleResize]);
-
-    const fetchWikipediaBio = async (actorName) => {
+    const fetchWikipediaBio = useCallback(async (actorName) => {
         if (!actorName) return null;
         const searchTerm = encodeURIComponent(actorName);
-        const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&titles=${searchTerm}&exintro=true&explaintext=true`;
+        const baseURL = 'https://en.wikipedia.org/w/api.php';
+
+        const params = new URLSearchParams({
+            action: 'query',
+            format: 'json',
+            origin: '*',
+            prop: 'extracts',
+            titles: searchTerm,
+            exintro: true,
+            explaintext: true
+        });
+
+        const apiUrl = `${baseURL}?${params.toString()}`;
 
         try {
             const response = await fetch(apiUrl);
@@ -232,7 +131,7 @@ export default function CastMemberDetailsPage() {
             console.error('Error fetching Wikipedia biography:', error);
             return null;
         }
-    };
+    }, []);
 
     const {
         data: wikipediaBio,
@@ -241,7 +140,9 @@ export default function CastMemberDetailsPage() {
     } = useQuery({
         queryKey: ['wikipediaBio', castDetailsData?.name],
         queryFn: () => fetchWikipediaBio(castDetailsData?.name),
-        enabled: !!castDetailsData?.name
+        enabled: !!castDetailsData?.name,
+        staleTime: Infinity,
+        cacheTime: Infinity
     });
 
     const handleModalClickOutside = useCallback(
@@ -258,15 +159,11 @@ export default function CastMemberDetailsPage() {
     );
 
     useEffect(() => {
-        if (renderModal) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
+        document.body.style.overflow = isBioModalOpen ? 'hidden' : 'unset';
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [renderModal]);
+    }, [isBioModalOpen]);
 
     useEffect(() => {
         if (isBioModalOpen) {
@@ -279,239 +176,77 @@ export default function CastMemberDetailsPage() {
         };
     }, [isBioModalOpen, handleModalClickOutside]);
 
-    const handleBioSourceChange = (event) => {
-        setBioSource(event.target.value);
-    };
+    const castDetailsInfoProps = useMemo(
+        () => ({
+            age,
+            handleOpenBioModal,
+            renderModal: isBioModalOpen,
+            isBioModalOpen,
+            bioModalRef,
+            handleCloseBioModal,
+            bioSource,
+            setBioSource,
+            castDetailsLoading,
+            castDetailsError,
+            wikipediaBioLoading,
+            wikipediaBioError,
+            wikipediaBio
+        }),
+        [
+            age,
+            handleOpenBioModal,
+            isBioModalOpen,
+            bioModalRef,
+            handleCloseBioModal,
+            bioSource,
+            setBioSource,
+            castDetailsLoading,
+            castDetailsError,
+            wikipediaBioLoading,
+            wikipediaBioError,
+            wikipediaBio
+        ]
+    );
 
     return (
         <div className="cast-member-details-page">
-            <div className="cast-member-details-page__content-wrapper">
-                <div className="cast-member-details-page__header">
-                    <div className="cast-member-details-page__poster-container">
-                        {castDetailsLoading ? (
-                            <div>Loading poster...</div>
-                        ) : castDetailsError ? (
-                            <div>Error loading poster.</div>
-                        ) : (
-                            <MediaPoster
-                                imagePath={`https://image.tmdb.org/t/p/w500${castDetailsData?.profile_path}`}
-                                mediaTitle={castDetailsData?.name}
-                            />
-                        )}
-                    </div>
-                    <div className="cast-member-details-page__info" ref={infoRef}>
-                        <div className="cast-member-details-page__title">
-                            {castDetailsData?.name}
-                        </div>
-                        <p className="cast-member-details-page__metadata">
-                            {castDetailsData?.deathday ? (
-                                <span
-                                    title={new Date(
-                                        castDetailsData.deathday
-                                    ).toLocaleDateString('en-GB')}
-                                >
-                                    Passed away at {age}
-                                    <sup>
-                                        <svg className="cast-member-details-page__metadata-icon">
-                                            <use xlinkHref={`${sprite}#help`} />
-                                        </svg>
-                                    </sup>
-                                </span>
-                            ) : (
-                                castDetailsData?.birthday && (
-                                    <span
-                                        title={new Date(
-                                            castDetailsData.birthday
-                                        ).toLocaleDateString('en-GB')}
-                                    >
-                                        {age} years old
-                                        <sup>
-                                            <svg className="cast-member-details-page__metadata-icon">
-                                                <use xlinkHref={`${sprite}#help`} />
-                                            </svg>
-                                        </sup>
-                                    </span>
-                                )
-                            )}
-
-                            {castDetailsData?.place_of_birth && (
-                                <>
-                                    <span className="cast-member-details-page__metadata-separator">
-                                        •
-                                    </span>
-                                    <span title="Place of Birth">
-                                        {castDetailsData.place_of_birth}
-                                        <sup>
-                                            <svg className="cast-member-details-page__metadata-icon ">
-                                                <use xlinkHref={`${sprite}#help`} />
-                                            </svg>
-                                        </sup>
-                                    </span>
-                                </>
-                            )}
-
-                            {castDetailsData?.known_for_department && (
-                                <>
-                                    <span className="cast-member-details-page__metadata-separator">
-                                        •
-                                    </span>
-                                    <span title="Known For">
-                                        {castDetailsData.known_for_department}
-                                        <sup>
-                                            <svg className="cast-member-details-page__metadata-icon">
-                                                <use xlinkHref={`${sprite}#help`} />
-                                            </svg>
-                                        </sup>
-                                    </span>
-                                </>
-                            )}
-                        </p>
-
-                        <div className="cast-member-details-page__details-container">
-                            <DynamicButton
-                                className="cast-member-details-page__details-button"
-                                onClick={handleOpenBioModal}
-                            >
-                                Biography
-                            </DynamicButton>
-
-                            <DynamicButton className="cast-member-details-page__details-button">
-                                Awards
-                            </DynamicButton>
-
-                            <DynamicButton className="cast-member-details-page__details-button">
-                                Socials
-                            </DynamicButton>
-                        </div>
-                        {renderModal && (
-                            <div
-                                className={`cast-member-details-page__bio-modal ${isBioModalOpen ? 'open' : ''}`}
-                                ref={bioModalRef}
-                            >
-                                <div className="cast-member-details-page__bio-modal-content">
-                                    <div className="cast-member-details-page__bio-modal-header">
-                                        <div className="cast-member-details-page__bio-modal-header--left-container">
-                                            <p className="cast-member-details-page__bio-modal-title">
-                                                Biography
-                                            </p>
-                                            <CustomDropdown
-                                                bioSource={bioSource}
-                                                setBioSource={setBioSource}
-                                            />
-                                        </div>
-
-                                        <DynamicButton
-                                            className="cast-member-details-page__bio-modal-close-button"
-                                            onClick={handleCloseBioModal}
-                                        >
-                                            <svg className="cast-member-details-page__bio-modal-close-icon">
-                                                <use xlinkHref={`${sprite}#close`} />
-                                            </svg>
-                                        </DynamicButton>
-                                    </div>
-
-                                    {bioSource === 'tmdb' ? (
-                                        castDetailsLoading ? (
-                                            <div>Loading biography from TMDB...</div>
-                                        ) : castDetailsError ||
-                                          !castDetailsData?.biography ? (
-                                            <div>Biography not found on TMDB.</div>
-                                        ) : (
-                                            <div className="cast-member-details-page__biography-text-container">
-                                                <p className="cast-member-details-page__biography-text">
-                                                    {castDetailsData.biography}
-                                                </p>
-                                            </div>
-                                        )
-                                    ) : bioSource === 'wikipedia' ? (
-                                        wikipediaBioLoading ? (
-                                            <div>Loading from Wikipedia...</div>
-                                        ) : wikipediaBioError || !wikipediaBio ? (
-                                            <div>Nothing found on Wikipedia.</div>
-                                        ) : (
-                                            <div className="cast-member-details-page__biography-text-container">
-                                                <p className="cast-member-details-page__biography-text">
-                                                    {wikipediaBio}
-                                                </p>
-                                            </div>
-                                        )
-                                    ) : null}
-                                </div>
-                            </div>
-                        )}
-                        {castCreditsData && castCreditsData.cast && (
-                            <div className="filmography__section">
-                                <div className="filmography__header">
-                                    <p className="filmography__title">
-                                        Filmography
-                                        <DynamicButton className="filmography__count">
-                                            {numberOfMedia}
-                                        </DynamicButton>
-                                        <svg className="filmography__heading-icon">
-                                            <use xlinkHref={`${sprite}#arrow-forward`} />
-                                        </svg>
-                                    </p>
-                                    {/* <DynamicButton className="filmography__view-full-list-button">
-                                        Movies & TV shows
-                                    </DynamicButton> */}
-                                </div>
-
-                                <MediaScroller />
-                            </div>
-                        )}
-                    </div>
+            <div className="cast-member-details-page__header">
+                <div className="cast-member-details-page__poster-container">
+                    {castDetailsLoading && !castDetailsData ? (
+                        <div>Loading poster...</div>
+                    ) : castDetailsError ? (
+                        <div>Error loading poster.</div>
+                    ) : (
+                        <MediaPoster
+                            imagePath={`https://image.tmdb.org/t/p/w500${castDetailsData?.profile_path}`}
+                            mediaTitle={castDetailsData?.name}
+                        />
+                    )}
+                </div>
+                <div className="cast-member-details-page__info" ref={infoRef}>
+                    <CastMemberDetailsInfo
+                        {...castDetailsInfoProps}
+                        castDetailsData={castDetailsData}
+                    />
+                    {castCreditsLoading && !castCreditsData ? (
+                        <div>Loading filmography...</div>
+                    ) : castCreditsError ? (
+                        <div>Error loading filmography.</div>
+                    ) : (
+                        <FilmographySection
+                            castCreditsData={castCreditsData}
+                            numberOfMedia={numberOfMedia}
+                        />
+                    )}
                 </div>
             </div>
         </div>
     );
 }
 
-const CustomDropdown = ({ bioSource, setBioSource }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
-
-    const toggleOpen = () => setIsOpen(!isOpen);
-
-    const handleOptionClick = (value) => {
-        setBioSource(value);
-        setIsOpen(false);
-    };
-
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [dropdownRef]);
-
-    return (
-        <div className="custom-dropdown" ref={dropdownRef}>
-            <div className="custom-dropdown__button" onClick={toggleOpen}>
-                {bioSource === 'tmdb' ? 'TMDB' : 'Wikipedia'}
-                <svg className="custom-dropdown__icon">
-                    <use xlinkHref={`${sprite}#arrow-dropdown`} />
-                </svg>
-            </div>
-            <div className={`custom-dropdown__options ${isOpen ? 'open' : ''}`}>
-                <div
-                    className="custom-dropdown__option"
-                    onClick={() => handleOptionClick('tmdb')}
-                >
-                    TMDB
-                </div>
-                <div
-                    className="custom-dropdown__option"
-                    onClick={() => handleOptionClick('wikipedia')}
-                >
-                    Wikipedia
-                </div>
-            </div>
-        </div>
-    );
+CastPage.propTypes = {
+    // Updated propTypes to be for CastMemberDetailsPage (now Header) and to expect castId
+    castId: PropTypes.string.isRequired
 };
+
+CastPage.displayName = 'CastMemberDetailsHeader'; // Updated displayName
