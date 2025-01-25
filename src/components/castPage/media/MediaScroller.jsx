@@ -9,7 +9,7 @@ import PreviousButton from '../../buttons/PreviousButton';
 
 export default function MediaScroller() {
     const { castCredits } = useCastStore();
-    
+
     const wrapperRef = useRef(null);
     const containerRef = useRef(null);
     const [translateX, setTranslateX] = useState(0);
@@ -17,7 +17,7 @@ export default function MediaScroller() {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isScrolling, setIsScrolling] = useState(false);
 
-    const scrollStep = 600;
+    const scrollStep = 400;
     const scrollDelay = 500;
 
     const scrollLeft = useCallback(() => {
@@ -62,7 +62,7 @@ export default function MediaScroller() {
     }, [isInitialLoad, translateX, setIsScrollEnd]);
 
     return (
-        <div className="cast-scroller-container" ref={containerRef}>
+        <div className="media-scroller-inner" ref={containerRef}>
             <div className="cast-scroller-inner">
                 <div
                     className="shadow-overlay shadow-overlay-start"
@@ -75,19 +75,17 @@ export default function MediaScroller() {
                     />
                 </div>
                 <div
-                    className="cast-scroller-wrapper"
+                    className="media-scroller-wrapper"
                     ref={wrapperRef}
                     style={{
                         transform: `translateX(${translateX}px)`,
                         transition: 'transform 0.5s ease-in-out'
                     }}
                 >
-                    {castCredits &&
-                        castCredits.cast &&
-                        castCredits.cast.length > 0
+                    {castCredits && castCredits.cast && castCredits.cast.length > 0
                         ? castCredits.cast.map((media) => (
-                                <MediaItem media={media} key={media.id} />
-                            ))
+                              <MediaItem media={media} key={media.id} />
+                          ))
                         : null}
                 </div>
                 <div
@@ -112,10 +110,10 @@ export default function MediaScroller() {
                         disabled={
                             !isInitialLoad && wrapperRef.current && containerRef.current
                                 ? translateX <=
-                                    -(
-                                        wrapperRef.current.offsetWidth -
-                                        containerRef.current.offsetWidth
-                                    )
+                                  -(
+                                      wrapperRef.current.offsetWidth -
+                                      containerRef.current.offsetWidth
+                                  )
                                 : true
                         }
                     />

@@ -1,0 +1,238 @@
+/* CastMemberDetailsPage.css */
+
+.cast-member-details-page__bio-modal {
+    align-items: center;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.85);
+    color: rgb(196, 193, 198);
+    cursor: auto;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    left: 0;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    transition:
+        opacity 0.3s ease-in-out,
+        visibility 0s linear 0.3s;
+    visibility: hidden;
+    width: 100vw;
+    z-index: 100;
+}
+
+.cast-member-details-page__bio-modal.open {
+    opacity: 1;
+    transition:
+        opacity 0.3s ease-in-out,
+        visibility 0s linear 0s;
+    visibility: visible;
+}
+
+.cast-member-details-page__bio-modal-close-button {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.cast-member-details-page__bio-modal-close-icon {
+    fill: white;
+    height: 24px;
+    width: 24px;
+}
+
+.cast-member-details-page__bio-modal-content {
+    background-color: rgb(22, 27, 36);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    max-width: 600px;
+    position: relative;
+    width: 80vw;
+}
+
+.cast-member-details-page__bio-modal-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px 15px;
+}
+
+.cast-member-details-page__bio-modal-header--left-container {
+    display: flex;
+    gap: 8px;
+}
+
+.cast-member-details-page__bio-modal-title {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.cast-member-details-page__biography-text-container {
+    font-family: 'Open Sans', sans-serif;
+    height: 100%;
+    letter-spacing: 0.01rem;
+    line-height: 1.62rem;
+    max-height: calc(90vh - 90px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0 20px 20px;
+    text-align: left;
+    word-spacing: 0.02rem;
+}
+
+.cast-member-details-page__details-button {
+    align-items: center;
+    background-color: rgba(107, 101, 112, 0.7);
+    border-radius: 50px;
+    color: rgb(196, 193, 198);
+    display: flex;
+    font-size: 0.95rem;
+    height: 30px;
+    justify-content: center;
+    padding: 0px 7px;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.cast-member-details-page__details-button:hover {
+    background-color: rgba(107, 101, 112, 0.5);
+    color: rgb(175, 187, 242);
+    cursor: pointer;
+}
+
+.cast-member-details-page__details-container {
+    display: flex;
+    gap: 8px;
+    height: fit-content;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.custom-dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.custom-dropdown__button {
+    align-items: center;
+    background-color: rgba(107, 101, 112, 0.3);
+    border: 1px solid rgba(107, 101, 112, 0.7);
+    border-radius: 10px;
+    color: rgb(196, 193, 198);
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    gap: 4px;
+    justify-content: space-between;
+    padding: 8px 6px 8px 12px;
+    position: relative;
+    user-select: none;
+}
+
+.custom-dropdown__button-text {
+    opacity: 1;
+    transition:
+        opacity 0.2s ease-in-out,
+        width 0.2s ease-in-out; /* Added width transition */
+    width: auto; /* default width is auto */
+    overflow: hidden; /* to prevent content overflow during transition */
+    display: inline-block; /* to respect width property and transition */
+}
+
+.custom-dropdown__button-text.changing {
+    opacity: 0;
+}
+
+.custom-dropdown__icon {
+    aspect-ratio: 1;
+    fill: rgb(196, 193, 198);
+    height: 18px;
+    transition: transform 0.3s ease;
+    width: 18px;
+}
+
+.custom-dropdown__option {
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    transition: background-color 0.2s ease;
+}
+
+.custom-dropdown__option:hover {
+    background-color: rgba(107, 101, 112, 0.5);
+}
+
+.custom-dropdown__options {
+    background-color: rgb(22, 27, 36);
+    border: 1px solid rgba(107, 101, 112, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    left: 50%;
+    margin-top: 4px;
+    opacity: 0;
+    padding: 5px 0;
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    transform: translate(-50%, -6px);
+    transition:
+        opacity 0.2s ease-out,
+        pointer-events 0.2s ease-out,
+        transform 0.2s ease-out;
+    width: fit-content;
+    z-index: 10;
+}
+
+.custom-dropdown__options.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+}
+
+.filmography__count {
+    border-radius: 50px;
+    color: black;
+    font-size: 1.3rem;
+    font-weight: 600;
+    height: 30px;
+    margin-left: 10px;
+    padding: 0 12px;
+}
+
+.filmography__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 18px;
+}
+
+.filmography__heading-icon {
+    aspect-ratio: 1;
+    display: inline;
+    fill: rgb(196, 193, 198);
+    height: 35px;
+}
+
+.filmography__section {
+    color: rgb(196, 193, 198);
+    height: fit-content;
+    max-width: min(calc(1090px - 360px), calc(100vw - 430px));
+}
+
+.filmography__title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.filmography__view-full-list-button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import sprite from '../../styles/sprite.svg';
+
 const MediaRating = ({ voteAverage, voteCount, popularity }) => {
     return (
         <div className="rating-container">
@@ -47,8 +48,7 @@ const MediaRating = ({ voteAverage, voteCount, popularity }) => {
 MediaRating.propTypes = {
     voteAverage: PropTypes.number.isRequired,
     voteCount: PropTypes.number.isRequired,
-    popularity: PropTypes.number.isRequired,
-    sprite: PropTypes.string.isRequired
+    popularity: PropTypes.number.isRequired
 };
 
 export default MediaRating;

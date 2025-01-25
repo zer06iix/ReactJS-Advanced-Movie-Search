@@ -8,8 +8,8 @@
 @import './navigation.css';
 @import './scrollbar.css';
 @import './dynamic-button.css';
-@import './media-expandable.css';
 @import './media-poster.css';
+@import './biography-modal.css';
 
 /* Layouts */
 @import './layouts/contentPage.css';
@@ -18,7 +18,7 @@
 @import './layouts/searchResultsPage.css';
 
 /* Media Queries */
-@import './mediaQueries.css';
+@import './media-queries.css';
 
 @tailwind base;
 @tailwind components;
