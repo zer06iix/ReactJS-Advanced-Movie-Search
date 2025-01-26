@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import useFetchStore from '../stores/fetchStore';
 import useNavStore from '../stores/navStore';
 
@@ -58,7 +59,7 @@ export default function ResultsPage() {
                                 : null;
 
                             return (
-                                <div className="result-item-container" key={item.id}>
+                                <Link to={`/${mediaType}/${item.id}`}  className="result-item-container" key={item.id}>
                                     <div className="poster">
                                         {imageUrl && <img src={imageUrl} alt={title} />}
                                     </div>
@@ -93,7 +94,7 @@ export default function ResultsPage() {
                                             </p>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             );
                         })
                     ) : (
