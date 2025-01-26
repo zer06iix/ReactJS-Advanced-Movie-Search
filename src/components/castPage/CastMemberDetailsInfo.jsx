@@ -1,10 +1,10 @@
-import React from 'react';
+import { memo } from 'react';
 import DynamicButton from '../../components/buttons/DynamicButton';
 import MetadataDisplay from './MetadataDisplay';
 import BioModal from './BioModal';
 import PropTypes from 'prop-types';
 
-const CastMemberDetailsInfo = React.memo(
+const CastMemberDetailsInfo = memo(
     ({
         castDetailsData,
         age,

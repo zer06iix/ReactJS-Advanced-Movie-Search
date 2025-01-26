@@ -11,7 +11,7 @@ const FilmographySection = React.memo(({ castCreditsData, numberOfMedia }) => {
         <div className="filmography__section">
             <div className="filmography__header">
                 <p className="filmography__title">
-                    Filmography
+                    Appearances
                     <DynamicButton className="filmography__count">
                         {numberOfMedia}
                     </DynamicButton>

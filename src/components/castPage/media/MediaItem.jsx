@@ -34,7 +34,7 @@ export default function MediaItem({ media }) {
     }, [media]);
 
     return (
-        <Link to={`/cast/${media.id}`} className="cast-media">
+        <Link to={`/movie/${media.id}`} className="cast-media">
             <div className="media-image-container">
                 {!imgError ? (
                     <MediaImage media={media} onError={handleImageError} />

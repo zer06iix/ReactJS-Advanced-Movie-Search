@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import '../../styles/Dynamic-button.css';
 
 const DynamicButton = ({
     children,
     onClick,
-    href,
+    to,
     style: overrideStyles,
     className,
     disabled
@@ -40,7 +41,7 @@ const DynamicButton = ({
         setRipples((prevRipples) => [...prevRipples, newRipple]);
 
         // Execute the onClick handler if it's a regular button
-        if (!href && onClick) onClick(e);
+        if (!to && onClick) onClick(e);
     };
 
     const handleRippleEnd = (id) => {
@@ -50,8 +51,8 @@ const DynamicButton = ({
     // Combine override styles with potentially existing className styles
     const combinedStyles = overrideStyles || {};
 
-    // Determine the button element based on the presence of href
-    const ButtonElement = href ? 'a' : 'button';
+    // Determine the button element based on the presence of href(to)
+    const ButtonElement = to ? Link : 'button';
 
     return (
         <ButtonElement
@@ -59,7 +60,7 @@ const DynamicButton = ({
             className={`dynamic-button ${className || ''}`}
             style={combinedStyles}
             onClick={handleClick}
-            href={href}
+            to={to}
             disabled={disabled}
         >
             {children}
