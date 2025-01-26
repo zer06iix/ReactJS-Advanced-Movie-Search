@@ -234,6 +234,7 @@ export default function CastPage() {
                         <div>Error loading filmography.</div>
                     ) : (
                         <FilmographySection
+                            castDetailsData={castDetailsData}
                             castCreditsData={castCreditsData}
                             numberOfMedia={numberOfMedia}
                         />

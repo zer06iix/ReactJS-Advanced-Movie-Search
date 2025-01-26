@@ -1,17 +1,21 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DynamicButton from '../../components/buttons/DynamicButton';
 import MediaScroller from '../../components/castPage/media/MediaScroller';
 import sprite from '../../styles/sprite.svg';
 
-const FilmographySection = React.memo(({ castCreditsData, numberOfMedia }) => {
+const FilmographySection = React.memo(({ castDetailsData, castCreditsData, numberOfMedia }) => {
+    
+    const gender = castDetailsData.gender
+
     if (!castCreditsData?.cast) return null;
 
     return (
         <div className="filmography__section">
             <div className="filmography__header">
                 <p className="filmography__title">
-                    Appearances
+                    {gender == 2 ? 'His ' : 'Her '} Appearances
                     <DynamicButton className="filmography__count">
                         {numberOfMedia}
                     </DynamicButton>
