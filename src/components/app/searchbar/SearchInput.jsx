@@ -2,7 +2,13 @@
 
 const SearchInput = ({ value, onChange, className }) => {
     return (
-        <input placeholder="Search what you want..." type="text" className={className} value={value} onChange={onChange} />
+        <input
+            placeholder="Search anything..."
+            type="text"
+            className={className}
+            value={value}
+            onChange={onChange}
+        />
     );
 };
 
