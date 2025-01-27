@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import DynamicButton from '../../components/buttons/DynamicButton';
 import sprite from '../../styles/sprite.svg';
 import CustomDropdown from './CustomDropdown';
@@ -18,9 +18,45 @@ const BioModal = React.memo(
         wikipediaBioError,
         wikipediaBio
     }) => {
+        const [containerHeight, setContainerHeight] = useState(0);
+        const tmdbRef = useRef(null);
+        const wikipediaRef = useRef(null);
+        const containerRef = useRef(null);
+
+        const updateContainerHeight = useCallback(() => {
+            if (!containerRef.current) return;
+
+            let activeRef = null;
+            if (bioSource === 'tmdb') {
+                activeRef = tmdbRef.current;
+            } else if (bioSource === 'wikipedia') {
+                activeRef = wikipediaRef.current;
+            }
+
+            if (activeRef) {
+                setContainerHeight(activeRef.offsetHeight);
+            }
+        }, [bioSource, tmdbRef, wikipediaRef]);
+
+        useEffect(() => {
+            updateContainerHeight();
+        }, [updateContainerHeight]);
+
+        useEffect(() => {
+            // Set initial height on component mount
+            updateContainerHeight();
+            window.addEventListener('resize', updateContainerHeight);
+
+            return () => {
+                window.removeEventListener('resize', updateContainerHeight);
+            };
+        }, [updateContainerHeight]);
+
         return (
             <div
-                className={`cast-member-details-page__bio-modal ${isBioModalOpen ? 'open' : ''}`}
+                className={`cast-member-details-page__bio-modal ${
+                    isBioModalOpen ? 'open' : ''
+                }`}
                 ref={bioModalRef}
             >
                 <div className="cast-member-details-page__bio-modal-content">
@@ -44,31 +80,39 @@ const BioModal = React.memo(
                         </DynamicButton>
                     </div>
 
-                    {bioSource === 'tmdb' ? (
-                        castDetailsLoading ? (
+                    <div
+                        className="cast-member-details-page__biography-text-container"
+                        ref={containerRef}
+                        style={{ height: `${containerHeight}px` }}
+                    >
+                        <div className="biography-shadow-overlay biography-shadow-overlay-start"></div>
+
+                        {castDetailsLoading ? (
                             <div>Loading biography from TMDB...</div>
-                        ) : castDetailsError || !castDetailsData?.biography ? (
-                            <div>Biography not found on TMDB.</div>
-                        ) : (
-                            <div className="cast-member-details-page__biography-text-container">
-                                <p className="cast-member-details-page__biography-text">
-                                    {castDetailsData.biography}
-                                </p>
-                            </div>
-                        )
-                    ) : bioSource === 'wikipedia' ? (
-                        wikipediaBioLoading ? (
+                        ) : castDetailsError || !castDetailsData?.biography ? null : (
+                            <p
+                                className="cast-member-details-page__biography-text"
+                                style={{ opacity: bioSource === 'tmdb' ? 1 : 0 }}
+                                ref={tmdbRef}
+                            >
+                                {castDetailsData.biography}
+                            </p>
+                        )}
+
+                        {wikipediaBioLoading ? (
                             <div>Loading from Wikipedia...</div>
-                        ) : wikipediaBioError || !wikipediaBio ? (
-                            <div>Nothing found on Wikipedia.</div>
-                        ) : (
-                            <div className="cast-member-details-page__biography-text-container">
-                                <p className="cast-member-details-page__biography-text">
-                                    {wikipediaBio}
-                                </p>
-                            </div>
-                        )
-                    ) : null}
+                        ) : wikipediaBioError || !wikipediaBio ? null : (
+                            <p
+                                className="cast-member-details-page__biography-text"
+                                style={{ opacity: bioSource === 'wikipedia' ? 1 : 0 }}
+                                ref={wikipediaRef}
+                            >
+                                {wikipediaBio}
+                            </p>
+                        )}
+
+                        <div className="biography-shadow-overlay biography-shadow-overlay-end"></div>
+                    </div>
                 </div>
             </div>
         );
@@ -86,10 +130,8 @@ BioModal.propTypes = {
     setBioSource: PropTypes.func.isRequired,
     castDetailsLoading: PropTypes.bool.isRequired,
     castDetailsError: PropTypes.instanceOf(Error),
-
     castDetailsData: PropTypes.shape({
         biography: PropTypes.string
-        // Define other properties of castDetailsData if needed
     }),
     wikipediaBioLoading: PropTypes.bool.isRequired,
     wikipediaBioError: PropTypes.instanceOf(Error),

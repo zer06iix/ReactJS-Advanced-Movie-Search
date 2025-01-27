@@ -10,32 +10,15 @@ const DROPDOWN_OPTIONS = [
 const CustomDropdown = React.memo(({ bioSource, setBioSource }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-    const [isChanging, setIsChanging] = useState(false);
     const currentOptionLabel =
         DROPDOWN_OPTIONS.find((option) => option.value === bioSource)?.label || '';
-    const buttonTextRef = useRef(null);
 
     const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
 
     const handleOptionClick = useCallback(
         (value) => {
-            setIsChanging(true);
-            const currentWidth = buttonTextRef.current?.offsetWidth;
-
-            if (buttonTextRef.current) {
-                buttonTextRef.current.style.width = `${currentWidth}px`;
-            }
-
-            setTimeout(() => {
-                setBioSource(value);
-                setIsChanging(false);
-                setIsOpen(false);
-                setTimeout(() => {
-                    if (buttonTextRef.current) {
-                        buttonTextRef.current.style.width = 'auto';
-                    }
-                }, 200);
-            }, 200);
+            setBioSource(value);
+            setIsOpen(false);
         },
         [setBioSource]
     );
@@ -60,13 +43,7 @@ const CustomDropdown = React.memo(({ bioSource, setBioSource }) => {
     return (
         <div className="custom-dropdown" ref={dropdownRef}>
             <div className="custom-dropdown__button" onClick={toggleOpen}>
-                <div
-                    ref={buttonTextRef}
-                    className={`custom-dropdown__button-text ${isChanging ? 'changing' : ''}`}
-                    style={{ overflow: 'hidden', display: 'inline-block' }}
-                >
-                    {currentOptionLabel}
-                </div>
+                <div className="custom-dropdown__button-text">{currentOptionLabel}</div>
                 <svg className="custom-dropdown__icon">
                     <use xlinkHref={`${sprite}#arrow-dropdown`} />
                 </svg>

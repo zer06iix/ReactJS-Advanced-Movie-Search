@@ -117,6 +117,15 @@
     color: rgba(196, 193, 198, 0.5);
 }
 
+.metadata-icon {
+    display: inline;
+    margin-left: 2px;
+    fill: rgb(196, 193, 198);
+    opacity: 0.7;
+    width: 15px;
+    height: 15px;
+}
+
 .metadata .date-separator {
     margin-inline: 2px;
 }

@@ -3,7 +3,6 @@ import sprite from '../../styles/sprite.svg';
 import useMovieStore from '../../stores/movieStore';
 import { countryNames } from '../../api/countries';
 
-
 const MovieMetadata = ({
     releaseDate,
     adult,
@@ -11,7 +10,6 @@ const MovieMetadata = ({
     formattedRating,
     formattedRuntime
 }) => {
-
     const { movie } = useMovieStore();
 
     return (
@@ -19,7 +17,7 @@ const MovieMetadata = ({
             <span title={new Date(releaseDate).toLocaleDateString('en-GB')}>
                 {releaseDate.slice(0, 4)}
                 <sup>
-                    <svg className="icon inline" width="15" height="15">
+                    <svg className="metadata-icon">
                         <use xlinkHref={`${sprite}#help`} />
                     </svg>
                 </sup>
@@ -34,16 +32,20 @@ const MovieMetadata = ({
 
             <>
                 <span className="separator">•</span>
-                {Array.isArray(movie.origin_country) ? 
+                {Array.isArray(movie.origin_country) ? (
                     movie.origin_country.map((country, index) => (
                         <span key={country} title={countryNames[country]}>
-                            {country}{index < movie.origin_country.length - 1 ? ', ' : ''}
+                            {country}
+                            {index < movie.origin_country.length - 1 ? ', ' : ''}
                         </span>
-                    )) 
-                    : <span title={countryNames[movie.origin_country]}>{movie.origin_country}</span>
-                }
+                    ))
+                ) : (
+                    <span title={countryNames[movie.origin_country]}>
+                        {movie.origin_country}
+                    </span>
+                )}
                 <sup>
-                    <svg className="icon inline" width="15" height="15">
+                    <svg className="metadata-icon">
                         <use xlinkHref={`${sprite}#help`} />
                     </svg>
                 </sup>
@@ -55,7 +57,7 @@ const MovieMetadata = ({
                     <span title={ratingTitle}>
                         {formattedRating}
                         <sup>
-                            <svg className="icon inline" width="15" height="15">
+                            <svg className="metadata-icon">
                                 <use xlinkHref={`${sprite}#help`} />
                             </svg>
                         </sup>
