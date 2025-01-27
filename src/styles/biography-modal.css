@@ -73,16 +73,39 @@
 }
 
 .cast-member-details-page__biography-text-container {
-    font-family: 'Open Sans', sans-serif;
-    height: 100%;
-    letter-spacing: 0.01rem;
-    line-height: 1.62rem;
+    padding-bottom: 20px;
+    position: relative;
     max-height: calc(90vh - 90px);
     overflow-x: hidden;
     overflow-y: scroll;
-    padding: 0 20px 20px;
-    text-align: left;
+    transition: height 0.35s ease;
+}
+
+/* .biography-shadow-overlay {
+    position: sticky;
+    border: 1px solid lime;
+    height: 20px;
+    width: 100%;
+    left: 0;
+}
+
+.biography-shadow-overlay-start {
+    top: 0;
+}
+
+.biography-shadow-overlay-end {
+    top: 100%;
+} */
+
+.cast-member-details-page__biography-text {
+    position: absolute;
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 0.01rem;
     word-spacing: 0.02rem;
+    line-height: 1.62rem;
+    text-align: left;
+    padding-inline: 20px;
+    transition: opacity 0.35s ease;
 }
 
 .cast-member-details-page__details-button {

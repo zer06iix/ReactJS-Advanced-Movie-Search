@@ -21,7 +21,7 @@
     width: 1170px;
     height: 465px;
     display: flex;
-    margin-block: 35px;
+    margin-bottom: 50px;
     margin-inline: 30px;
     gap: 30px;
 }
@@ -78,7 +78,6 @@
     margin-left: 4px;
     fill: rgb(196, 193, 198);
     opacity: 0.7;
-    vertical-align: super;
     width: 15px;
     height: 15px;
 }
