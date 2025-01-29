@@ -3,7 +3,6 @@ import sprite from '../../styles/sprite.svg';
 import useShowStore from '../../stores/showStore';
 import { countryNames } from '../../api/countries';
 
-
 const ShowsMeta = ({
     showFormattedDate,
     seasonsCount,
@@ -11,16 +10,13 @@ const ShowsMeta = ({
     ratingTitle,
     formattedRating
 }) => {
-
     const { shows } = useShowStore();
 
     return (
         <p className="metadata">
-            <span>
-                {showFormattedDate}
-            </span>
+            <span>{showFormattedDate}</span>
             <sup>
-                <svg className="icon inline" width="15" height="15">
+                <svg className="metadata-icon">
                     <use xlinkHref={`${sprite}#help`} />
                 </svg>
             </sup>
@@ -31,16 +27,20 @@ const ShowsMeta = ({
 
             <>
                 <span className="separator">•</span>
-                {Array.isArray(shows.origin_country) ? 
+                {Array.isArray(shows.origin_country) ? (
                     shows.origin_country.map((country, index) => (
                         <span key={country} title={countryNames[country]}>
-                            {country}{index < shows.origin_country.length - 1 ? ', ' : ''}
+                            {country}
+                            {index < shows.origin_country.length - 1 ? ', ' : ''}
                         </span>
-                    )) 
-                    : <span title={countryNames[shows.origin_country]}>{shows.origin_country}</span>
-                }
+                    ))
+                ) : (
+                    <span title={countryNames[shows.origin_country]}>
+                        {shows.origin_country}
+                    </span>
+                )}
                 <sup>
-                    <svg className="icon inline" width="15" height="15">
+                    <svg className="metadata-icon">
                         <use xlinkHref={`${sprite}#help`} />
                     </svg>
                 </sup>
@@ -52,7 +52,7 @@ const ShowsMeta = ({
                     <span title={ratingTitle}>
                         {formattedRating}
                         <sup>
-                            <svg className="icon inline" width="15" height="15">
+                            <svg className="metadata-icon">
                                 <use xlinkHref={`${sprite}#help`} />
                             </svg>
                         </sup>
