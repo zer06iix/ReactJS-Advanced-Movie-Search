@@ -89,6 +89,13 @@ const useFetchStore = create((set) => ({
         }
     },
 
+    fetchSearchQueries: async (query) => {
+        const url = createApiUrlWithQuery(`/search/multi`, query);
+        const response = await axios.get(url);
+
+        return response.data.results;
+    },
+
     fetchMovieQueries: async (query) => {
         const url = createApiUrlWithQuery(`/search/movie`, query);
         const response = await axios.get(url);
