@@ -8,6 +8,7 @@ import useCastStore from '../stores/castStore';
 import MediaPoster from '../components/contentPage/MediaPoster';
 import CastMemberDetailsInfo from '../components/castPage/CastMemberDetailsInfo';
 import FilmographySection from '../components/castPage/FilmographySection';
+import Loading from '../components/app/Loading';
 
 export default function CastPage() {
     // Renamed to CastMemberDetailsHeader and export default changed
@@ -213,7 +214,7 @@ export default function CastPage() {
             <div className="cast-member-details-page__header">
                 <div className="cast-member-details-page__poster-container">
                     {castDetailsLoading && !castDetailsData ? (
-                        <div>Loading poster...</div>
+                        <Loading />
                     ) : castDetailsError ? (
                         <div>Error loading poster.</div>
                     ) : (
