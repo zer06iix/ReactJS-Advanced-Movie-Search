@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import Loading from '../components/app/Loading';
 import PopularCarousel from '../components/homePage/imageCarousel/PopularCarousel';
 import UpNextSection from '../components/homePage/upNext/UpNextSection';
+import NavigationMenu from '../components/HomePage/NavigationMenu';
+
 import useFetchStore from '../stores/fetchStore';
 import useMovieStore from '../stores/movieStore';
 
@@ -43,6 +45,7 @@ export default function Home() {
 
     return (
         <>
+            <NavigationMenu />
             <PopularCarousel
                 movies={popularMovies}
                 wrapperRef={carouselWrapperRef}
