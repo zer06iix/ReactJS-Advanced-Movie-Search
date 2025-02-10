@@ -11,6 +11,7 @@
 
 /* Hide the "up next" section on medium-sized screens */
 @media (max-width: 1280px) {
+    .navigation-menu-container,
     .up-next-container {
         display: none;
     }
