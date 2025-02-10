@@ -373,7 +373,7 @@ nav {
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: bold;
-    padding-right:;
+    /* padding-right:; */
     color: #ffffff;
 }
 

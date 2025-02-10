@@ -273,26 +273,87 @@
     font-size: 0.85rem;
 }
 
-.navigation-menu-container {
-    color: white;
-    background-color: rgba(156, 211, 255, 0.144);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 185px;
-    right: 50%;
-    transform: translate(calc(calc((-830px * 5.5 / 8) / 2) + 30px), 0);
-    width: calc(100vw / 2 - 300px);
-    height: 70.4%;
+/* Navigation menu */
 
+.navigation-menu-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% - 31vw), calc(-50% + 50px));
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    z-index: 999;
+    padding: 20px;
 }
-.navigation-menu-container h1 {
-    font-size: 30px;
-    margin-bottom: 50px;
+
+.navigation-menu-heading {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
-.navigation-menu-container p {
-    margin-bottom: 50px;
+
+.navigation-menu-heading .title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.navigation-menu-heading .icon {
+    width: 30px;
+    height: 30px;
+    fill: rgba(255, 255, 255, 0.75);
+    transform: scaleX(-1);
+}
+
+.navigation-menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 4px;
+    margin-left: 0px;
+    padding-left: 32px;
+    position: relative;
+}
+
+.indicator-line {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 100%;
+    border-left: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.indicator {
+    position: absolute;
+    left: -2px;
+    width: 4px;
+    height: 30px;
+    background-color: white;
+    border-radius: 999px;
+    transition: top 0.2s ease-in-out;
+    margin-block: 6px;
+}
+
+.navigation-menu-content button {
+    opacity: 0.6;
+    transition: opacity 0.35s ease;
+    width: 100%;
+    padding-block: 10px;
+    border: none;
+    background-color: transparent;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.navigation-menu-content button:hover {
+    opacity: 1;
+}
+
+.navigation-button.selected {
+    opacity: 1;
 }
