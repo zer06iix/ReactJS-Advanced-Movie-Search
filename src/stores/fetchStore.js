@@ -119,7 +119,7 @@ const useFetchStore = create((set) => ({
 
     // Shows actor/actress movies they played
     fetchCastCredits: async (id) => {
-        const url = createApiUrlWithQueryParams(`/person/${id}/combined_credits`, { sort_by: 'vote_average.asc' });
+        const url = createApiUrl(`/person/${id}/combined_credits`);
         const response = await axios.get(url);
 
         return response.data;
@@ -128,7 +128,7 @@ const useFetchStore = create((set) => ({
     fetchTrending: async () => {
         const url = createApiUrl('/trending/all/week'); // This will show the trending of the week (Or can be day instead of week)
         const response = await axios.get(url);
-        response.data;
+        response.data; 
     },
 
     fetchMovieRecommendations: async (id) => {
