@@ -4,6 +4,9 @@ const useMovieStore = create((set) => ({
     movie: null, // Movie details on the movie page
     setMovie: (movieDetails) => set({ movie: movieDetails }),
 
+    trendingMovies: [],
+    setTrendingMovies: (movies) => set({ trendingMovies: movies }),
+
     popularMovies: [], // State to hold popular movies
     setPopularMovies: (movies) => set({ popularMovies: movies }),
 
