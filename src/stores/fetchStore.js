@@ -125,8 +125,13 @@ const useFetchStore = create((set) => ({
         return response.data;
     },
 
-    fetchTrending: async () => {
-        const url = createApiUrl('/trending/all/week'); // This will show the trending of the week (Or can be day instead of week)
+    fetchTrendingMovies: async () => {
+        const url = createApiUrl('/trending/movie/week'); // This will show the trending of the week (Or can be day instead of week)
+        const response = await axios.get(url);
+        response.data; 
+    },
+    fetchTrendingShows: async () => {
+        const url = createApiUrl('/trending/tv/week'); // This will show the trending of the week (Or can be day instead of week)
         const response = await axios.get(url);
         response.data; 
     },
