@@ -11,7 +11,6 @@ import FilmographySection from '../components/castPage/FilmographySection';
 import Loading from '../components/app/Loading';
 
 export default function CastPage() {
-    // Renamed to CastMemberDetailsHeader and export default changed
     const { id: castId } = useParams();
     const { fetchCastDetails, fetchCastCredits } = useFetchStore();
     const { setCast, setCastCredits } = useCastStore();
@@ -32,8 +31,8 @@ export default function CastPage() {
 
     const {
         data: castCreditsData,
-        isLoading: castCreditsLoading, // Added isLoading and error
-        error: castCreditsError // for castCreditsData for loading state in filmography
+        isLoading: castCreditsLoading,
+        error: castCreditsError
     } = useQuery({
         queryKey: ['castCredits', castId],
         queryFn: () => fetchCastCredits(castId),
@@ -101,50 +100,9 @@ export default function CastPage() {
         return calculateAge(castDetailsData.birthday, castDetailsData?.deathday);
     }, [castDetailsData?.birthday, castDetailsData?.deathday, calculateAge]);
 
-    const fetchWikipediaBio = useCallback(async (actorName) => {
-        if (!actorName) return null;
-        const searchTerm = encodeURIComponent(actorName);
-        const baseURL = 'https://en.wikipedia.org/w/api.php';
+    // Removed fetchWikipediaBio useCallback
 
-        const params = new URLSearchParams({
-            action: 'query',
-            format: 'json',
-            origin: '*',
-            prop: 'extracts',
-            titles: searchTerm,
-            exintro: true,
-            explaintext: true
-        });
-
-        const apiUrl = `${baseURL}?${params.toString()}`;
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            const pages = data.query?.pages;
-            if (!pages) return null;
-
-            const pageId = Object.keys(pages)[0];
-            if (pageId === '-1') return null;
-
-            return pages[pageId]?.extract || null;
-        } catch (error) {
-            console.error('Error fetching Wikipedia biography:', error);
-            return null;
-        }
-    }, []);
-
-    const {
-        data: wikipediaBio,
-        isLoading: wikipediaBioLoading,
-        error: wikipediaBioError
-    } = useQuery({
-        queryKey: ['wikipediaBio', castDetailsData?.name],
-        queryFn: () => fetchWikipediaBio(castDetailsData?.name),
-        enabled: !!castDetailsData?.name,
-        staleTime: Infinity,
-        cacheTime: Infinity
-    });
+    // Removed wikipediaBio useQuery and related states
 
     const handleModalClickOutside = useCallback(
         (event) => {
@@ -188,10 +146,8 @@ export default function CastPage() {
             bioSource,
             setBioSource,
             castDetailsLoading,
-            castDetailsError,
-            wikipediaBioLoading,
-            wikipediaBioError,
-            wikipediaBio
+            castDetailsError
+            // Removed wikipediaBioLoading, wikipediaBioError, wikipediaBio
         }),
         [
             age,
@@ -202,10 +158,8 @@ export default function CastPage() {
             bioSource,
             setBioSource,
             castDetailsLoading,
-            castDetailsError,
-            wikipediaBioLoading,
-            wikipediaBioError,
-            wikipediaBio
+            castDetailsError
+            // Removed wikipediaBioLoading, wikipediaBioError, wikipediaBio
         ]
     );
 
@@ -247,8 +201,7 @@ export default function CastPage() {
 }
 
 CastPage.propTypes = {
-    // Updated propTypes to be for CastMemberDetailsPage (now Header) and to expect castId
     castId: PropTypes.string.isRequired
 };
 
-CastPage.displayName = 'CastMemberDetailsHeader'; // Updated displayName
+CastPage.displayName = 'CastMemberDetailsHeader';

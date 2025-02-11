@@ -313,3 +313,45 @@
     height: 100%;
     object-fit: cover;
 }
+
+.filmography__count {
+    border-radius: 50px;
+    color: black;
+    font-size: 1.3rem;
+    font-weight: 600;
+    height: 30px;
+    margin-left: 10px;
+    padding: 0 12px;
+}
+
+.filmography__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 18px;
+}
+
+.filmography__heading-icon {
+    aspect-ratio: 1;
+    display: inline;
+    fill: rgb(196, 193, 198);
+    height: 35px;
+}
+
+.filmography__section {
+    color: rgb(196, 193, 198);
+    height: fit-content;
+    max-width: min(calc(1090px - 360px), calc(100vw - 430px));
+}
+
+.filmography__title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.filmography__view-full-list-button {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
