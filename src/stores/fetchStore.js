@@ -16,7 +16,7 @@ const createApiUrlWithQueryParams = (endpoint, queryParams) => {
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async (page) => {
         console.log('Fetching popular movies'); // Log when fetching starts
-        const url = createApiUrlWithQueryParams('/movie/popular', { page: page});
+        const url = createApiUrl('/movie/popular');
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
