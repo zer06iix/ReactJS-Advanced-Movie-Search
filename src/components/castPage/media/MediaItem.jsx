@@ -7,6 +7,7 @@ import MediaImage from './MediaImage';
 export default function MediaItem({ media }) {
     const nameRef = useRef(null);
     const mediaRef = useRef(null);
+    let mediaType;
     const [nameTitle, setNameTitle] = useState('');
     const [mediaTitle, setMediaTitle] = useState('');
     const [imgError, setImgError] = useState(false);
@@ -33,8 +34,19 @@ export default function MediaItem({ media }) {
         }
     }, [media]);
 
+    switch(media.media_type) {
+        case 'tv':
+            mediaType = 'shows';
+            break
+        case 'movie':
+            mediaType = 'movie';
+            break
+        default: 
+            mediaType = '';
+    }
+
     return (
-        <Link to={`/movie/${media.id}`} className="cast-media">
+        <Link to={`/${mediaType}/${media.id}`} className="cast-media">
             <div className="media-image-container">
                 {!imgError ? (
                     <MediaImage media={media} onError={handleImageError} />

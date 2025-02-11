@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback,useMemo, useEffect } from 'react';
 import useCastStore from '../../../stores/castStore';
 
 import MediaItem from './MediaItem';
@@ -9,17 +9,30 @@ import PreviousButton from '../../buttons/PreviousButton';
 
 export default function MediaScroller() {
     const { castCredits } = useCastStore();
-
+    
     const wrapperRef = useRef(null);
     const containerRef = useRef(null);
     const [translateX, setTranslateX] = useState(0);
     const [isScrollEnd, setIsScrollEnd] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isScrolling, setIsScrolling] = useState(false);
-
+    
     const scrollStep = 400;
     const scrollDelay = 500;
-
+    
+    const sortedCastCredits = useMemo(() => {
+        if (castCredits && castCredits.cast) {
+            const uniqueMedia = new Map();
+            castCredits.cast.forEach((media) => {
+                if (!uniqueMedia.has(media.id) && media.vote_count > 50) {
+                    uniqueMedia.set(media.id, media);
+                }
+            });
+            return [...uniqueMedia.values()].sort((a, b) => b.vote_average - a.vote_average);
+        }
+        return [];
+    }, [castCredits]);
+    
     const scrollLeft = useCallback(() => {
         if (wrapperRef.current && !isScrolling) {
             setIsScrolling(true);
@@ -37,13 +50,13 @@ export default function MediaScroller() {
             const contentWidth = wrapperRef.current.offsetWidth;
             setTranslateX((prevTranslateX) =>
                 Math.max(-(contentWidth - containerWidth), prevTranslateX - scrollStep)
-            );
+        );
             setTimeout(() => {
                 setIsScrolling(false);
             }, scrollDelay);
         }
     }, [scrollStep, isScrolling, scrollDelay, setIsScrolling, setTranslateX]);
-
+    
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
             setIsInitialLoad(false);
@@ -52,7 +65,7 @@ export default function MediaScroller() {
             setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
         }
     }, [translateX, setIsInitialLoad, setIsScrollEnd]);
-
+    
     useEffect(() => {
         if (!isInitialLoad && wrapperRef.current && containerRef.current) {
             const contentWidth = wrapperRef.current.offsetWidth;
@@ -60,7 +73,7 @@ export default function MediaScroller() {
             setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
         }
     }, [isInitialLoad, translateX, setIsScrollEnd]);
-
+    
     return (
         <div className="media-scroller-inner" ref={containerRef}>
             <div className="cast-scroller-inner">
@@ -82,10 +95,10 @@ export default function MediaScroller() {
                         transition: 'transform 0.5s ease-in-out'
                     }}
                 >
-                    {castCredits && castCredits.cast && castCredits.cast.length > 0
-                        ? castCredits.cast.map((media) => (
-                              <MediaItem media={media} key={media.id} />
-                          ))
+                    {sortedCastCredits.length > 0
+                        ? sortedCastCredits.map((media) => (
+                            <MediaItem media={media} key={media.id} />
+                        ))
                         : null}
                 </div>
                 <div
@@ -110,10 +123,10 @@ export default function MediaScroller() {
                         disabled={
                             !isInitialLoad && wrapperRef.current && containerRef.current
                                 ? translateX <=
-                                  -(
-                                      wrapperRef.current.offsetWidth -
-                                      containerRef.current.offsetWidth
-                                  )
+                                    -(
+                                        wrapperRef.current.offsetWidth -
+                                        containerRef.current.offsetWidth
+                                    )
                                 : true
                         }
                     />
