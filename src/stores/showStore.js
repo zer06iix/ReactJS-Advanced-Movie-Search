@@ -4,8 +4,11 @@ const useShowStore = create((set) => ({
     shows: null, // Shows details on the movie page
     setShows: (showDetails) => set({ shows: showDetails }),
 
+    trendingShows: [],
+    setTrendingShows: (shows) => set({ trendingShows: shows }),
+
     popularShows: [], // State to hold popular shows
-    setPopularShow: (show) => set({ popularShows: show }),
+    setPopularShows: (shows) => set({ popularShows: shows }),
 
     showsCredits: [],
     setCredits: (showsCredit) => set({ showsCredits: showsCredit }),
