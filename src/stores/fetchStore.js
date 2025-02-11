@@ -14,16 +14,16 @@ const createApiUrlWithQueryParams = (endpoint, queryParams) => {
 
 
 const useFetchStore = create((set) => ({
-    fetchPopularMovies: async (page) => {
+    fetchPopularMovies: async () => {
         console.log('Fetching popular movies'); // Log when fetching starts
         const url = createApiUrl('/movie/popular');
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
     },
-    fetchPopularShows: async (page) => {
+    fetchPopularShows: async () => {
         console.log('Fetching popular shows'); // Log when fetching starts
-        const url = createApiUrlWithQueryParams('/tv/popular', { page: page});
+        const url = createApiUrlWithQueryParams('/tv/popular');
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
