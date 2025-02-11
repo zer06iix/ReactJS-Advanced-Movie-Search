@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import Loading from '../components/app/Loading';
-import PopularCarousel from '../components/homePage/imageCarousel/PopularCarousel';
+import MediaCarousel from '../components/homePage/imageCarousel/MediaCarousel';
 import UpNextSection from '../components/homePage/upNext/UpNextSection';
 import NavigationMenu from '../components/HomePage/NavigationMenu';
 
@@ -46,8 +46,8 @@ export default function Home() {
     return (
         <>
             <NavigationMenu />
-            <PopularCarousel
-                movies={popularMovies}
+            <MediaCarousel
+                media={popularMovies}
                 wrapperRef={carouselWrapperRef}
                 upNextWrapperRef={upNextWrapperRef}
             />

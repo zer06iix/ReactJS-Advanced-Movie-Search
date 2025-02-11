@@ -12,13 +12,13 @@ import NextSlide from './NextSlide';
 import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../stores/carouselStore';
 
-export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }) {
+export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     const transitionLength = 380;
     const currentSlideRef = useRef(null);
     const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
     const [isDragging, setIsDragging] = useState(false);
 
-    const totalSlides = movies.length;
+    const totalSlides = media.length;
     const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides);
     const nextSlideIndex = Math.min(totalSlides - 1, (currentSlide + 1) % totalSlides);
 
@@ -131,9 +131,9 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
                 />
 
                 <div className="carousel-wrapper" ref={wrapperRef}>
-                    <PreviousSlide slide={movies[prevSlideIndex]} />
-                    <CurrentSlide slide={movies[currentSlide]} ref={currentSlideRef} />
-                    <NextSlide slide={movies[nextSlideIndex]} />
+                    <PreviousSlide slide={media[prevSlideIndex]} />
+                    <CurrentSlide slide={media[currentSlide]} ref={currentSlideRef} />
+                    <NextSlide slide={media[nextSlideIndex]} />
                 </div>
 
                 <MouseDownDetector
@@ -164,8 +164,8 @@ export default function PopularCarousel({ movies, wrapperRef, upNextWrapperRef }
     );
 }
 
-PopularCarousel.propTypes = {
-    movies: PropTypes.arrayOf(PropTypes.object).isRequired,
+MediaCarousel.propTypes = {
+    media: PropTypes.arrayOf(PropTypes.object).isRequired,
     wrapperRef: PropTypes.object.isRequired,
     upNextWrapperRef: PropTypes.object.isRequired
 };
