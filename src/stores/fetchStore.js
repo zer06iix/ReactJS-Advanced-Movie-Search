@@ -3,28 +3,27 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { API_KEY, BASE_URL } from '../api/tmdb';
 
+
 // Utility function to create API URLs
 const createApiUrl = (endpoint) => `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
-
-// Utility function to create API URLs with their page
-const createApiUrlWithPage = (endpoint, page) =>
-    `${BASE_URL}${endpoint}?api_key=${API_KEY}&page=${page}`;
-
 // Utility function to create API URLs with their query
-const createApiUrlWithQuery = (endpoint, query) =>
-    `${BASE_URL}${endpoint}?api_key=${API_KEY}&query=${query}`;
+const createApiUrlWithQueryParams = (endpoint, queryParams) => {
+    const queryString = new URLSearchParams({ api_key: API_KEY, ...queryParams }).toString();
+    return `${BASE_URL}${endpoint}?${queryString}`;
+};
+
 
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async (page) => {
         console.log('Fetching popular movies'); // Log when fetching starts
-        const url = createApiUrlWithPage('/movie/popular', page);
+        const url = createApiUrlWithQueryParams('/movie/popular', { page: page});
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
     },
     fetchPopularShows: async (page) => {
         console.log('Fetching popular shows'); // Log when fetching starts
-        const url = createApiUrlWithPage('/tv/popular', page);
+        const url = createApiUrlWithQueryParams('/tv/popular', { page: page});
         const response = await axios.get(url);
         const movies = response.data.results;
         return movies; // Ensure this is returning an array
@@ -90,21 +89,21 @@ const useFetchStore = create((set) => ({
     },
 
     fetchSearchQueries: async (query) => {
-        const url = createApiUrlWithQuery(`/search/multi`, query);
+        const url = createApiUrlWithQueryParams(`/search/multi`, { query: query});
         const response = await axios.get(url);
 
         return response.data.results;
     },
 
     fetchMovieQueries: async (query) => {
-        const url = createApiUrlWithQuery(`/search/movie`, query);
+        const url = createApiUrlWithQueryParams(`/search/movie`, { query: query});
         const response = await axios.get(url);
 
         return response.data.results;
     },
 
     fetchShowsQueries: async (query) => {
-        const url = createApiUrlWithQuery(`/search/tv`, query);
+        const url = createApiUrlWithQueryParams(`/search/tv`, { query: query});
         const response = await axios.get(url);
 
         return response.data.results;
@@ -120,10 +119,16 @@ const useFetchStore = create((set) => ({
 
     // Shows actor/actress movies they played
     fetchCastCredits: async (id) => {
-        const url = createApiUrl(`/person/${id}/credits`);
+        const url = createApiUrlWithQueryParams(`/person/${id}/combined_credits`, { sort_by: 'vote_average.asc' });
         const response = await axios.get(url);
 
         return response.data;
+    },
+
+    fetchTrending: async () => {
+        const url = createApiUrl('/trending/all/week'); // This will show the trending of the week (Or can be day instead of week)
+        const response = await axios.get(url);
+        response.data;
     },
 
     fetchMovieRecommendations: async (id) => {
