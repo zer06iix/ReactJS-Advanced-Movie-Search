@@ -6,7 +6,7 @@ import useFetchStore from '../../../stores/fetchStore';
 import UpNextItem from './UpNextItem';
 import { useQuery } from '@tanstack/react-query';
 
-export default function UpNextSection({ movies, wrapperRef }) {
+export default function UpNextSection({ media, wrapperRef }) {
     const [itemsToLoad, setItemsToLoad] = useState(5);
     const [opacities, setOpacities] = useState([]);
     const { currentSlide } = useCarouselStore();
@@ -64,15 +64,15 @@ export default function UpNextSection({ movies, wrapperRef }) {
                         Array.from({ length: itemsToLoad + 2 }, (_, i) => {
                             const movieIndex = currentSlide + i;
                             const adjustedIndex =
-                                (movieIndex + movies.length) % movies.length;
-                            const movie = movies[adjustedIndex];
+                                (movieIndex + media.length) % media.length;
+                            const movie = media[adjustedIndex];
                             if (!movie) return null;
                             const translateY =
                                 ((itemsToLoad + 1) / 2 - i) * -100 - 50;
                             return (
                                 <UpNextItem
                                     key={i}
-                                    movie={movie}
+                                    media={movie}
                                     index={i}
                                     genresData={genresData}
                                     translateY={translateY}
@@ -88,6 +88,6 @@ export default function UpNextSection({ movies, wrapperRef }) {
 }
 
 UpNextSection.propTypes = {
-    movies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    media: PropTypes.arrayOf(PropTypes.object).isRequired,
     wrapperRef: PropTypes.object.isRequired
 };

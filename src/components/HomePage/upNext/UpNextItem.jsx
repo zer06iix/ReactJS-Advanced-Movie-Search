@@ -7,7 +7,8 @@ import useFetchStore from '../../../stores/fetchStore';
 import { Link } from 'react-router-dom';
 import Loading from '../../app/Loading';
 
-const UpNextItem = ({ movie, index, translateY }) => {
+const UpNextItem = ({ media, index, translateY }) => {
+    const mediaType = media?.name ? 'shows': 'movie';
     const { fetchMovieCredits } = useFetchStore();
 
     const {
@@ -15,8 +16,8 @@ const UpNextItem = ({ movie, index, translateY }) => {
         isLoading: creditsLoading,
         error: creditsError
     } = useQuery({
-        queryKey: ['credits', movie?.id],
-        queryFn: () => fetchMovieCredits(movie?.id)
+        queryKey: ['credits', media?.id],
+        queryFn: () => fetchMovieCredits(media?.id)
     });
 
     if (creditsLoading) {
@@ -50,14 +51,14 @@ const UpNextItem = ({ movie, index, translateY }) => {
             className="up-next-item"
             style={{ transform: `translateY(${translateY}%)` }}
         >
-            <Link to={`/movie/${movie.id}`} className="poster">
-                <Slide slide={movie} posterDetail={false} />
+            <Link to={`/${mediaType}/${media.id}`} className="poster">
+                <Slide slide={media} posterDetail={false} />
             </Link>
 
             <div className="right-side">
                 <div className="heading">
-                    <Link to={`/movie/${movie.id}`}>
-                        <p className="title">{movie.title}</p>
+                    <Link to={`/${mediaType}/${media.id}`}>
+                        <p className="title">{media?.title || media?.name}</p>
                     </Link>
                     <p className="director-name">Directed by {directorName}</p>
                 </div>
@@ -65,8 +66,8 @@ const UpNextItem = ({ movie, index, translateY }) => {
                 <div className="genres-container">
                     {' '}
                     <div className="genre-scroll-container">
-                        {movie.genre_ids && movie.genre_ids.length > 0 ? (
-                            <Genre genreIds={movie.genre_ids} />
+                        {media.genre_ids && media.genre_ids.length > 0 ? (
+                            <Genre genreIds={media.genre_ids} />
                         ) : (
                             <div>Genre not available</div>
                         )}
