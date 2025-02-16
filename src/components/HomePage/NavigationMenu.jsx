@@ -1,15 +1,22 @@
-import { useState, useRef, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import { useState, useRef, useEffect, useCallback } from 'react';
 import sprite from '../../styles/sprite.svg';
+import useNavigationMenuStore from '../../stores/navigationMenuStore';
 
 export default function NavigationMenu() {
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    const { selectedIndex, setSelectedIndex } = useNavigationMenuStore();
+
+    // const [selectedIndex, setSelectedIndex] = useState(0);
     const buttonRefs = useRef([]);
+    const setButtonRef = useCallback((el, index) => {
+        buttonRefs.current[index] = el;
+    }, []);
 
     useEffect(() => {
         if (buttonRefs.current[selectedIndex]) {
             buttonRefs.current[selectedIndex].classList.add('selected');
         }
-    }, []);
+    }, [selectedIndex]);
 
     const handleButtonClick = (index) => {
         if (buttonRefs.current[selectedIndex]) {
@@ -45,10 +52,10 @@ export default function NavigationMenu() {
                     'Coming Soon'
                 ].map((item, index) => (
                     <button
-                        key={index}
-                        ref={(el) => (buttonRefs.current[index] = el)}
-                        onClick={() => handleButtonClick(index)}
                         className={`navigation-button`}
+                        key={index}
+                        ref={(el) => setButtonRef(el, index)}
+                        onClick={() => handleButtonClick(index)}
                     >
                         {item}
                     </button>
