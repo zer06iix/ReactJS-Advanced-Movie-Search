@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import VoteAverage from './imageCarousel/VoteAverage';
 
 const Slide = forwardRef(({ slide, posterDetail }, ref) => {
+    const mediaType = slide?.name ? 'shows': 'movie';
     const imageUrl = slide?.poster_path
         ? `https://image.tmdb.org/t/p/w500${slide.poster_path}`
         : null;
@@ -17,19 +18,24 @@ const Slide = forwardRef(({ slide, posterDetail }, ref) => {
         <div className="carousel-cards">
             {posterDetail ? (
                 <Link
-                    to={`/movie/${slide?.id}`}
-                    onClick={() => console.log(`Navigating to ${slide?.title}`)}
+                    to={`/${mediaType}/${slide?.id}`}
+                    onClick={() => console.log(`Navigating to ${slide?.title || slide?.name}`)}
                     ref={ref}
                 >
                     <img
                         className="carousel-images"
                         src={imageUrl}
-                        alt={slide.title}
+                        alt={slide?.title || slide?.name}
                     />
                     <div className="carousel-detail-bg">
                         <p className="carousel-detail-title">
-                            {slide.title} (
-                            {new Date(slide.release_date).getFullYear()})
+                            {slide?.title || slide?.name} (
+                            {mediaType === 'shows'
+                                ? slide.in_production
+                                    ? `Since ${slide.first_air_date ? new Date(slide.first_air_date).getFullYear() : 'N/A'}`
+                                    : `${slide.first_air_date ? `${new Date(slide.first_air_date).getFullYear()}` : 'N/A'} - ${slide.last_air_date ? new Date(slide.last_air_date).getFullYear() : 'N/A'}`
+                                : slide.release_date ? new Date(slide.release_date).getFullYear() : 'N/A'}
+                            )
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <VoteAverage voteAverage={slide.vote_average} />
@@ -40,7 +46,7 @@ const Slide = forwardRef(({ slide, posterDetail }, ref) => {
                     </div>
                 </Link>
             ) : (
-                <img src={imageUrl} alt={slide.title} />
+                <img src={imageUrl} alt={slide?.title || slide?.name} />
             )}
         </div>
     );
