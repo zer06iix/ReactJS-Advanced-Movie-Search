@@ -331,10 +331,11 @@
     left: -2px;
     width: 4px;
     height: 30px;
-    background-color: white;
+    background-color: #ffffff; /* Neon green color */
     border-radius: 999px;
     transition: top 0.2s ease-in-out;
     margin-block: 6px;
+    box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff; /* Neon glow effect */
 }
 
 .navigation-menu-content button {
