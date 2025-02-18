@@ -48,8 +48,8 @@ export default function NavigationMenu() {
                     'Trending Shows',
                     'Popular Movies',
                     'Popular Shows',
-                    'New Releases',
-                    'Coming Soon'
+                    'New Releases (Not Ready Yet)',
+                    'Coming Soon (Not Ready Yet)'
                 ].map((item, index) => (
                     <button
                         className={`navigation-button`}
